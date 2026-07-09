@@ -1,0 +1,17 @@
+{
+  "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
+  "_comment": "First-run habit seed for the dashboard. On a fresh browser (empty local storage) the dashboard hydrates its weekly Habits matrix from this file, so an AI can write real habits here and the user sees them. Shape: schemas/habits.schema.json (id/notionId/updatedAt/weekOf and the day checkboxes are filled in on load — this week, all unchecked). Demo persona: Alex Rivera.",
+  "updatedAt": "2026-07-09",
+  "habits": [
+    { "name": "Workout / strength", "keystone": true, "active": true, "cadence": "Daily" },
+    { "name": "10k steps", "keystone": false, "active": true, "cadence": "Daily" },
+    { "name": "Morning sunlight", "keystone": false, "active": true, "cadence": "Daily" },
+    { "name": "Meditation 10-15 min", "keystone": true, "active": true, "cadence": "Daily" },
+    { "name": "Water ~3 L", "keystone": false, "active": true, "cadence": "Daily" },
+    { "name": "Vitamins", "keystone": false, "active": true, "cadence": "Daily" },
+    { "name": "Read 30 min", "keystone": false, "active": true, "cadence": "Daily" },
+    { "name": "Sleep early 7+ hrs", "keystone": true, "active": true, "cadence": "Daily" },
+    { "name": "Time with Sam", "keystone": true, "active": true, "cadence": "Daily" },
+    { "name": "Deep-work block", "keystone": false, "active": true, "cadence": "Daily" }
+  ]
+}

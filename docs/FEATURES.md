@@ -25,6 +25,8 @@ Legend: ✅ built · 🔄 available via MCP (no bundled sync) · 📋 planned ·
 | Anchor | `anchor` | ✅ | The Inner OS: grounding protocols, reframes, guardrails. |
 | Flashcards | `flashcards` | 🔜 planned (off by default) | An optional study-deck surface; config flag reserved, page not shipped in v1. |
 
+Setting `finance`, `anchor`, or `knowledge_base` to `false` **hides that surface and its nav/dock links** on the dashboard (the toggle is read at load). `missions` and `trackers` are the always-on core surfaces — their flags are reserved for future use and don't hide anything yet; `flashcards` is reserved for a page not shipped in v1.
+
 ---
 
 ## The dashboard (`dashboard/`)

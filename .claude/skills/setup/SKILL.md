@@ -19,19 +19,19 @@ Ask, a few at a time (accept partial answers, infer sensible defaults, confirm r
 4. **Modules** — which parts to switch on (`modules`): `missions`, `trackers`, `finance`, `knowledge_base`, `anchor`, `flashcards`. Default most on, `flashcards` off.
 5. **Current hero mission** (if `missions` is on) — the one outcome they're racing toward right now, and its gate date. This seeds `dashboard/mission.json`.
 
-## Phase 2 — Write `lifeos.config.json`
+## Phase 2 — Write `dashboard/lifeos.config.json`
 
-Write `lifeos.config.json` at the repo root (it is gitignored — it holds identity, not secrets), validated against `schemas/lifeos.config.schema.json`. Start from `lifeos.config.example.json` and replace the demo values. Keep the `product` block. Leave `integrations.*.enabled` false until the owner wires them (secrets go in `.env`, never here).
+Copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json` and replace the demo values, validated against `schemas/lifeos.config.schema.json`. It is **safe to commit** — it holds identity + toggles, not secrets — and it lives inside `dashboard/` (the deploy root) so a hosted dashboard renders as the owner instead of the demo persona. Keep the `product` block. Leave `integrations.*.enabled` false until the owner wires them (secrets go in `.env`, never here).
 
 ## Phase 3 — "Paste anything about your life"
 
 Invite the owner: *"Paste anything — a brain-dump, an old journal, notes, goals, whatever. Messy is fine. I'll sort it."* Then map what they give you into the vault, honoring the schemas:
 
-- **Tasks** → `06_Trackers/tasks.md` (shape: `tasks.schema.json` — title, area code, priority, status).
-- **Habits / routines** → `06_Trackers/habits.md` (`habits.schema.json`).
+- **Tasks** → `dashboard/tasks-data.json` (shape: `tasks.schema.json` — title, area code, priority, status). This is the file the dashboard hydrates on first run, so the owner sees the tasks immediately. Mirror to `06_Trackers/tasks.md` only if you also want a long-form vault copy.
+- **Habits / routines** → `dashboard/habits-data.json` (`habits.schema.json`) — the weekly matrix renders from this file.
+- **"About me" facts** (strengths, values, watch-outs, preferences, one per area) → `dashboard/kb-data.json` following `kb.schema.json`. This is the surface the Knowledge Base page renders — it reads the JSON, not markdown. Keep `02_Areas/knowledge_base/*.md` as an optional long-form layer.
 - **Dated things** → `06_Trackers/reminders.md`.
 - **Loose ideas / worries** → `06_Trackers/inbox.md` (append, timestamped).
-- **"About me" facts** (strengths, values, watch-outs, preferences) → `02_Areas/knowledge_base/` as entries following `kb.schema.json` (this powers the searchable knowledge base).
 - **Area notes** → one file per area under `02_Areas/`, each starting with frontmatter (`title/area/type/tags/updated`).
 - **The hero mission** → `dashboard/mission.json` following `mission.schema.json` (pick a `slug`, fill `hero`, `week`, `evidence`). Snapshot the demo mission into `archive/` first if you're replacing it.
 

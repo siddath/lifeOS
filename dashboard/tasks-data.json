@@ -1,0 +1,15 @@
+{
+  "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
+  "_comment": "First-run task seed for the dashboard. On a fresh browser (empty local storage) the dashboard hydrates its Tasks list from this file, so an AI can write real tasks here and the user sees them without touching the UI. Shape: schemas/tasks.schema.json (id/status/notionId/updatedAt are filled in on load). Demo persona: Alex Rivera.",
+  "updatedAt": "2026-07-09",
+  "tasks": [
+    { "title": "Nail the core capture → recall loop", "area": "fieldnotes", "priority": "P1", "status": "open", "due": "" },
+    { "title": "Write first-run onboarding copy", "area": "fieldnotes", "priority": "P1", "status": "open", "due": "" },
+    { "title": "Fix the top-5 known bugs", "area": "career", "priority": "P1", "status": "open", "due": "" },
+    { "title": "20-30 min with Sam, no work talk", "area": "relationship", "priority": "P1", "status": "open", "due": "" },
+    { "title": "Plan a special dinner with Sam", "area": "relationship", "priority": "P3", "status": "open", "due": "" },
+    { "title": "Photograph this week's pottery pieces", "area": "pottery", "priority": "P3", "status": "open", "due": "" },
+    { "title": "Finish the current course module", "area": "learning", "priority": "P3", "status": "open", "due": "" },
+    { "title": "Renew the apartment lease", "area": "admin", "priority": "P3", "status": "open", "due": "" }
+  ]
+}

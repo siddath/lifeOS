@@ -20,9 +20,9 @@ The principle underneath all of them: **ingestion is prompt-driven against `sche
 
 Open your assistant in the repo folder and tell it: *"Read `AGENTS.md` and help me set up LifeOS."* It follows the Onboarding section there — recognizes the demo persona as placeholder, asks you a few things (name, timezone, currency, the life **areas** you track, your current **one main thing**), then:
 
-1. Writes `lifeos.config.json` (personalized from `lifeos.config.example.json`): identity, area codes, enabled modules, integration toggles.
+1. Writes `dashboard/lifeos.config.json` (copied from `dashboard/lifeos.config.example.json`): identity, area codes, enabled modules, integration toggles. It's safe to commit — no secrets live in it — and committing it inside `dashboard/` is what personalizes a deploy.
 2. Drafts your first **mission** into `dashboard/mission.json` (validated against `schemas/mission.schema.json`) — hero title, gate date, week plan, evidence.
-3. Seeds starter **tasks**, **habits**, and **knowledge-base** entries against their schemas.
+3. Seeds starter **tasks** (`dashboard/tasks-data.json`), **habits** (`dashboard/habits-data.json`), and **knowledge-base** entries (`dashboard/kb-data.json`) against their schemas — the exact files the dashboard renders from.
 4. Tells you what's next (deploy, or wire a connector).
 
 Because it writes against the schemas, everything renders in the dashboard immediately. Review, tweak the wording, and you're live.
@@ -52,10 +52,10 @@ This is the "I have stuff, just make it structured" path.
 
 If you'd rather live in Notion on mobile and use the dashboard on desktop, hydrate from a Notion template:
 
-1. **Duplicate the public Notion template** into your own workspace (the template ships the Tasks and Habits databases with the exact property names LifeOS expects).
+1. **Create two Notion databases — Tasks and Habits — with the exact property names LifeOS expects.** The property tables in [connectors/notion.md](connectors/notion.md) (Step 4) are the spec; building them by hand takes a couple of minutes. (A prebuilt duplicate-me template is planned but not shipped yet.)
 2. **Create an internal integration** and share those databases with it; copy the **API key** and the two **database IDs**.
 3. **Set the env vars** — `NOTION_API_KEY`, `NOTION_DATABASE_ID_TASKS`, `NOTION_DATABASE_ID_HABITS`, and a `SYNC_SHARED_SECRET` — locally in `.env` and in your host.
-4. **Run the pull** (`api/notion-pull.js`, or the pull button in the dashboard's sync bar). It hydrates local task/habit data from Notion, and pushes flow back the same way.
+4. **Run the pull** (`api/notion-pull.js`, or the **Pull** button in the dashboard's dock). It hydrates local task/habit data from Notion, and pushes flow back the same way.
 
 Full walkthrough with the exact property names and select-option values: **[connectors/notion.md](connectors/notion.md)**.
 

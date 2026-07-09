@@ -11,10 +11,10 @@
 1. **Recognize the placeholders.** If you see Alex Rivera / Portland / Fieldnotes / pottery, or a `"_DEMO"` key, treat it as a fill-me-in template — never as the user's real life.
 2. **Get their material.** Ask them about themselves, or take whatever they hand you: a paragraph, a brain-dump, an old journal, an exported Obsidian vault, a Notion export, a folder of loose files, a task list. Whatever form it's in is fine — the mapping is your job, not theirs. Don't make them reformat anything.
 3. **Map it onto the schemas.** The files in `schemas/` are the contract. Read the relevant schema, then write conforming data:
-   - identity, area codes, currency, enabled modules → `lifeos.config.json` (copy `lifeos.config.example.json`, replace the demo values; it's gitignored, holds no secrets)
+   - identity, area codes, currency, enabled modules → `dashboard/lifeos.config.json` (copy `dashboard/lifeos.config.example.json`, replace the demo values). It's **safe to commit** — identity + toggles, never secrets — and committing it inside `dashboard/` is exactly what personalizes a static deploy.
    - the one thing they're driving toward → `dashboard/mission.json` (`mission.schema.json`)
-   - their tasks → the tasks shape (`tasks.schema.json`); recurring things → habits (`habits.schema.json`)
-   - facts about them (strengths, values, watch-outs, preferences, one per life area) → the knowledge base (`kb.schema.json`)
+   - their tasks → `dashboard/tasks-data.json` (`tasks.schema.json`); recurring things → `dashboard/habits-data.json` (`habits.schema.json`). These two files are what the dashboard hydrates from on first run, so writing them is how the user sees tasks/habits without touching the UI. (A vault mirror at `06_Trackers/tasks.md` / `habits.md` is an optional long-form layer.)
+   - facts about them (strengths, values, watch-outs, preferences, one per life area) → `dashboard/kb-data.json` (`kb.schema.json`) — the surface the Knowledge Base page renders. Keep `02_Areas/knowledge_base/*.md` as an optional long-form layer; the page reads the JSON, not the markdown.
    - money → `dashboard/finance-data.json` (`finance.schema.json`)
 4. **Snapshot before you overwrite.** Move demo content into `archive/` rather than deleting it, and confirm before replacing a file the user might have touched.
 5. **Stop when it renders as them.** Open `dashboard/index.html` — their name, areas, and mission should appear. Don't gold-plate the first session; get them a working vault, then iterate.
@@ -55,7 +55,7 @@ The vault is plain Markdown + JSON so it stays portable, greppable, and yours. F
 - `03_Projects/` — ongoing ventures and projects, each with its own notes and (optionally) subagent roles.
 - `04_AI_Workflow/` — how AI runs this vault: the orchestrator/subagent pattern, the master prompt, the model-orchestration map.
 - `05_Checklists/` — reusable checklists (topic-wise and situational).
-- `06_Trackers/` — the live state layer: `tasks.md`, `habits.md`, `reminders.md`, `inbox.md`, `evidence.md`. This is the shared memory that skills and subagents read and write.
+- `06_Trackers/` — the live state layer. The repo ships blank `*.template.md` files here (`tasks.template.md`, `habits.template.md`, `reminders.template.md`, `inbox.template.md`, `evidence.template.md`, `finance.template.md`); your live `tasks.md`, `habits.md`, etc. are created from them on first setup. This is the shared memory that skills and subagents read and write. (What the *dashboard* renders lives as JSON in `dashboard/` — `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json` — per the schemas.)
 - `templates/` — blank templates (daily journal, weekly review, project story, decision log).
 - `dashboard/` — the interactive dashboard (`index.html`) whose hero renders from `mission.json`.
 - `api/` — serverless sync functions (e.g. optional two-way Notion sync).
@@ -68,7 +68,7 @@ The vault is plain Markdown + JSON so it stays portable, greppable, and yours. F
 
 Live state has schemas in `schemas/`. Skills and sync code should honor them:
 
-- `lifeos.config.schema.json` — identity, area codes, enabled modules. Read `lifeos.config.json` for the current instance.
+- `lifeos.config.schema.json` — identity, area codes, enabled modules. Read `dashboard/lifeos.config.json` for the current instance (falling back to `dashboard/lifeos.config.example.json`).
 - `mission.schema.json` — the hero mission (`dashboard/mission.json`).
 - `tasks.schema.json`, `habits.schema.json`, `finance.schema.json`, `kb.schema.json` — trackers and knowledge base.
 

@@ -537,18 +537,18 @@
   <!-- ============ HERO ZONE: the one thing ============ -->
   <section id="hero" class="section" style="margin-top:0" aria-label="The one thing">
     <div class="countdown" id="countdown"></div>
-    <p class="mission" id="heroMission">Calm. Prepared. Sharp. Clear about my value.</p>
+    <p class="mission" id="heroMission">Finished, not perfect. One block a day beats a weekend binge.</p>
 
     <div class="hero-one">
       <div class="one-tag" id="heroOneTag">🎯 The one thing right now</div>
-      <p class="one-do" id="heroOneDo">Do the day's top interview task — and only that.</p>
-      <p class="one-why" id="heroOneWhy">Pick the P1 at the top of Tasks below. Finish it before you open anything else. That is the win.</p>
-      <p class="one-reframe" id="heroOneReframe">No spiral. Enough for launch means: the core loop works, it feels finished, real people can use it. You don't need perfect — you need shipped.</p>
+      <p class="one-do" id="heroOneDo">Do today's single build block — one feature or one fix — and ship it.</p>
+      <p class="one-why" id="heroOneWhy">Open the launch checklist, do the block for today, tick it. One finished thing is the win. Don't open the whole backlog and spiral about everything left.</p>
+      <p class="one-reframe" id="heroOneReframe">A launch is a hundred small finished things, not one heroic weekend. You're not behind — you're building the machine that makes shipping ordinary.</p>
     </div>
 
-    <div class="rule" id="heroRule">⏱️ <strong>This week's rule:</strong> every task answers — <em>"Does this help ship the beta?"</em> If yes, do it. If no, park it. Always-OK: Sam · sleep · food · health · unavoidable family/admin.</div>
+    <div class="rule" id="heroRule">⏱️ <strong>This month's rule:</strong> every build day, one honest block beats a perfect plan. <em>Did I ship one real thing today?</em> If yes, that day counts. Always-OK: Sam · sleep · food · health · the day job.</div>
 
-    <div class="reframe" id="heroReframe">Think once → Build → Measure → Improve. This week ends with evidence, not ideas.</div>
+    <div class="reframe" id="heroReframe">Think once → Build → Measure → Improve. Shipped things are evidence. Log them, don't just plan them.</div>
 
     <div class="progress"><div id="progbar"></div></div>
     <p class="mission" id="progtext">0% of tracked items done</p>
@@ -1143,7 +1143,7 @@
   loadMission();
 
   /* ============================================================
-     THEME (day / evening) — warm light or warm dark, his choice,
+     THEME (day / evening) — warm light or warm dark, your choice,
      defaulting to the OS preference. Persisted on this device.
      ============================================================ */
   function effectiveTheme(){
@@ -1384,12 +1384,17 @@
   function getHabits(){ return JSON.parse(localStorage.getItem('lifeos_habits_v1')||'[]'); }
   function setHabits(h){ localStorage.setItem('lifeos_habits_v1', JSON.stringify(h)); }
 
-  // DEMO DATA — the tasks/habits below are placeholder seeds for the "Alex Rivera" persona,
-  // written to localStorage on first run so a fresh clone looks alive. Replace them with your
-  // own (edit in the UI, or have your AI seed them per schemas/tasks.schema.json + habits.schema.json).
+  // DEMO DATA — first-run seeds for the "Alex Rivera" persona so a fresh clone looks alive.
+  // On first run the dashboard prefers the committed files dashboard/tasks-data.json +
+  // dashboard/habits-data.json (see hydrateSeedsFromFiles below) so an AI can write real
+  // tasks/habits there and the user sees them; the literals here are the offline fallback
+  // used only if those files can't be fetched (e.g. file:// with fetch blocked). Either way,
+  // they only write when local storage is empty. Shapes: schemas/tasks|habits.schema.json.
   // See DEMO_DATA.md and AGENTS.md → Onboarding.
+  const _seededInlineThisLoad = { tasks:false, habits:false };
   function seedIfEmpty(){
     if(!localStorage.getItem('lifeos_tasks_v1')){
+      _seededInlineThisLoad.tasks = true;
       const now = nowIso();
       const seed = [
         {title:'Nail the core capture → recall loop', area:'fieldnotes', priority:'P1', due:''},
@@ -1404,6 +1409,7 @@
       setTasks(seed);
     }
     if(!localStorage.getItem('lifeos_habits_v1')){
+      _seededInlineThisLoad.habits = true;
       const now = nowIso(); const weekOf = currentWeekMonday();
       const names = ['Workout / strength','10k steps','Morning sunlight','Meditation 10-15 min','Water ~3 L','Vitamins','Read 30 min','Sleep early 7+ hrs','Time with Sam','Deep-work block'];
       const keystones = new Set(['Sleep early 7+ hrs','Workout / strength','Time with Sam','Meditation 10-15 min']);
@@ -1413,6 +1419,42 @@
     }
   }
   seedIfEmpty();
+
+  // FILE HYDRATION — prefer the committed seed files over the inline fallback on first run,
+  // so an AI can populate dashboard/tasks-data.json + dashboard/habits-data.json and a user
+  // with an empty browser sees exactly that. We only replace data WE just wrote inline this
+  // load (via _seededInlineThisLoad) — a returning user's real edits are never touched.
+  async function hydrateSeedsFromFiles(){
+    if(_seededInlineThisLoad.tasks){
+      try{
+        const r = await fetch('tasks-data.json',{cache:'no-store'});
+        if(r.ok){ const d = await r.json();
+          if(Array.isArray(d.tasks) && d.tasks.length){
+            const now = nowIso();
+            setTasks(d.tasks.map(t=>({ id:uid(), title:t.title||'Untitled', area:t.area||'mindset',
+              priority:t.priority||'P3', status:t.status||'open', due:t.due||'', notionId:null, updatedAt:now })));
+          }
+        }
+      }catch(e){ /* file:// or offline — keep the inline fallback */ }
+    }
+    if(_seededInlineThisLoad.habits){
+      try{
+        const r = await fetch('habits-data.json',{cache:'no-store'});
+        if(r.ok){ const d = await r.json();
+          if(Array.isArray(d.habits) && d.habits.length){
+            const now = nowIso(), weekOf = currentWeekMonday();
+            setHabits(d.habits.map(h=>({ id:uid(), name:h.name||'Untitled habit', keystone:!!h.keystone,
+              active:h.active!==false, cadence:h.cadence||'Daily', weekOf,
+              days:{mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false},
+              notionId:null, updatedAt:now })));
+          }
+        }
+      }catch(e){ /* keep inline fallback */ }
+    }
+    if(typeof renderTasks === 'function') renderTasks();
+    if(typeof renderHabits === 'function') renderHabits();
+    if(typeof renderHabitHistory === 'function') renderHabitHistory();
+  }
 
   // ---- Habit-week rollover: archive last week's matrix so streaks aren't lost ----
   function getHabitHistory(){ return JSON.parse(localStorage.getItem('lifeos_habits_history_v1')||'{}'); }
@@ -1682,6 +1724,7 @@
   document.getElementById('habitQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addHabitFromQuickAdd(); }});
 
   renderTasks(); renderHabits(); renderHabitHistory();
+  hydrateSeedsFromFiles();  // swap the inline fallback for the committed seed files when reachable
 
   /* ============================================================
      SYNC PIPELINE — queues edits, pushes to /api/notion-sync,
@@ -1734,6 +1777,7 @@
     try{
       const res = await fetch(SYNC_PUSH, { method:'POST', headers:syncHeaders({'Content-Type':'application/json'}), body: JSON.stringify({items:q}) });
       if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); return; }
+      if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Sync rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }  // stop looping; wait for the user to set the key
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
       applyResults(data.results||[]);
@@ -1767,6 +1811,7 @@
     try{
       const res = await fetch(SYNC_PULL, { headers:syncHeaders() });
       if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); syncNote('Notion sync isn’t configured yet on this deployment — see docs/connectors/notion.md'); return; }
+      if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Pull rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
       mergeRemoteTasks(data.tasks||[]); mergeRemoteHabits(data.habits||[]);
@@ -2208,6 +2253,15 @@
     const nb = document.getElementById('openNotionBtn');
     const nu = (LIFEOS.deployment && LIFEOS.deployment.notionPageUrl) || '';
     if(nb){ if(nu){ nb.href = nu; nb.hidden = false; } else nb.hidden = true; }
+    // Module toggles: hide a surface (and its nav/dock links) when explicitly switched off.
+    // `=== false` so an absent or true flag keeps the surface visible (default-on).
+    const mods = LIFEOS.modules || {};
+    if(mods.finance === false){
+      const fin = document.getElementById('finance'); if(fin) fin.hidden = true;
+      document.querySelectorAll('a[href="#finance"]').forEach(a=>{ a.hidden = true; });
+    }
+    if(mods.anchor === false){ document.querySelectorAll('a[href="anchor.html"]').forEach(a=>{ a.hidden = true; }); }
+    if(mods.knowledge_base === false){ document.querySelectorAll('a[href="knowledge.html"]').forEach(a=>{ a.hidden = true; }); }
     if(typeof renderGreeting === 'function') renderGreeting();
     if(typeof buildComposerChips === 'function') buildComposerChips();
     if(typeof refreshComposerChips === 'function') refreshComposerChips();

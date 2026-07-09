@@ -22,13 +22,15 @@ It's ignored by the schemas (none use `additionalProperties: false`) and by the 
 Files that carry it:
 
 - `dashboard/mission.json` — the demo hero mission ("Operation Launch Week")
+- `dashboard/tasks-data.json` — the demo first-run task list (hydrates the dashboard)
+- `dashboard/habits-data.json` — the demo first-run habit matrix
 - `dashboard/kb-data.json` — the demo knowledge base (one entry per life area)
 - `dashboard/finance-data.json` — demo net-worth and budget numbers
-- `lifeos.config.example.json` — the demo identity, areas, and currency
+- `dashboard/lifeos.config.example.json` — the demo identity, areas, and currency
 
 **Markdown files use `<!-- lifeos:fill -->`.** Anywhere a template wants your input, it leaves that marker inline. Replace the surrounding text with something true for you and delete the marker. `AGENTS.md`, `00_START_HERE.md`, and the files under `02_Areas/` use this.
 
-**The dashboard's inline seed** (the first-run tasks and habits written to your browser's local storage) is commented as demo data in `dashboard/index.html`, right above the `seedIfEmpty()` function. It only writes if local storage is empty, so once you add your own tasks it never comes back.
+**First-run tasks and habits** hydrate from `dashboard/tasks-data.json` and `dashboard/habits-data.json` when local storage is empty — so an AI can write real tasks/habits into those files and you'll see them without touching the UI. If those files can't be fetched (e.g. `file://` blocking fetch), the dashboard falls back to an inline seed commented as demo data in `dashboard/index.html`, right above the `seedIfEmpty()` function. Either way it only writes when local storage is empty, so once you add your own tasks it never comes back.
 
 **The `examples/alex/` folder** is deliberately, entirely demo — a fully worked vault showing what the blank templates look like filled in. Read it for tone, then delete it whenever you like; nothing depends on it.
 
@@ -36,7 +38,7 @@ Files that carry it:
 
 You don't have to do this by hand. Open your AI assistant in the repo, point it at [`AGENTS.md`](AGENTS.md), and let it walk the onboarding: it recognizes the markers above, asks for your real context (or reads whatever you hand it), and writes schema-valid files in place of the demo. If you use Claude Code, `/setup` does the same thing as a guided interview.
 
-If you'd rather do it yourself: copy `lifeos.config.example.json` to `lifeos.config.json`, edit the four demo JSON files against their schemas in [`schemas/`](schemas/), replace the `<!-- lifeos:fill -->` markers, and clear the demo tasks/habits from the dashboard UI (or your browser's local storage). That's the whole job.
+If you'd rather do it yourself: copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json`, edit the demo JSON files (`mission.json`, `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json`) against their schemas in [`schemas/`](schemas/), replace the `<!-- lifeos:fill -->` markers, and clear the demo tasks/habits from the dashboard UI (or your browser's local storage). That's the whole job.
 
 ## One thing to keep
 

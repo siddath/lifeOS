@@ -47,13 +47,14 @@
     },
     "modules": {
       "type": "object",
+      "description": "Surface toggles. finance/anchor/knowledge_base are wired: false hides that surface and its nav/dock links. missions/trackers are reserved (always-on core; flag not yet read). flashcards is reserved (page not shipped in v1).",
       "properties": {
-        "missions": { "type": "boolean" },
-        "trackers": { "type": "boolean" },
-        "finance": { "type": "boolean" },
-        "knowledge_base": { "type": "boolean" },
-        "anchor": { "type": "boolean" },
-        "flashcards": { "type": "boolean" }
+        "missions": { "type": "boolean", "description": "Reserved — hero mission is always on." },
+        "trackers": { "type": "boolean", "description": "Reserved — tasks/habits are always on." },
+        "finance": { "type": "boolean", "description": "Wired — false hides the Finance surface and its links." },
+        "knowledge_base": { "type": "boolean", "description": "Wired — false hides the Knowledge Base links." },
+        "anchor": { "type": "boolean", "description": "Wired — false hides the Inner OS / Anchor links." },
+        "flashcards": { "type": "boolean", "description": "Reserved — study-deck page not shipped in v1." }
       }
     },
     "repo": {
