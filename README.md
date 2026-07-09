@@ -13,8 +13,10 @@
 
 > The deploy button points at this repo. If you fork LifeOS, change `siddath/lifeOS` to your own handle so it deploys your copy.
 
-<!-- Screenshot: capture dashboard/index.html running the demo persona and drop it in as docs/assets/hero-desktop-light.png. Capture list: docs/assets/README.md -->
-<p align="center"><em>Screenshot goes here — see <a href="docs/assets/README.md">docs/assets/README.md</a> for the capture list.</em></p>
+<p align="center">
+  <img src="docs/assets/hero-desktop-light.png" alt="The LifeOS dashboard running the demo persona: the Operation Launch Week hero mission with a live countdown, the one thing to do right now, the sync/nav dock, and the quote engine." width="840">
+  <br><em>The dashboard running the demo persona — swap one config file and it renders your life instead.</em>
+</p>
 
 ---
 
