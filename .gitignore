@@ -3,12 +3,17 @@ node_modules/
 *.log
 .DS_Store
 
-# Secrets & personal instance config — ship only the .example versions
+# Secrets — ship only the .example versions. Real keys never get committed.
 .env
 .env.*
 !.env.example
-lifeos.config.json
 .mcp.json
+
+# Your instance config is SAFE TO COMMIT: dashboard/lifeos.config.json holds
+# identity + toggles, never secrets — and committing it is how a static deploy
+# (Vercel/GitHub Pages) actually renders as YOU instead of the demo persona.
+# We only ignore the legacy repo-root copy (superseded by the dashboard/ one).
+/lifeos.config.json
 
 # Your private life data (the framework ships only templates + the demo persona)
 02_Areas/**/*.md

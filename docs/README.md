@@ -39,7 +39,7 @@ This folder is the map. Start with whichever door fits you.
 
 ## Core files referenced throughout
 
-- `lifeos.config.json` — your identity, areas, enabled modules, and integration toggles (copy from `lifeos.config.example.json`).
+- `dashboard/lifeos.config.json` — your identity, areas, enabled modules, and integration toggles (copy from `dashboard/lifeos.config.example.json`; safe to commit — it holds no secrets, and committing it inside `dashboard/` is what personalizes a deploy).
 - `schemas/` — JSON Schemas for tasks, habits, mission, finance, and the knowledge base. These are the contract every surface and every importer agrees on.
 - `dashboard/` — the static single-page dashboard and its data files (`mission.json`, `finance-data.json`, `quotes.json`).
 - `api/` — optional Vercel serverless functions for Notion sync.

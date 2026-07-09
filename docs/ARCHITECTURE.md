@@ -24,7 +24,7 @@ The guiding idea: **your life data is plain text and open JSON; everything else 
 
 All three agree on one **contract**:
 
-- **`lifeos.config.json`** — who you are (name, timezone, currency, greeting), your **area codes**, which **modules** are on, and which **integrations** are enabled.
+- **`dashboard/lifeos.config.json`** — who you are (name, timezone, currency, greeting), your **area codes**, which **modules** are on, and which **integrations** are enabled. It lives inside the deploy root (`dashboard/`) so a hosted dashboard reads it; copy it from `dashboard/lifeos.config.example.json`. Safe to commit (identity + toggles, never keys).
 - **`schemas/`** — JSON Schemas for `tasks`, `habits`, `mission`, `finance`, and the `kb` (knowledge base). Every surface and every importer validates against these, so nothing drifts.
 
 Below the contract sits the **optional** machinery:

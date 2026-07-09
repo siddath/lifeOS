@@ -21,21 +21,28 @@ function requireAuth(req, res) {
   return false;
 }
 
-// Area code -> Notion select-option label, driven by lifeos.config.json (falls back to the
-// example). Keeps the dashboard and the sync layer from ever drifting on area names.
+// Area code -> Notion select-option label, driven by the committed config in the static
+// root (dashboard/), falling back to the shipped example. The config lives under dashboard/
+// because that is the deploy root; vercel.json's `functions.includeFiles` bundles
+// dashboard/lifeos.config*.json into this function so the paths below resolve at runtime.
+// Paths are explicit literals (not a loop-built filename) so Vercel's file tracer can see them.
+function readConfig(p) {
+  try {
+    const cfg = JSON.parse(fs.readFileSync(p, 'utf8'));
+    if (Array.isArray(cfg.areas) && cfg.areas.length) return cfg;
+  } catch (e) { /* not here */ }
+  return null;
+}
 function loadAreaMap() {
-  const roots = [path.join(__dirname, '..')];
-  for (const root of roots) {
-    for (const f of ['lifeos.config.json', 'lifeos.config.example.json']) {
-      try {
-        const cfg = JSON.parse(fs.readFileSync(path.join(root, f), 'utf8'));
-        if (Array.isArray(cfg.areas) && cfg.areas.length) {
-          const map = {};
-          cfg.areas.forEach((a) => { map[a.code] = a.notion || a.label || a.code; });
-          return map;
-        }
-      } catch (e) { /* try next */ }
-    }
+  const cfg =
+    readConfig(path.join(__dirname, '..', 'dashboard', 'lifeos.config.json')) ||
+    readConfig(path.join(__dirname, '..', 'dashboard', 'lifeos.config.example.json')) ||
+    readConfig(path.join(__dirname, '..', 'lifeos.config.json')) ||         // legacy repo-root copy
+    readConfig(path.join(__dirname, '..', 'lifeos.config.example.json'));   // legacy repo-root copy
+  if (cfg) {
+    const map = {};
+    cfg.areas.forEach((a) => { map[a.code] = a.notion || a.label || a.code; });
+    return map;
   }
   return { mindset: 'Mindset' };
 }

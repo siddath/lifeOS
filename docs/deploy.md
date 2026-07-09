@@ -8,9 +8,11 @@ updated: 2026-07
 
 # Deploy the dashboard
 
-The LifeOS dashboard (`dashboard/`) is a **static site** — plain HTML/JS, no build step. You can open `dashboard/index.html` straight from disk, or host it so it's always-live and on your phone. This guide covers Vercel; any static host works the same way.
+The LifeOS dashboard (`dashboard/`) is a **static site** — plain HTML/JS, no build step. Serve it (locally with `python3 -m http.server`, or hosted) so its JSON fetches work; opening `index.html` straight from disk mostly works but `file://` blocks some fetches. This guide covers Vercel; any static host works the same way.
 
-**It works with zero configuration.** Deployed with **no environment variables**, the dashboard renders fully from the committed JSON (`mission.json`, `finance-data.json`, `quotes.json`) and stores checkbox state in the browser's `localStorage`. Connectors like Notion sync simply stay dormant until you add their keys — this is intentional **graceful degradation**, not an error state.
+**It works with zero configuration.** Deployed with **no environment variables**, the dashboard renders fully from the committed JSON in `dashboard/` (`lifeos.config.json` or its `.example`, `mission.json`, `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json`, `quotes.json`) and stores checkbox state in the browser's `localStorage`. Connectors like Notion sync simply stay dormant until you add their keys — this is intentional **graceful degradation**, not an error state.
+
+**To personalize a deploy**, commit `dashboard/lifeos.config.json` (copied from the `.example` and edited). It's safe to commit — identity + toggles, never secrets — and because it lives in the deploy root, the hosted dashboard renders as you instead of the demo persona.
 
 ---
 

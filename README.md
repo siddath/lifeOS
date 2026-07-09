@@ -48,13 +48,19 @@ There's also a set of Claude Code skills (`/setup`, `/daily-brief`, `/weekly-rev
 
 ```bash
 git clone https://github.com/siddath/lifeOS.git
-cd lifeos
+cd lifeOS
 
 # Optional — make it yours. Skip it and you'll see the demo persona.
-cp lifeos.config.example.json lifeos.config.json
+# This file is safe to commit (identity + toggles, no secrets); committing it
+# is exactly what makes a deploy render as you instead of the demo.
+cp dashboard/lifeos.config.example.json dashboard/lifeos.config.json
 
-# Open the dashboard. No build step.
-open dashboard/index.html        # or: python3 -m http.server 8000
+# Serve the dashboard — recommended, because file:// blocks the JSON fetches it needs
+# (config, mission, tasks/habits seeds). No build step.
+python3 -m http.server 8000      # then open http://localhost:8000/dashboard/
+
+# Zero-server fallback (works, but some data may not load under file://):
+open dashboard/index.html
 ```
 
 Then open your AI assistant in this folder and tell it to read `AGENTS.md` and help you get started. It'll ask about you (or take whatever notes you already have), write your `lifeos.config.json`, and fill in your first mission, tasks, and knowledge base. If you use Claude Code, `/setup` does the same thing as a guided interview.
@@ -100,7 +106,7 @@ Import is prompt-driven against the schemas, not a rigid importer — so it work
 |---|---|---|
 | **Just talk to your AI** | Point it at `AGENTS.md`, answer a few questions, and it writes your config, mission, tasks, and knowledge base against the schemas. | ~10 min |
 | **Paste your notes** | Hand it a brain-dump, an old journal, a task list — messy is fine. It maps them onto the schemas and hands back valid data files. | ~10 min |
-| **Notion** | Duplicate the Notion template, set four env vars, pull — the dashboard hydrates from your Notion databases and syncs both ways. | ~10 min |
+| **Notion** | Build two small Notion databases from the property tables in the guide, set four env vars, pull — the dashboard hydrates from your Notion databases and syncs both ways. | ~10 min |
 | **Existing tools over MCP** | Let the AI read your calendar and notes over MCP and bootstrap the vault from what's already there. | ~20 min |
 
 Details, including the demo persona and how the AI recognizes it as placeholder: [docs/onboarding.md](docs/onboarding.md). The placeholder convention itself is in [DEMO_DATA.md](DEMO_DATA.md).
@@ -110,7 +116,7 @@ Details, including the demo persona and how the AI recognizes it as placeholder:
 | Connector | What v1 gives you | Setup |
 |---|---|---|
 | **Vercel** | Deploy button + `vercel.json` | One click |
-| **Notion** | Two-way Tasks/Habits sync + a template with the exact property names the code expects | ~10 min, [guide](docs/connectors/notion.md) |
+| **Notion** | Two-way Tasks/Habits sync; build two DBs by hand from the exact property tables in the guide | ~10 min, [guide](docs/connectors/notion.md) |
 | **Google** (Cal/Gmail/Drive) | Read access over MCP today; serverless sync is on the roadmap | Via MCP |
 | **GitHub** | `repo.url` in config wires the vault-is-a-repo links | One line |
 | **Broker** | Any broker's public MCP endpoint; the finance card also takes manual JSON | Via MCP |

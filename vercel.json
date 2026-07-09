@@ -1,5 +1,10 @@
 {
   "version": 2,
   "buildCommand": "",
-  "outputDirectory": "dashboard"
+  "outputDirectory": "dashboard",
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "dashboard/lifeos.config*.json"
+    }
+  }
 }
