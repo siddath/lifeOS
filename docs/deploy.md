@@ -68,7 +68,7 @@ None of these are required to deploy. Add them only for the features you want. S
 | `NOTION_API_KEY` | Notion two-way sync | Internal integration token. |
 | `NOTION_DATABASE_ID_TASKS` | Tasks sync | The **database id** (URL slug), not a `collection://` id. |
 | `NOTION_DATABASE_ID_HABITS` | Habits sync | Same rule. |
-| `SYNC_SHARED_SECRET` | Auth for dashboard → serverless calls | Any long random string; set the **identical** value in the dashboard config. If unset, the sync endpoints are open (fine locally, **not** for a public deployment). |
+| `SYNC_SHARED_SECRET` | Auth for dashboard → serverless calls | Any long random string. Set the **identical** value in the dashboard via the **🔑 Sync key** button in the sync bar (stored per-browser, never committed). If unset on the server, the sync endpoints are open (fine locally, **not** for a public deployment). |
 
 Full Notion walkthrough (including the exact property names and where to find the database id): **[connectors/notion.md](connectors/notion.md)**.
 

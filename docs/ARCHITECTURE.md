@@ -20,7 +20,7 @@ The guiding idea: **your life data is plain text and open JSON; everything else 
 
 1. **The Dashboard** (`dashboard/`) — a static, single-page HTML/JS app. No build step, no framework, `localStorage` for client state. It renders the current hero mission, tasks, habits, knowledge, finance, and the Anchor. Trivially self-hostable or archivable.
 2. **The Markdown Vault** (GitHub / Obsidian) — long-form, evergreen, human-readable content: your notes, project specs, routines, reviews. Git-versioned, offline-first. The repo *is* an Obsidian vault (relative Markdown links, YAML frontmatter), so a graph view and Dataview queries come for free.
-3. **Claude Code + skills** — the AI layer. Skills like `/setup`, `/daily-brief`, and `/weekly-review` read the vault and config, then write structured data back. Onboarding and ingestion are **prompt-driven against `schemas/`**, not a bespoke parser.
+3. **An AI assistant** — the AI layer, and it can be any of them (Claude, ChatGPT, Cursor, Copilot, Gemini). It reads the vault and config, then writes structured data back. Onboarding and ingestion are **prompt-driven against `schemas/`**, not a bespoke parser — which is exactly why the assistant is interchangeable. Claude Code users get bundled skills (`/setup`, `/daily-brief`, `/weekly-review`) that script the common flows; everyone else drives the same schemas from `AGENTS.md`.
 
 All three agree on one **contract**:
 
@@ -30,7 +30,7 @@ All three agree on one **contract**:
 Below the contract sits the **optional** machinery:
 
 - **`api/` serverless functions** — small Vercel functions (`notion-sync.js`, `notion-pull.js`) that push/pull the Tasks and Habits databases to **Notion**. Authenticated with a shared secret. Entirely optional — with no env vars, the dashboard degrades gracefully to local-only.
-- **MCP connectors** — Claude reads/writes external systems (Google Workspace, a broker, GitHub) through the Model Context Protocol. In v1 these are docs-first and optional.
+- **MCP connectors** — your assistant reads/writes external systems (Google Workspace, a broker, GitHub) through the Model Context Protocol. Any MCP-capable client works. In v1 these are docs-first and optional.
 
 ---
 
@@ -42,7 +42,7 @@ flowchart TD
 
     You --> Dash["Dashboard<br/>(static, dashboard/)"]
     You --> Vault["Markdown Vault<br/>(GitHub / Obsidian)"]
-    You --> Claude["Claude Code<br/>+ skills"]
+    You --> Claude["AI assistant<br/>(any tool)"]
 
     subgraph Contract["The contract"]
         Config["lifeos.config.json<br/>(identity · areas · modules)"]
@@ -74,7 +74,7 @@ Solid edges are always-on paths within the repo. **Dashed edges are MCP connecto
 ## Data tiers (where each kind of thing lives)
 
 **Tier 1 — Source of truth (Markdown in Git).**
-Long-form, evergreen content that changes infrequently: notes, project specs, routines, weekly reviews, guides. Git-versioned, portable, offline-first, and directly readable/editable by Claude. This tier never depends on any external service.
+Long-form, evergreen content that changes infrequently: notes, project specs, routines, weekly reviews, guides. Git-versioned, portable, offline-first, and directly readable/editable by any assistant. This tier never depends on any external service.
 
 **Tier 2 — Structured data (JSON, schema-validated).**
 The machine-readable state the dashboard renders: `dashboard/mission.json` (the hero), `dashboard/finance-data.json`, tasks, habits, and the knowledge base. Each conforms to a file in `schemas/`. This is what importers write to and what connectors sync.
@@ -101,7 +101,7 @@ LifeOS is designed so sync can grow without reworking the vault:
 
 - **Manual / local (default).** You edit files; the dashboard reads them. No services, no secrets.
 - **Two-way Notion sync (built, optional).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Notion is the mobile front-end; the repo stays source of truth. See [connectors/notion.md](connectors/notion.md).
-- **Calendar / mail / broker (planned, MCP-only for now).** Today Claude can read these live over MCP; dedicated serverless sync functions are on the roadmap, not shipped. See [ROADMAP.md](ROADMAP.md).
+- **Calendar / mail / broker (planned, MCP-only for now).** Today an MCP-capable assistant can read these live; dedicated serverless sync functions are on the roadmap, not shipped. See [ROADMAP.md](ROADMAP.md).
 
 ---
 
@@ -123,7 +123,7 @@ LifeOS is designed so sync can grow without reworking the vault:
 | Dashboard | Plain HTML5 + JS | Zero build, one file, fast, trivially archivable |
 | Hosting | Static host (e.g. Vercel) | Git-native, free tier, serverless functions, CDN |
 | Mobile mirror | Notion (optional) | Great mobile app, filtering, zero learning curve |
-| AI layer | Claude Code + skills | Reads the vault, writes schema-valid data |
+| AI layer | Any assistant (schemas + `AGENTS.md`) | Reads the vault, writes schema-valid data; not tied to one tool |
 | External systems | MCP connectors | Managed, uniform integration surface |
 
 ---

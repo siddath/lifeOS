@@ -94,9 +94,10 @@ SYNC_SHARED_SECRET=<any-long-random-string>
 
 ### About `SYNC_SHARED_SECRET`
 
-This authenticates the **dashboard → serverless** calls. The dashboard sends it as an `X-Sync-Secret` header (or `Authorization: Bearer …`); the function compares it to `SYNC_SHARED_SECRET`. Set the **identical** value in the dashboard config.
+This authenticates the **dashboard → serverless** calls. The dashboard sends it as an `X-Sync-Secret` header; the function compares it to `SYNC_SHARED_SECRET`. The dashboard doesn't read the value from an env var (it's static — it can't), so you set the matching key **in the dashboard itself**: click **🔑 Sync key** in the sync bar and paste the same string. It's stored in that browser's local storage and never committed, so do it once per device.
 
-- **If unset**, the sync endpoints are **open** — acceptable for local development only. For any deployment reachable on the internet, set it, or anyone who finds your function URL can write to your Notion.
+- **If unset on the server**, the sync endpoints are **open** — acceptable for local development only. For any deployment reachable on the internet, set it, or anyone who finds your function URL can write to your Notion.
+- **If set on the server but not in the dashboard**, sync returns `401`. Set the key with the 🔑 button.
 
 ---
 
@@ -114,7 +115,7 @@ If nothing happens, the usual causes are: the integration wasn't shared with the
 | Symptom | Likely cause |
 |---|---|
 | "Notion sync not configured" | One of `NOTION_API_KEY` / `NOTION_DATABASE_ID_TASKS` / `NOTION_DATABASE_ID_HABITS` is missing. |
-| `401 Unauthorized` on sync | `SYNC_SHARED_SECRET` mismatch between dashboard config and the environment. |
+| `401 Unauthorized` on sync | The dashboard's 🔑 Sync key doesn't match `SYNC_SHARED_SECRET` on the server (or isn't set — click 🔑 Sync key). |
 | Sync runs but Notion doesn't change | Integration not added to the database's **Connections**, or a property name/type doesn't match Step 4. |
 | API rejects the database id | You used a `collection://` data-source id. Use the URL slug **before `?v=`**. |
 | Areas come back as the wrong label | An `areas[]` entry's `notion` label in `lifeos.config.json` doesn't match a Select option in the Tasks DB. |

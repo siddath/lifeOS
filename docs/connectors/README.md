@@ -18,7 +18,7 @@ Every connector touches at most three well-defined places. To add one, you provi
 
 1. **Config / secrets.** Add env var(s) to **`.env.example`** (and set the real values in `.env` locally / your host's environment). Secrets never go in `lifeos.config.json` or the vault. If the connector is user-visible, add a toggle under `integrations` in `lifeos.config.json` (e.g. `"notion": { "enabled": true }`) and, for MCP, an entry in `.mcp.json` (template: `.mcp.example.json`).
 2. **Data shape.** Add or reuse a JSON shape in **`schemas/`** so the dashboard and importers agree on what the connector's data looks like. (The finance card, for example, reads `schemas/finance.schema.json` whether the numbers came from a broker or from a hand-edited JSON.)
-3. **Transport (optional).** If the connector needs server-side calls, add a small serverless function under **`api/`** (as Notion sync does). Many connectors need no code at all — they're **MCP-based**, meaning Claude talks to them directly, and the connector is really just documentation plus a `.mcp.json` entry.
+3. **Transport (optional).** If the connector needs server-side calls, add a small serverless function under **`api/`** (as Notion sync does). Many connectors need no code at all — they're **MCP-based**, meaning your assistant talks to them directly, and the connector is really just documentation plus a `.mcp.json` entry.
 
 That's the whole extension surface: **env var → schema → (optional) `api/` function.** Nothing bypasses the config-and-schemas contract described in [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
@@ -32,7 +32,7 @@ Honest status. "Built" means it works today; "planned" means designed and docume
 |---|---|---|---|
 | **Vercel** | Deploy button + `vercel.json` | **Built** | Hosts the static dashboard; one-click deploy. See [../deploy.md](../deploy.md). |
 | **Notion** | `api/` serverless + env vars | **Built** — guided ~10-min setup | Two-way sync of Tasks + Habits. Repo stays source of truth; Notion is the mobile front-end. See [notion.md](notion.md). |
-| **Google — Calendar / Gmail / Drive** | MCP | **Planned** (docs-only) | Claude can read these live over MCP today; dedicated serverless sync functions are on the roadmap, not shipped. |
+| **Google — Calendar / Gmail / Drive** | MCP | **Planned** (docs-only) | An MCP-capable assistant can read these live today; dedicated serverless sync functions are on the roadmap, not shipped. |
 | **GitHub** | Config (`repo.url`) | **Built** (config-level) | The vault is a Git repo; `repo.url` in `lifeos.config.json` wires links. Deeper automation (webhooks) is planned. |
 | **Broker** | MCP (generic) | **Planned** (docs-only) | A generic finance connector — e.g. a broker's public MCP endpoint. The finance card also works with **manual JSON** (`dashboard/finance-data.json`) with no connector at all. |
 

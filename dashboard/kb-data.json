@@ -1,4 +1,6 @@
 {
+  "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
+  "_comment": "Demo-persona knowledge base (Alex Rivera). One 'about you' entry per life area — the raw material an AI reads to write daily briefs. Shape: schemas/kb.schema.json.",
   "updatedAt": "2026-07-09",
   "entries": [
     {

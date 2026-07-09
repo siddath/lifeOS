@@ -8,7 +8,7 @@ updated: 2026-07
 
 # 🤖 AI Workflow
 
-How to run a LifeOS with AI as leverage — without AI becoming another thing to manage. This folder is framework-level: the patterns hold regardless of who the owner is.
+How to run a LifeOS with AI doing the heavy lifting — without AI becoming another thing to manage. This folder is framework-level: the patterns hold regardless of who the owner is, and regardless of which assistant you use.
 
 ## The core loop
 
@@ -18,7 +18,7 @@ How to run a LifeOS with AI as leverage — without AI becoming another thing to
 4. **Loop engineering** — recurring tasks (daily brief, weekly review) run on a schedule, not on willpower.
 
 ## Files
-- [`claude_guide.md`](claude_guide.md) — how to leverage an in-repo AI coding agent.
+- [`claude_guide.md`](claude_guide.md) — working with an in-repo AI coding agent (written around Claude Code; the patterns carry to any agentic assistant).
 - [`subagents.md`](subagents.md) — the orchestrator → subagent → review pattern in depth.
 - [`master_prompt.md`](master_prompt.md) — a reusable prompt to bootstrap any AI session with full context.
 - [`model_orchestration_map.md`](model_orchestration_map.md) — routing work across a tier of models (planner / orchestrator / builder / sweeper).

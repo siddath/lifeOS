@@ -8,7 +8,7 @@ updated: 2026-07
 
 # LifeOS Documentation
 
-**LifeOS** is an AI-native personal operating system: a plain-text vault + a static dashboard + Claude Code skills + a small set of optional connectors. Everything renders from one config file (`lifeos.config.json`) and a folder of JSON schemas (`schemas/`) — nothing hardcodes a person, so a fresh clone runs end-to-end with zero setup as the demo persona and becomes *yours* by editing config and content.
+**LifeOS** is a personal operating system you drive with any AI assistant: a plain-text vault + a static dashboard + a small set of optional connectors, plus bundled Claude Code skills for people who use Claude. Everything renders from one config file (`lifeos.config.json`) and a folder of JSON schemas (`schemas/`) — nothing hardcodes a person, so a fresh clone runs end-to-end with zero setup as the demo persona and becomes *yours* by editing config and content.
 
 This folder is the map. Start with whichever door fits you.
 
@@ -21,12 +21,14 @@ This folder is the map. Start with whichever door fits you.
 | Put the dashboard on the web | [deploy.md](deploy.md) |
 | See what's built vs. planned | [ROADMAP.md](ROADMAP.md) · [FEATURES.md](FEATURES.md) |
 | Wire up an integration | [connectors/README.md](connectors/README.md) |
+| Understand the data shapes | [../schemas/README.md](../schemas/README.md) |
+| Know what the demo data is | [../DEMO_DATA.md](../DEMO_DATA.md) |
 | Understand the look and feel | [design_system.md](design_system.md) |
 
 ## The docs
 
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — system design: the vault, the dashboard, the config-and-schemas contract, the serverless sync layer, and the MCP connectors. Includes the data-flow diagram.
-- **[onboarding.md](onboarding.md)** — the four adoption paths: the `/setup` Claude skill (flagship), plain-text import, Notion import, and MCP bootstrap. Ingestion is prompt-driven against `schemas/`, not code-driven.
+- **[onboarding.md](onboarding.md)** — the four adoption paths, each usable with any AI assistant: talk to your AI, paste your notes, Notion import, MCP bootstrap. Ingestion is prompt-driven against `schemas/`, not code-driven.
 - **[deploy.md](deploy.md)** — deploy the static dashboard to Vercel, the one-click "Deploy to Vercel" button, and environment variables. Works with **no** env vars (graceful local-only degradation).
 - **[ROADMAP.md](ROADMAP.md)** — phased plan, honest about built-now vs. planned.
 - **[FEATURES.md](FEATURES.md)** — the feature grid across surfaces.

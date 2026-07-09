@@ -1,4 +1,5 @@
 {
+  "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
   "_comment": "Demo-persona finance snapshot (Alex Rivera). Manual-first; currency falls back to lifeos.config owner.currency. Round fake numbers only.",
   "updatedAt": null,
   "source": "manual",

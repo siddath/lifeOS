@@ -575,6 +575,7 @@
       <span class="st">🔄 Sync</span>
       <span class="status-pill" aria-live="polite"><span class="status-dot" id="statusDot" data-sync-dot></span><span id="statusText" data-sync-text>Local only</span></span>
       <a class="sync-btn primary" id="openNotionBtn" href="#" target="_blank" rel="noopener" hidden>Open Notion</a>
+      <button class="sync-btn" onclick="setSyncSecret()" title="Set the sync key that matches SYNC_SHARED_SECRET on your deployment">🔑 Sync key</button>
       <button class="sync-btn" onclick="exportState()">💾 Export backup</button>
       <button class="sync-btn" onclick="importState()">📥 Import backup</button>
       <span class="sync-msg" id="syncMsg">Edits to Tasks/Habits below queue an automatic sync to Notion · see <a href="../docs/connectors/notion.md">setup guide</a>.</span>
@@ -1383,6 +1384,10 @@
   function getHabits(){ return JSON.parse(localStorage.getItem('lifeos_habits_v1')||'[]'); }
   function setHabits(h){ localStorage.setItem('lifeos_habits_v1', JSON.stringify(h)); }
 
+  // DEMO DATA — the tasks/habits below are placeholder seeds for the "Alex Rivera" persona,
+  // written to localStorage on first run so a fresh clone looks alive. Replace them with your
+  // own (edit in the UI, or have your AI seed them per schemas/tasks.schema.json + habits.schema.json).
+  // See DEMO_DATA.md and AGENTS.md → Onboarding.
   function seedIfEmpty(){
     if(!localStorage.getItem('lifeos_tasks_v1')){
       const now = nowIso();
@@ -1710,6 +1715,17 @@
   // on the server). Kept in localStorage, never committed. Empty = no header (open/dev deployments).
   function syncHeaders(base){ const h = base||{}; let s=''; try{ s=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
     if(s) h['X-Sync-Secret']=s; return h; }
+  // If you set SYNC_SHARED_SECRET on your deployment, the dashboard must send the SAME value.
+  // This stores it in this browser's localStorage (never committed) and retries the sync.
+  function setSyncSecret(){
+    let cur=''; try{ cur=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
+    const next = window.prompt('Sync key — must match SYNC_SHARED_SECRET on your deployment.\nLeave blank to clear it (open/dev deployments).', cur);
+    if(next===null) return; // cancelled
+    try{ if(next) localStorage.setItem('lifeos_sync_secret', next); else localStorage.removeItem('lifeos_sync_secret'); }catch(e){}
+    apiConfigured = true; // let it try again now that a key is set/cleared
+    syncNote(next ? '🔑 Sync key saved on this device. Retrying…' : '🔑 Sync key cleared.');
+    flushQueue();
+  }
 
   async function flushQueue(){
     const q = getQueue(); if(!q.length){ if(apiConfigured) setStatus('synced', lastSyncedLabel()); return; }

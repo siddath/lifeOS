@@ -53,7 +53,7 @@ The rule of thumb: anything that touches your data has a **local-first, no-servi
 
 ## 🔄 Available now via MCP (no bundled sync yet)
 
-Claude can already **read** these live over MCP if you enable them in `.mcp.json` — useful during onboarding (Path D) and for ad-hoc queries. What's *not* yet built is a dedicated serverless sync function that keeps them continuously in step with the vault.
+An MCP-capable assistant can already **read** these live if you enable them in `.mcp.json` — useful during onboarding (Path D) and for ad-hoc queries. What's *not* yet built is a dedicated serverless sync function that keeps them continuously in step with the vault.
 
 - **Google Calendar / Gmail / Drive** — readable over MCP today; **serverless sync functions are planned, not shipped.**
 - **Broker** — a generic MCP-based finance connector (point it at a broker's public MCP endpoint). Live portfolio reads work over MCP; deep, continuous integration is planned.

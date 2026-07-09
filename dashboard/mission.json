@@ -1,4 +1,5 @@
 {
+  "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
   "_comment": "The current hero mission. Swap this file to change the whole dashboard hero — header, countdown, one-thing, week planner, evidence. Nothing else hardcodes the mission. When you swap: snapshot this into archive/mission_<slug>.json first (see the mission-swap skill). 'slug' namespaces this mission's week/evidence checkbox keys so ticks never carry across mission swaps. This is demo-persona data for 'Alex Rivera'.",
   "slug": "launch-week",
   "hero": {

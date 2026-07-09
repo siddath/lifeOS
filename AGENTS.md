@@ -1,6 +1,25 @@
 # AGENTS.md — Rules of engagement for AI sessions
 
-> Read this first. It tells any AI agent (Claude Code, or any other) how this LifeOS vault is organized and how to work inside it. This is a reusable **pattern**, not one person's story. Identity and settings live in `lifeos.config.json`; the words below use `{{owner}}` wherever your name would go. Anywhere you see `<!-- lifeos:fill -->`, replace it with something true for you and delete the marker.
+> Read this first. It tells any AI agent — Claude, ChatGPT, Cursor, Copilot, Gemini, or anything else — how this LifeOS vault is organized and how to work inside it. This is a reusable **pattern**, not one person's story. Identity and settings live in `lifeos.config.json`; the words below use `{{owner}}` wherever your name would go. Anywhere you see `<!-- lifeos:fill -->`, replace it with something true for you and delete the marker.
+
+## Onboarding — read this if a person just opened this repo
+
+**Everything shipped here is demo data.** The name Alex Rivera, the town of Portland, the app "Fieldnotes," the pottery hobby, the "Operation Launch Week" mission, the sample tasks and habits — all placeholder. It exists so a fresh clone renders fully before anyone personalizes it. Every seed data file announces this: JSON files carry a top-level `"_DEMO"` key, and the marker files say `<!-- lifeos:fill -->`. See [DEMO_DATA.md](DEMO_DATA.md) for the full convention.
+
+**Your job, the first time someone opens this repo with you, is to replace that persona with the real one.** Concretely:
+
+1. **Recognize the placeholders.** If you see Alex Rivera / Portland / Fieldnotes / pottery, or a `"_DEMO"` key, treat it as a fill-me-in template — never as the user's real life.
+2. **Get their material.** Ask them about themselves, or take whatever they hand you: a paragraph, a brain-dump, an old journal, an exported Obsidian vault, a Notion export, a folder of loose files, a task list. Whatever form it's in is fine — the mapping is your job, not theirs. Don't make them reformat anything.
+3. **Map it onto the schemas.** The files in `schemas/` are the contract. Read the relevant schema, then write conforming data:
+   - identity, area codes, currency, enabled modules → `lifeos.config.json` (copy `lifeos.config.example.json`, replace the demo values; it's gitignored, holds no secrets)
+   - the one thing they're driving toward → `dashboard/mission.json` (`mission.schema.json`)
+   - their tasks → the tasks shape (`tasks.schema.json`); recurring things → habits (`habits.schema.json`)
+   - facts about them (strengths, values, watch-outs, preferences, one per life area) → the knowledge base (`kb.schema.json`)
+   - money → `dashboard/finance-data.json` (`finance.schema.json`)
+4. **Snapshot before you overwrite.** Move demo content into `archive/` rather than deleting it, and confirm before replacing a file the user might have touched.
+5. **Stop when it renders as them.** Open `dashboard/index.html` — their name, areas, and mission should appear. Don't gold-plate the first session; get them a working vault, then iterate.
+
+The schemas are what make this reliable across any assistant: infer the fields the schema asks for (area codes from their config, `priority` as P1/P2/P3, `status`, due dates from natural language) and emit valid JSON. Messy input in, structured data out. If you're Claude Code, the `/setup` skill walks this exact path; any other assistant does it by reading this section and the schemas directly.
 
 ## Who this is for
 

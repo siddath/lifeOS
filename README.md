@@ -1,17 +1,7 @@
-<h1 align="center">🧭 LifeOS</h1>
+<h1 align="center">LifeOS</h1>
 
 <p align="center">
-  <strong>An AI-native personal operating system.</strong><br>
-  A plain-text life vault + a warm, config-driven dashboard + Claude skills + Notion/Google/broker connectors.
-</p>
-
-<p align="center">
-  <a href="#-quickstart">Quickstart</a> ·
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-onboarding--bring-your-own-data">Onboarding</a> ·
-  <a href="#-connectors">Connectors</a> ·
-  <a href="#-philosophy">Philosophy</a> ·
-  <a href="docs/ROADMAP.md">Roadmap</a>
+  A plain-text vault for your life plus a dashboard that renders it — driven by whatever AI assistant you already use.
 </p>
 
 <p align="center">
@@ -19,57 +9,63 @@
     <img src="https://vercel.com/button" alt="Deploy with Vercel">
   </a>
   &nbsp;·&nbsp; <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  &nbsp;·&nbsp; <em>Live demo: <code>lifeos.vercel.app</code> (deploy the demo persona — no setup required)</em>
 </p>
 
-> Replace `OWNER` in the Deploy button and demo link with your GitHub handle after you publish.
+> After you publish, replace `OWNER` in the deploy button (and the demo link below) with your GitHub handle.
+
+<!-- Screenshot: capture dashboard/index.html running the demo persona and drop it in as docs/assets/hero-desktop-light.png. Capture list: docs/assets/README.md -->
+<p align="center"><em>Screenshot goes here — see <a href="docs/assets/README.md">docs/assets/README.md</a> for the capture list.</em></p>
 
 ---
 
-## What is LifeOS?
+## What this is
 
-LifeOS turns "I should get organized" into **evidence, not ideas**. It is a small, private-by-default system you *own*: your data lives in your own Git repo, your browser, and (optionally) your own Notion and Vercel — there is no LifeOS server.
+Most "get organized" systems fail the same way: you spend an afternoon setting them up and never look at them again. LifeOS is built the other way around. Your life lives as plain Markdown and JSON in a Git repo you own; a static dashboard renders it; and an AI assistant does the tedious part — reading your messy notes and turning them into the structured files the dashboard reads.
 
-The trick that makes it generic: **the framework contains no content, only paths and a contract.** One `lifeos.config.json` personalizes everything; JSON Schemas in `schemas/` describe every data file so *any* AI can read your notes and fill the system in for you. Swap one `mission.json` and the entire dashboard hero re-renders around your current focus.
+There's no LifeOS server and no account. Your data sits in your repo, your browser's local storage, and — if you opt in — your own Notion and Vercel. Nothing phones home.
 
-It ships with a complete demo persona ("Alex Rivera") so a fresh clone renders fully with **zero setup**.
+The one design decision everything hangs off: **the framework ships no content, only paths and a contract.** A single `lifeos.config.json` holds who you are; JSON Schemas in `schemas/` describe every data file. Swap one `mission.json` and the whole dashboard re-renders around your current focus. Because the shapes are written down, any AI can read your notes and fill the system in — you don't need this specific tool or that specific model.
 
-## ✨ Features
+A fresh clone runs immediately as a demo persona ("Alex Rivera," a product engineer in Portland) so you can see the whole thing working before you touch a file.
 
-| | |
-|---|---|
-| 🎯 **One hero mission at a time** | The dashboard centers a single focus with a live countdown, "the one thing right now," a weekly arc, and an evidence checklist — all from `dashboard/mission.json`. |
-| ✅ **Tasks & habits, live** | Natural-language task composer (`#area P1 due:tomorrow`), a weekly habit matrix with streak history, saved locally and optionally 2-way synced to Notion. |
-| 📚 **Knowledge base** | A searchable "about you" — the raw material an AI uses to write your briefs. Schema-defined so it's easy to import. |
-| ⚓ **The Anchor (Inner OS)** | A calm break-glass surface: grounding protocols, a philosophy of "enough," and a 7-day reset. The psychology-aware differentiator. |
-| 💰 **Finance** | Net worth, monthly budget, and an optional broker portfolio view. Currency-configurable. |
-| 🌙 **4-step daily review** | Two gentle minutes: how the day felt, presence with the people you love, three small thanks, tomorrow's one thing. |
-| 🤖 **Claude skills** | `daily-brief`, `quick-capture`, `weekly-review`, `setup`, `mission-swap` — the AI-native workflow layer. |
-| 🎨 **Warm, theme-aware UI** | The "Hearth" design language (paper, terracotta, gold) in light and dark, a mobile dock, and reduced-motion support. |
-| 🔒 **Private by default** | Secrets in env vars only; your vault content is gitignored; the framework ships templates + a demo, never a life. |
+## Works with any AI
 
-## 🚀 Quickstart
+This isn't tied to one assistant. The instructions an AI needs live in [`AGENTS.md`](AGENTS.md) — a plain file that Claude, ChatGPT, Cursor, Copilot, Gemini, or anything else can read. Point your assistant at it and say "help me set this up." It recognizes the demo data as placeholder, asks for yours (or reads what you hand it — a paragraph, an Obsidian vault, a Notion export, a folder of notes), and maps it onto the schemas.
+
+There's also a set of Claude Code skills (`/setup`, `/daily-brief`, `/weekly-review`, and friends) bundled under `.claude/` for people who use Claude Code — a convenience layer, not a requirement. The schemas are what make it portable; the skills are one nice way to drive them.
+
+## What's in it
+
+- **One hero mission at a time.** The dashboard centers a single focus with a live countdown, "the one thing right now," a week-by-week arc, and an evidence checklist. All of it renders from `dashboard/mission.json`; swap the file to swap the mission (about a ten-minute edit).
+- **Tasks and habits, live.** A natural-language task box (`#area P1 due:tomorrow`), a weekly habit grid with streak history, saved in your browser and optionally two-way-synced to Notion so your phone and desktop agree.
+- **A knowledge base about you.** Searchable notes — strengths, watch-outs, preferences, one entry per life area. This is the raw material an AI reads to write your daily brief.
+- **The Anchor.** A calm break-glass page: grounding steps, a few reframes, a seven-day reset. It's the part that assumes you're a person who spirals under pressure, not a productivity robot.
+- **Finance.** Net worth, a monthly budget, and an optional broker view. Currency comes from your config.
+- **A four-step evening review.** Two minutes: how the day felt, presence with the people you love, three small thanks, tomorrow's one thing.
+- **A warm, theme-aware UI.** Light and dark, a mobile dock, reduced-motion support. Opinionated about being calm rather than loud.
+
+## Quickstart
 
 ```bash
 git clone https://github.com/OWNER/lifeos.git
 cd lifeos
 
-# 1. (optional) make it yours — the example is the fallback, so you can skip this to see the demo
+# Optional — make it yours. Skip it and you'll see the demo persona.
 cp lifeos.config.example.json lifeos.config.json
 
-# 2. open the dashboard — no build step
-open dashboard/index.html          # or: python3 -m http.server 8000
+# Open the dashboard. No build step.
+open dashboard/index.html        # or: python3 -m http.server 8000
 ```
 
-Then, in Claude Code, run **`/setup`** to be interviewed and have your config + first vault written for you. Or run **`/daily-brief`** to see the workflow.
+Then open your AI assistant in this folder and tell it to read `AGENTS.md` and help you get started. It'll ask about you (or take whatever notes you already have), write your `lifeos.config.json`, and fill in your first mission, tasks, and knowledge base. If you use Claude Code, `/setup` does the same thing as a guided interview.
 
-Deploy the dashboard to the web with the **Deploy with Vercel** button above (it serves `dashboard/`). It works with **no environment variables** — Notion sync simply degrades to local-only.
+When you want it on your phone, deploy the `dashboard/` folder with the button up top. It runs fine with zero environment variables — Notion sync just stays dormant until you add keys. Full deploy notes: [docs/deploy.md](docs/deploy.md).
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
-    U[You] -->|Claude Code + skills| C
+    U[You] -->|any AI assistant| C
     U -->|edit / read| V[Markdown vault<br/>GitHub · Obsidian]
     U -->|browse| D[Dashboard<br/>static · dashboard/]
 
@@ -78,7 +74,7 @@ flowchart TD
       SCH[schemas/*.schema.json]
     end
 
-    C[Claude skills<br/>daily-brief · setup · …] --> CFG
+    C[AI assistant<br/>+ optional Claude skills] --> CFG
     D --> CFG
     V --> SCH
     C --> SCH
@@ -94,49 +90,59 @@ flowchart TD
     class G,B dashed;
 ```
 
-`lifeos.config.json` + `schemas/` are the seam everything reads. The dashboard is static; the only backend is a pair of serverless functions *you* deploy for Notion sync. Everything else is optional and connects over MCP. Full write-up: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
+`lifeos.config.json` and `schemas/` are the seam everything reads. The dashboard is static. The only backend is a pair of serverless functions *you* deploy for Notion sync — everything else is optional and connects over MCP. Longer write-up: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## 🧭 Onboarding — bring your own data
+## Bring your own data
 
-Ingestion is **prompt-driven against the schemas**, so you can use whatever AI you like.
+Import is prompt-driven against the schemas, not a rigid importer — so it works with whatever AI you like and whatever shape your notes are in. Four ways in:
 
 | Path | What happens | Effort |
 |---|---|---|
-| **`/setup` skill** (flagship) | Claude interviews you → writes `lifeos.config.json` → "paste anything about your life" → maps it onto the schemas + templates → generates your first daily brief. | ~10 min |
-| **Plain-text import** | Copy a mega-prompt that embeds the schemas into any AI, paste your notes, get back valid data files. | ~10 min |
-| **Notion import** | Duplicate the Notion template → set 3 env vars → `notion-pull` hydrates the dashboard. | ~10 min |
-| **MCP setup** | Claude reads your existing Notion / Calendar over MCP and bootstraps the vault. Most magical. | ~20 min |
+| **Just talk to your AI** | Point it at `AGENTS.md`, answer a few questions, and it writes your config, mission, tasks, and knowledge base against the schemas. | ~10 min |
+| **Paste your notes** | Hand it a brain-dump, an old journal, a task list — messy is fine. It maps them onto the schemas and hands back valid data files. | ~10 min |
+| **Notion** | Duplicate the Notion template, set four env vars, pull — the dashboard hydrates from your Notion databases and syncs both ways. | ~10 min |
+| **Existing tools over MCP** | Let the AI read your calendar and notes over MCP and bootstrap the vault from what's already there. | ~20 min |
 
-Details: **[docs/onboarding.md](docs/onboarding.md)**.
+Details, including the demo persona and how the AI recognizes it as placeholder: [docs/onboarding.md](docs/onboarding.md). The placeholder convention itself is in [DEMO_DATA.md](DEMO_DATA.md).
 
-## 🔌 Connectors
+## Connectors
 
-| Connector | v1 scope | Class |
+| Connector | What v1 gives you | Setup |
 |---|---|---|
-| **Vercel** | Deploy button + `vercel.json` | One-click |
-| **Notion** | 2-way Tasks/Habits sync + a public template with the exact property names the code expects | Guided ~10 min |
-| **Google** (Cal/Gmail/Drive) | MCP-based, docs-only in v1 (serverless functions are on the roadmap) | Guided via MCP |
-| **GitHub** | `repo.url` in config + "your vault is a repo" docs | One-click |
-| **Broker** | MCP-based (a broker's public MCP endpoint); the finance card also works with manual JSON | Guided via MCP |
-| **Anything else** | The [connector contract](docs/connectors/README.md) — env vars + a data JSON + an optional `api/` function | Contributions welcome |
+| **Vercel** | Deploy button + `vercel.json` | One click |
+| **Notion** | Two-way Tasks/Habits sync + a template with the exact property names the code expects | ~10 min, [guide](docs/connectors/notion.md) |
+| **Google** (Cal/Gmail/Drive) | Read access over MCP today; serverless sync is on the roadmap | Via MCP |
+| **GitHub** | `repo.url` in config wires the vault-is-a-repo links | One line |
+| **Broker** | Any broker's public MCP endpoint; the finance card also takes manual JSON | Via MCP |
+| **Something else** | The [connector contract](docs/connectors/README.md): an env var, a data JSON, and an optional `api/` function | — |
 
-## 🪷 Philosophy
+## Why it's shaped this way
 
-LifeOS is opinionated in one direction: **from *Think → Plan → Improve the plan → Think again* to *Think once → Build → Measure → Improve.*** Two ideas do most of the work:
+LifeOS is opinionated in exactly one direction: it wants to move you from *think → plan → improve the plan → think again* to **think once, then build, measure, improve.** Two ideas carry most of the weight.
 
-- **One hero mission at a time.** Everything else is *parked, not abandoned*. Running every front at full intensity ends in freeze; sequencing is the cure.
-- **Evidence, not ideas.** Every week should end with an artifact you can point at. The dashboard makes the artifact the win.
+One hero mission at a time. Everything else is parked, not abandoned. Running every front at once is how you end up frozen; sequencing is the way out.
 
-It's built to support people who over-plan under pressure — who generate more meaning than they have containers for. The Anchor (Inner OS) is where that psychology gets a calm home instead of a 1 AM spiral.
+Evidence, not ideas. A week should end with something you can point at. The dashboard is built to make the artifact the win, not the to-do list.
 
-## 🗺️ Roadmap
+It's meant for people who over-plan under pressure — who generate more meaning than they have containers for. The Anchor is where that has a calm home instead of a 1 a.m. spiral.
 
-Built now: config-driven dashboard, Notion 2-way sync, the skill layer, the demo persona. Planned: serverless Google Calendar/Gmail functions, a capture pipeline, deeper broker integration. See **[docs/ROADMAP.md](docs/ROADMAP.md)**.
+## Docs
 
-## 🤝 Contributing
+- [docs/onboarding.md](docs/onboarding.md) — the four ways to make it yours
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the pieces fit
+- [docs/deploy.md](docs/deploy.md) — put the dashboard on the web
+- [docs/connectors/README.md](docs/connectors/README.md) — the connector contract
+- [docs/connectors/notion.md](docs/connectors/notion.md) — Notion two-way sync, step by step
+- [schemas/README.md](schemas/README.md) — the data contract, file by file
+- [DEMO_DATA.md](DEMO_DATA.md) — the placeholder convention
+- [docs/ROADMAP.md](docs/ROADMAP.md) — built now vs. planned
 
-Small and focused, private-by-default. See **[CONTRIBUTING.md](CONTRIBUTING.md)** and **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)**. Never commit personal data — CI runs a generic PII/secret scan on every PR.
+## Contributing
 
-## 📄 License
+Small, focused, private-by-default. See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Don't commit personal data — CI runs a generic secret/PII scan on every PR.
 
-[MIT](LICENSE). Copying is the success condition here, not the threat — build your own life on it.
+## License
+
+[MIT](LICENSE). Copying is the point, not the threat — build your own life on it.
+</content>
+</invoke>
