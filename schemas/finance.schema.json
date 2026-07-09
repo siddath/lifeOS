@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lifeos/finance",
+  "title": "Finance snapshot",
+  "description": "Manual-first finance data for the dashboard. Currency is driven by lifeos.config.json owner.currency.",
+  "type": "object",
+  "properties": {
+    "updatedAt": { "type": ["string", "null"] },
+    "source": { "type": "string", "enum": ["manual", "broker"] },
+    "currency": { "type": "string", "description": "ISO 4217; falls back to config owner.currency." },
+    "netWorth": {
+      "type": "object",
+      "properties": {
+        "assets": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "value": { "type": "number" } } } },
+        "liabilities": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "value": { "type": "number" } } } },
+        "total": { "type": ["number", "null"] }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "month": { "type": "string", "description": "YYYY-MM." },
+        "income": { "type": ["number", "null"] },
+        "categories": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "budget": { "type": "number" }, "spent": { "type": "number" } } } }
+      }
+    },
+    "broker": {
+      "type": "object",
+      "description": "Optional live portfolio from a broker connector (MCP or manual).",
+      "properties": {
+        "connected": { "type": "boolean" },
+        "lastSync": { "type": ["string", "null"] },
+        "summary": { "type": "object" },
+        "holdings": { "type": "array" },
+        "positions": { "type": "array" }
+      }
+    }
+  }
+}

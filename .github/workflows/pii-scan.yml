@@ -1,0 +1,11 @@
+name: PII / secret scan
+on:
+  push:
+  pull_request:
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run generic PII / secret scan
+        run: bash scripts/pii-scan.sh .

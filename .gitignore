@@ -1,0 +1,26 @@
+node_modules/
+.vercel
+*.log
+.DS_Store
+
+# Secrets & personal instance config — ship only the .example versions
+.env
+.env.*
+!.env.example
+lifeos.config.json
+.mcp.json
+
+# Your private life data (the framework ships only templates + the demo persona)
+02_Areas/**/*.md
+!02_Areas/**/*.template.md
+!02_Areas/README.md
+reviews/*.md
+!reviews/README.md
+
+# Obsidian: keep shared config (app/core-plugins/community-plugins), ignore per-device state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/
+.obsidian/themes/
+.trash/

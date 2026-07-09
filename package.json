@@ -1,0 +1,11 @@
+{
+  "name": "lifeos",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "description": "LifeOS — an AI-native personal operating system: plain-text vault + dashboard + Claude skills + Notion/Google/broker connectors",
+  "keywords": ["life-os", "pkm", "second-brain", "claude", "mcp", "notion", "productivity", "dashboard"],
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}

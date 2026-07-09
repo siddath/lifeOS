@@ -1,0 +1,450 @@
+{
+  "_comment": "Daily Wisdom source for dashboard/index.html. Loaded like mission.json (fetch + inline QUOTES_FALLBACK). Stable slug ids (favorites reference ids). Attribution flags '(trans.)' / '(paraphrased)' / '(from interviews, paraphrased)' are load-bearing — never strip them. All gradients palette-warm. Legacy theme names mapped in JS: career->action, stoicism->equanimity, general->grounding.",
+  "version": 1,
+  "themes": {
+    "action": {
+      "label": "Karma yoga · act, release",
+      "grad": [
+        "#8a3c1f",
+        "#b4502a"
+      ]
+    },
+    "equanimity": {
+      "label": "Equanimity",
+      "grad": [
+        "#1f6f5c",
+        "#134e3f"
+      ]
+    },
+    "overthinking": {
+      "label": "Quiet the loop",
+      "grad": [
+        "#4a3728",
+        "#2b2620"
+      ]
+    },
+    "patience": {
+      "label": "Patience · long game",
+      "grad": [
+        "#1f6f5c",
+        "#436b3f"
+      ]
+    },
+    "courage": {
+      "label": "Courage",
+      "grad": [
+        "#7a331b",
+        "#a8442a"
+      ]
+    },
+    "confidence": {
+      "label": "Self-belief",
+      "grad": [
+        "#6b5312",
+        "#8a6d1b"
+      ]
+    },
+    "love": {
+      "label": "Love · presence",
+      "grad": [
+        "#8c2f4f",
+        "#b4502a"
+      ]
+    },
+    "craft": {
+      "label": "Craft · reps",
+      "grad": [
+        "#78350f",
+        "#b45309"
+      ]
+    },
+    "ventures": {
+      "label": "Building things",
+      "grad": [
+        "#5c4022",
+        "#8a6d1b"
+      ]
+    },
+    "grounding": {
+      "label": "Grounding",
+      "grad": [
+        "#3d3327",
+        "#1f6f5c"
+      ]
+    }
+  },
+  "quotes": [
+    {
+      "id": "gita-2-47",
+      "text": "You have the right to work, but never to the fruit of work.",
+      "author": "Bhagavad Gita 2.47",
+      "tradition": "gita",
+      "themes": [
+        "action"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gita-2-48",
+      "text": "Perform your duty equipoised, abandoning all attachment to success or failure. Such equanimity is called yoga.",
+      "author": "Bhagavad Gita 2.48",
+      "tradition": "gita",
+      "themes": [
+        "equanimity",
+        "action"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gita-2-50",
+      "text": "Yoga is skill in action.",
+      "author": "Bhagavad Gita 2.50",
+      "tradition": "gita",
+      "themes": [
+        "action",
+        "craft"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gita-6-5",
+      "text": "Lift yourself by your own self; do not let yourself sink. For you alone are your own friend, and you alone your own enemy.",
+      "author": "Bhagavad Gita 6.5",
+      "tradition": "gita",
+      "themes": [
+        "confidence"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gita-6-6",
+      "text": "For one who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, the mind remains the greatest enemy.",
+      "author": "Bhagavad Gita 6.6",
+      "tradition": "gita",
+      "themes": [
+        "overthinking"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gita-2-40",
+      "text": "In this path no effort is ever wasted and no gain is ever reversed; even a little practice of this discipline protects one from great fear.",
+      "author": "Bhagavad Gita 2.40",
+      "tradition": "gita",
+      "themes": [
+        "patience",
+        "grounding"
+      ],
+      "note": ""
+    },
+    {
+      "id": "marcus-mind-power",
+      "text": "You have power over your mind — not outside events. Realize this, and you will find strength.",
+      "author": "Marcus Aurelius, Meditations",
+      "tradition": "stoic",
+      "themes": [
+        "equanimity"
+      ],
+      "note": ""
+    },
+    {
+      "id": "marcus-impediment",
+      "text": "The impediment to action advances action. What stands in the way becomes the way.",
+      "author": "Marcus Aurelius, Meditations",
+      "tradition": "stoic",
+      "themes": [
+        "action"
+      ],
+      "note": ""
+    },
+    {
+      "id": "marcus-be-one",
+      "text": "Waste no more time arguing about what a good man should be. Be one.",
+      "author": "Marcus Aurelius, Meditations",
+      "tradition": "stoic",
+      "themes": [
+        "overthinking"
+      ],
+      "note": ""
+    },
+    {
+      "id": "epictetus-react",
+      "text": "It's not what happens to you, but how you react to it that matters.",
+      "author": "Epictetus",
+      "tradition": "stoic",
+      "themes": [
+        "equanimity"
+      ],
+      "note": ""
+    },
+    {
+      "id": "seneca-imagination",
+      "text": "We suffer more often in imagination than in reality.",
+      "author": "Seneca, Letters from a Stoic",
+      "tradition": "stoic",
+      "themes": [
+        "overthinking"
+      ],
+      "note": ""
+    },
+    {
+      "id": "seneca-luck",
+      "text": "Luck is what happens when preparation meets opportunity.",
+      "author": "attributed to Seneca",
+      "tradition": "stoic",
+      "themes": [
+        "craft"
+      ],
+      "note": ""
+    },
+    {
+      "id": "seneca-present",
+      "text": "The greatest obstacle to living is expectancy, which hangs upon tomorrow and loses today. Enjoy the present without an anxious dependence on the future.",
+      "author": "Seneca, Letters from a Stoic",
+      "tradition": "stoic",
+      "themes": [
+        "equanimity",
+        "love"
+      ],
+      "note": ""
+    },
+    {
+      "id": "laotzu-journey",
+      "text": "A journey of a thousand miles begins with a single step.",
+      "author": "Lao Tzu, Tao Te Ching",
+      "tradition": "taoist",
+      "themes": [
+        "patience"
+      ],
+      "note": ""
+    },
+    {
+      "id": "laotzu-nature",
+      "text": "Nature does not hurry, yet everything is accomplished.",
+      "author": "Lao Tzu",
+      "tradition": "taoist",
+      "themes": [
+        "patience"
+      ],
+      "note": ""
+    },
+    {
+      "id": "brucelee-water",
+      "text": "Be water, my friend.",
+      "author": "Bruce Lee",
+      "tradition": "modern",
+      "themes": [
+        "patience",
+        "equanimity"
+      ],
+      "note": ""
+    },
+    {
+      "id": "naval-longterm",
+      "text": "Play long-term games with long-term people.",
+      "author": "Naval Ravikant",
+      "tradition": "modern",
+      "themes": [
+        "ventures"
+      ],
+      "note": ""
+    },
+    {
+      "id": "rumi-clever-wise",
+      "text": "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",
+      "author": "Rumi",
+      "tradition": "sufi",
+      "themes": [
+        "overthinking"
+      ],
+      "note": ""
+    },
+    {
+      "id": "rumi-wound-light",
+      "text": "The wound is the place where the light enters you.",
+      "author": "Rumi",
+      "tradition": "sufi",
+      "themes": [
+        "confidence",
+        "grounding"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gibran-work-love",
+      "text": "Work is love made visible.",
+      "author": "Kahlil Gibran, The Prophet",
+      "tradition": "sufi",
+      "themes": [
+        "craft",
+        "ventures"
+      ],
+      "note": ""
+    },
+    {
+      "id": "gibran-togetherness",
+      "text": "Let there be spaces in your togetherness, and let the winds of the heavens dance between you. Love one another, but make not a bond of love.",
+      "author": "Kahlil Gibran, The Prophet",
+      "tradition": "sufi",
+      "themes": [
+        "love"
+      ],
+      "note": ""
+    },
+    {
+      "id": "brihadaranyaka-4-4-5",
+      "text": "You are what your deep, driving desire is. As your desire is, so is your will. As your will is, so is your deed. As your deed is, so is your destiny.",
+      "author": "Brihadaranyaka Upanishad 4.4.5 (trans.)",
+      "tradition": "upanishad",
+      "themes": [
+        "action",
+        "confidence"
+      ],
+      "note": ""
+    },
+    {
+      "id": "brihadaranyaka-1-3-28",
+      "text": "Lead me from the unreal to the real, from darkness to light, from death to immortality.",
+      "author": "Brihadaranyaka Upanishad 1.3.28 (trans.)",
+      "tradition": "upanishad",
+      "themes": [
+        "grounding"
+      ],
+      "note": ""
+    },
+    {
+      "id": "mundaka-3-2-4",
+      "text": "This Self is not attained by the weak, nor by the careless, nor by aimless effort; but the wise who strive with steady, right effort enter into it.",
+      "author": "Mundaka Upanishad 3.2.4 (trans.)",
+      "tradition": "upanishad",
+      "themes": [
+        "patience",
+        "craft"
+      ],
+      "note": ""
+    },
+    {
+      "id": "vivekananda-arise",
+      "text": "Arise, awake, and stop not till the goal is reached.",
+      "author": "Swami Vivekananda",
+      "tradition": "vivekananda",
+      "themes": [
+        "action"
+      ],
+      "note": ""
+    },
+    {
+      "id": "vivekananda-believe-self",
+      "text": "You cannot believe in God until you believe in yourself.",
+      "author": "Swami Vivekananda",
+      "tradition": "vivekananda",
+      "themes": [
+        "confidence"
+      ],
+      "note": ""
+    },
+    {
+      "id": "vivekananda-one-idea",
+      "text": "Take up one idea. Make that one idea your life — think of it, dream of it, live on that idea. This is the way to success.",
+      "author": "Swami Vivekananda",
+      "tradition": "vivekananda",
+      "themes": [
+        "action",
+        "overthinking"
+      ],
+      "note": ""
+    },
+    {
+      "id": "vivekananda-powers",
+      "text": "All the powers in the universe are already ours. It is we who have put our hands before our eyes and cry that it is dark.",
+      "author": "Swami Vivekananda",
+      "tradition": "vivekananda",
+      "themes": [
+        "confidence"
+      ],
+      "note": ""
+    },
+    {
+      "id": "vivekananda-three-stages",
+      "text": "Every idea that is helpful and great must first be laughed at, then opposed, and only then accepted.",
+      "author": "Swami Vivekananda",
+      "tradition": "vivekananda",
+      "themes": [
+        "ventures",
+        "patience"
+      ],
+      "note": ""
+    },
+    {
+      "id": "ramana-let-come",
+      "text": "Let what comes come. Let what goes go. Find out what remains.",
+      "author": "Ramana Maharshi",
+      "tradition": "modern",
+      "themes": [
+        "equanimity",
+        "grounding"
+      ],
+      "note": ""
+    },
+    {
+      "id": "confucius-slowly",
+      "text": "It does not matter how slowly you go as long as you do not stop.",
+      "author": "Confucius",
+      "tradition": "confucian",
+      "themes": [
+        "patience"
+      ],
+      "note": ""
+    },
+    {
+      "id": "frankl-change-self",
+      "text": "When we are no longer able to change a situation, we are challenged to change ourselves.",
+      "author": "Viktor Frankl, Man's Search for Meaning",
+      "tradition": "modern",
+      "themes": [
+        "equanimity"
+      ],
+      "note": ""
+    },
+    {
+      "id": "jobs-love-work",
+      "text": "The only way to do great work is to love what you do.",
+      "author": "Steve Jobs",
+      "tradition": "modern",
+      "themes": [
+        "craft"
+      ],
+      "note": ""
+    },
+    {
+      "id": "robbins-problem-gift",
+      "text": "Every problem is a gift — without problems we would not grow.",
+      "author": "Tony Robbins",
+      "tradition": "modern",
+      "themes": [
+        "grounding"
+      ],
+      "note": ""
+    },
+    {
+      "id": "kalam-dream-sleep",
+      "text": "Dreams are not what you see in your sleep; dreams are the things that do not let you sleep.",
+      "author": "A.P.J. Abdul Kalam",
+      "tradition": "modern",
+      "themes": [
+        "ventures"
+      ],
+      "note": ""
+    },
+    {
+      "id": "kalam-dream-before",
+      "text": "You have to dream before your dreams can come true.",
+      "author": "A.P.J. Abdul Kalam",
+      "tradition": "modern",
+      "themes": [
+        "confidence"
+      ],
+      "note": ""
+    }
+  ]
+}

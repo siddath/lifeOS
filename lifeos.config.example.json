@@ -1,0 +1,53 @@
+{
+  "_comment": "Copy this file to lifeos.config.json (gitignored) and make it yours. The dashboard, skills, and sync functions all read identity + modules + areas from here — nothing hardcodes a person. The shipped values below are the 'Alex Rivera' demo persona so a fresh clone renders fully with zero setup.",
+  "product": {
+    "name": "lifeos",
+    "display": "LifeOS",
+    "tagline": "An AI-native personal operating system: plain-text vault + dashboard + Claude skills + connectors."
+  },
+  "owner": {
+    "name": "Alex Rivera",
+    "shortName": "Alex",
+    "timezone": "America/Los_Angeles",
+    "locale": "en-US",
+    "currency": "USD",
+    "greeting": "Hey, Alex"
+  },
+  "theme": {
+    "palette": "hearth",
+    "defaultMode": "auto"
+  },
+  "areas": [
+    { "code": "career",       "label": "Career",       "emoji": "💼", "notion": "Career" },
+    { "code": "health",       "label": "Health",       "emoji": "💪", "notion": "Health" },
+    { "code": "relationship", "label": "Relationship", "emoji": "❤️", "notion": "Relationship" },
+    { "code": "family",       "label": "Family",       "emoji": "👨‍👩‍👧", "notion": "Family" },
+    { "code": "fieldnotes",   "label": "Fieldnotes",   "emoji": "📓", "notion": "Fieldnotes" },
+    { "code": "pottery",      "label": "Pottery",      "emoji": "🏺", "notion": "Pottery" },
+    { "code": "finance",      "label": "Finance",      "emoji": "💰", "notion": "Finance" },
+    { "code": "admin",        "label": "Admin",        "emoji": "🗂️", "notion": "Admin" },
+    { "code": "learning",     "label": "Learning",     "emoji": "📚", "notion": "Learning" },
+    { "code": "mindset",      "label": "Mindset",      "emoji": "🧘", "notion": "Mindset" }
+  ],
+  "modules": {
+    "missions": true,
+    "trackers": true,
+    "finance": true,
+    "knowledge_base": true,
+    "anchor": true,
+    "flashcards": false
+  },
+  "repo": {
+    "url": ""
+  },
+  "deployment": {
+    "baseUrl": "",
+    "notionPageUrl": ""
+  },
+  "integrations": {
+    "notion": { "enabled": false },
+    "google": { "enabled": false },
+    "github": { "enabled": false },
+    "broker": { "enabled": false }
+  }
+}

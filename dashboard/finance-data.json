@@ -1,0 +1,36 @@
+{
+  "_comment": "Demo-persona finance snapshot (Alex Rivera). Manual-first; currency falls back to lifeos.config owner.currency. Round fake numbers only.",
+  "updatedAt": null,
+  "source": "manual",
+  "currency": "USD",
+  "netWorth": {
+    "assets": [
+      { "name": "Brokerage (index funds)", "value": 24000 },
+      { "name": "Emergency fund", "value": 12000 },
+      { "name": "Checking / savings", "value": 6000 }
+    ],
+    "liabilities": [
+      { "name": "Student loan", "value": 8000 }
+    ],
+    "total": null
+  },
+  "budget": {
+    "month": "2026-07",
+    "income": 6500,
+    "categories": [
+      { "name": "Rent", "budget": 1800, "spent": 1800 },
+      { "name": "Groceries", "budget": 500, "spent": 320 },
+      { "name": "Utilities", "budget": 200, "spent": 140 },
+      { "name": "Fieldnotes (hosting/tools)", "budget": 150, "spent": 90 },
+      { "name": "Pottery studio", "budget": 120, "spent": 120 },
+      { "name": "Investing", "budget": 1000, "spent": 1000 }
+    ]
+  },
+  "broker": {
+    "connected": false,
+    "lastSync": null,
+    "summary": { "invested": null, "current": null, "pnl": null, "pnlPct": null, "dayPnl": null },
+    "holdings": [],
+    "positions": []
+  }
+}

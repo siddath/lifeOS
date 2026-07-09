@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⚓ The Anchor — Inner OS · LifeOS</title>
+<style>
+  :root{
+    /* "Hearth" — daytime: paper, terracotta, warm gold */
+    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#8a7f6f;
+    --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
+    --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
+    --header-grad:linear-gradient(135deg,#8a3c1f,#5f2a15);
+    --navbg:rgba(250,246,239,.92);
+    --rule-bg:#fff4ec; --reframe-bg:#fdf6e3;
+    --pill-hero-bg:#fbe3d8; --pill-maint-bg:#e4efe9; --pill-found-bg:#f5eccf;
+    --gold-ink:#8a6d1b;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  /* Evening: the same warm world after dark — deep espresso + brightened terracotta, never a cold invert */
+  :root[data-theme="dark"]{
+    --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+    --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
+    --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+    --header-grad:linear-gradient(135deg,#5a2513,#33160b);
+    --navbg:rgba(25,20,16,.9);
+    --rule-bg:#2a201a; --reframe-bg:#26201a;
+    --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f; --gold-ink:#e6c06a;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]):not([data-theme="dark"]){
+      --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+      --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
+      --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+      --header-grad:linear-gradient(135deg,#5a2513,#33160b);
+      --navbg:rgba(25,20,16,.9);
+      --rule-bg:#2a201a; --reframe-bg:#26201a;
+      --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f; --gold-ink:#e6c06a;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 64px;
+       transition:background .4s ease,color .4s ease}
+  :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
+
+  /* ---- Ported floating dock (shared with the dashboard) ---- */
+  .dock{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:3px;
+    padding:8px 8px 12px;width:52px;background:color-mix(in srgb,var(--card) 82%,transparent);
+    -webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+    border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transition:width .3s cubic-bezier(.2,.7,.3,1)}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.dock{background:var(--card)}}
+  .dock:hover,.dock:focus-within{width:176px}
+  .dock-sync,.dock-nav,.dock-pages{display:flex;flex-direction:column;gap:2px}
+  .dock-sep{height:1px;background:var(--line);margin:4px 6px;flex:none}
+  .dock-btn{display:flex;align-items:center;gap:10px;white-space:nowrap;border:none;background:transparent;color:var(--ink);
+    text-decoration:none;cursor:pointer;font:inherit;font-size:.82rem;font-weight:600;padding:8px;border-radius:10px;min-height:36px;line-height:1;transition:background .15s}
+  .dock-btn:hover,.dock-btn:focus-visible{background:var(--line)}
+  .dock-btn .status-dot{width:9px;height:9px;border-radius:50%;background:#9a9186;flex:none}
+  .dock-label{opacity:0;width:0;overflow:hidden;white-space:nowrap;transition:opacity .3s}
+  .dock:hover .dock-label,.dock:focus-within .dock-label{opacity:1;width:auto}
+  .dock-pages a[aria-current="page"]{background:color-mix(in srgb,var(--gold) 22%,transparent);position:relative}
+  .dock-pages a[aria-current="page"]::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+  .dock-fab{display:none}
+  .dock-scrim{display:none}
+  @media(min-width:900px){body .wrap{padding-left:76px}}
+  @media(max-width:899px){
+    .dock{display:none}
+    .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
+      width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;background:var(--header-grad);box-shadow:var(--shadow)}
+    .dock.open{display:flex;flex-direction:column;gap:8px;width:auto;left:12px;right:12px;bottom:80px;top:auto;transform:none;max-height:70vh;overflow:auto;padding:14px}
+    .dock.open .dock-label{opacity:1;width:auto}
+    .dock.open .dock-nav,.dock.open .dock-pages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .dock.open .dock-nav a,.dock.open .dock-pages a{flex-direction:column;gap:4px;text-align:center;font-size:.68rem;min-height:56px;justify-content:center}
+    .dock-scrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,15,10,.35)}
+    .dock-scrim[hidden]{display:none}
+    body{padding-bottom:88px}
+  }
+
+  /* Slim sticky top nav */
+  .topnav{position:sticky;top:0;z-index:50;background:var(--navbg);backdrop-filter:blur(8px);
+          border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(60,45,20,.05)}
+  .topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .topnav .brand{font-weight:700;font-size:.92rem;color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
+  .topnav .brand span{color:var(--muted);font-weight:600}
+  .nav-links{display:flex;gap:2px;flex-wrap:wrap;flex:1;min-width:0}
+  .nav-links a{color:var(--ink);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px;transition:background .15s,color .15s}
+  .nav-links a:hover,.nav-links a:focus-visible{background:var(--line)}
+  .nav-kb{background:var(--accent2);color:#fff !important;text-decoration:none;font-size:.8rem;font-weight:700;
+          padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow)}
+  .nav-kb:hover,.nav-kb:focus-visible{filter:brightness(1.08)}
+  .theme-toggle{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+          width:34px;height:34px;font-size:.95rem;cursor:pointer;flex:none;line-height:1;transition:background .15s,transform .2s}
+  .theme-toggle:hover{background:var(--line);transform:rotate(-15deg)}
+  @media(max-width:640px){.topnav .nav-inner{padding:8px 12px}.nav-links{order:3;width:100%}.nav-links a{font-size:.76rem;padding:4px 8px}}
+
+  /* Personal greeting band */
+  .greeting{background:var(--card);border-bottom:1px solid var(--line)}
+  .greeting-inner{display:flex;align-items:baseline;gap:12px;padding:9px 16px;flex-wrap:wrap}
+  .greet-hi{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--accent)}
+  .greet-date{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .greet-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.86rem;margin-left:auto}
+  @media(max-width:640px){.greet-line{margin-left:0;width:100%}}
+
+  header{background:var(--header-grad);color:#fff;padding:26px 20px 22px;text-align:center;
+         box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 12% 20%,rgba(255,255,255,.10),transparent 42%),
+    radial-gradient(circle at 88% 80%,rgba(0,0,0,.12),transparent 45%);pointer-events:none}
+  header::before{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.9) 1.1px,transparent 1.3px);
+    background-size:22px 22px;background-position:center;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:1.85rem;letter-spacing:.2px;position:relative;text-wrap:balance}
+  header p{margin:6px 0 0;opacity:.94;font-size:.95rem;position:relative}
+  header .kicker{display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+         opacity:.82;font-weight:700;margin-bottom:6px;position:relative}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+  .section{scroll-margin-top:60px;margin:30px 0 0}
+  .section-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-bottom:6px;
+         border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .section-head h2{margin:0;font-size:1.12rem;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .section-head .eyebrow{font-size:.74rem;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 8px;font-size:1.02rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .card p{margin:0 0 8px;font-size:.92rem}
+  .card p:last-child{margin-bottom:0}
+  .pill{display:inline-block;font-size:.68rem;padding:2px 9px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .pill.hero{background:var(--pill-hero-bg);color:var(--accent)}
+  .pill.maint{background:var(--pill-maint-bg);color:var(--accent2)}
+  .pill.found{background:var(--pill-found-bg);color:var(--gold-ink)}
+
+  .hero-one{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+         border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);max-width:900px;margin:0 auto 16px}
+  .hero-one .one-tag{font-size:.7rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+  .hero-one .one-do{font-size:1.2rem;font-weight:700;margin:6px 0 4px;line-height:1.35}
+  .hero-one .one-why{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.98rem;margin:0}
+  .hero-one .one-reframe{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);
+         font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:.95rem}
+  .hero-one .jump{margin:12px 0 0;font-size:.86rem}
+  .hero-one .jump a{color:var(--accent);font-weight:700;text-decoration:none;border-bottom:2px solid var(--pill-hero-bg)}
+  .hero-one .jump a:hover{border-color:var(--accent)}
+
+  .rule{background:var(--rule-bg);border-left:4px solid var(--accent);padding:12px 16px;border-radius:8px;
+        font-size:.9rem;margin:0 auto 18px;max-width:900px}
+  .reframe{background:var(--reframe-bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:8px;
+        font-family:var(--serif);font-style:italic;color:var(--ink);opacity:.94;font-size:.95rem;margin:0 auto 18px;max-width:900px}
+
+  /* Break-glass protocol cards — retrievable, gentle, never an alarm */
+  .protocol{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+        border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+  .protocol.calm{border-left-color:var(--accent2)}
+  .protocol.gold{border-left-color:var(--gold)}
+  .protocol h3{margin:0 0 4px;font-size:1.02rem;display:flex;align-items:center;gap:8px}
+  .protocol .whenline{font-size:.78rem;color:var(--muted);margin:0 0 10px}
+  ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s}
+  ol.steps li{position:relative;padding:6px 0 6px 30px;font-size:.9rem;border-bottom:1px dashed var(--line)}
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:6px;
+        width:20px;height:20px;border-radius:50%;background:var(--pill-hero-bg);color:var(--accent);
+        font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .protocol.calm ol.steps li::before{background:var(--pill-maint-bg);color:var(--accent2)}
+  .protocol.gold ol.steps li::before{background:var(--pill-found-bg);color:var(--gold-ink)}
+  .protocol .say{font-family:var(--serif);font-style:italic;color:var(--accent2)}
+
+  /* Support / signpost block */
+  .support{background:var(--reframe-bg);border:1px solid var(--line);border-left:4px solid var(--gold);
+        border-radius:14px;padding:16px 18px;margin-top:16px}
+  .support h3{margin:0 0 8px;font-size:1rem}
+  .support ul{margin:0;padding-left:18px}
+  .support li{font-size:.9rem;margin:5px 0}
+  .support .num{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* Creed */
+  .creed{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow);max-width:900px;margin:0 auto}
+  .creed ul{margin:0;padding:0;list-style:none}
+  .creed li{font-family:var(--serif);font-size:1.02rem;padding:7px 0;border-bottom:1px dashed var(--line);line-height:1.5}
+  .creed li:last-child{border-bottom:none}
+  .creed li b{font-style:normal;color:var(--accent);font-weight:600}
+  .creed .anchor-line{margin-top:14px;padding-top:14px;border-top:2px solid var(--line);
+        font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--accent2)}
+  .creed .commitments{margin-top:8px;font-size:.86rem;color:var(--muted);letter-spacing:.3px}
+  .creed .commitments b{color:var(--gold-ink)}
+
+  /* Signals not scriptures */
+  .signals{margin:0;padding:0;list-style:none}
+  .signals li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+  .signals li:last-child{border-bottom:none}
+  .signals .emo{font-weight:700;color:var(--accent)}
+  .signals .ok{color:var(--accent2)} .signals .no{color:var(--muted)}
+
+  /* Collapsible heavy zones */
+  details.zone{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin:0 0 16px;overflow:hidden}
+  details.zone > summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;font-size:1.02rem;font-weight:700;user-select:none}
+  details.zone > summary::-webkit-details-marker{display:none}
+  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:.85rem;transition:transform .2s;flex:none}
+  details.zone[open] > summary .chev{transform:rotate(90deg)}
+  details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:.78rem}
+  details.zone .zone-body{padding:0 20px 20px}
+  details.zone .zone-body .card{box-shadow:none;background:var(--bg)}
+
+  /* Containment / daily anchors */
+  .anchors{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .anchor-block{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .anchor-block .h{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.6px;color:var(--accent2);margin:0 0 8px}
+  .anchor-block ul{margin:0;padding-left:16px;font-size:.9rem}
+  .anchor-block li{margin:4px 0}
+
+  /* Compounding timeline */
+  .timeline{position:relative;margin:0;padding:0;list-style:none}
+  .phase{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;
+        padding:16px 18px 16px 20px;box-shadow:var(--shadow);margin:0 0 14px;border-left:5px solid var(--accent2)}
+  .phase .horizon{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+        color:var(--accent2);background:var(--pill-maint-bg);padding:2px 10px;border-radius:999px;margin-bottom:8px}
+  .phase h3{margin:0 0 8px;font-size:1.05rem}
+  .phase ul{margin:0;padding-left:18px;font-size:.9rem}
+  .phase li{margin:5px 0}
+  .phase li b{color:var(--accent)}
+
+  ul.check{list-style:none;margin:0;padding:0}
+  ul.check li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+  ul.check li:last-child{border-bottom:none}
+  ul.check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent2);cursor:pointer;flex:none}
+  ul.check label{cursor:pointer;font-size:.92rem}
+  ul.check input:checked + label{color:var(--muted);text-decoration:line-through}
+
+  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:32px;padding:0 16px}
+  footer .close-line{font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:.95rem;margin-bottom:8px}
+  a.back{color:var(--accent2);text-decoration:none;font-weight:600}
+  a.back:hover{text-decoration:underline}
+</style>
+<script>/* Set theme before paint to avoid a flash */(function(){try{var t=localStorage.getItem('lifeos_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<!-- Ported floating dock (nav back to the dashboard + page group) -->
+<nav id="dock" class="dock" aria-label="Quick navigation">
+  <div class="dock-sync">
+    <a class="dock-btn" href="index.html" title="Open the dashboard"><span class="status-dot"></span> <span class="dock-label">Dashboard</span></a>
+  </div>
+  <div class="dock-sep" role="presentation"></div>
+  <div class="dock-nav">
+    <a class="dock-btn" href="index.html#hero" title="The one thing">🎯 <span class="dock-label">One thing</span></a>
+    <a class="dock-btn" href="index.html#work" title="This week">🗓️ <span class="dock-label">This week</span></a>
+    <a class="dock-btn" href="index.html#daily" title="Daily">🔁 <span class="dock-label">Daily</span></a>
+    <a class="dock-btn" href="index.html#reflect" title="Reflect">🪞 <span class="dock-label">Reflect</span></a>
+    <a class="dock-btn" href="index.html#finance" title="Finance">💰 <span class="dock-label">Finance</span></a>
+    <a class="dock-btn" href="index.html#vision" title="Vision">🌅 <span class="dock-label">Vision</span></a>
+  </div>
+  <div class="dock-sep" role="presentation"></div>
+  <div class="dock-pages">
+    <a class="dock-btn" href="anchor.html" aria-current="page" title="Inner OS — The Anchor">⚓ <span class="dock-label">Inner OS</span></a>
+    <a class="dock-btn" href="knowledge.html" title="Knowledge Base">📚 <span class="dock-label">Knowledge</span></a>
+  </div>
+</nav>
+<button id="dockFab" class="dock-fab" aria-expanded="false" aria-controls="dock" aria-label="Open navigation">🧭</button>
+<div id="dockScrim" class="dock-scrim" hidden></div>
+
+<nav class="topnav" aria-label="Section navigation">
+  <div class="nav-inner">
+    <a class="brand" href="#top">⚓ The Anchor <span>· Inner OS</span></a>
+    <div class="nav-links">
+      <a href="#ground">🧯 Ground yourself</a>
+      <a href="#anchors">⚓ Daily anchors</a>
+      <a href="#philosophy">🧭 Philosophy</a>
+      <a href="#audit">🪞 Who you are</a>
+      <a href="#plan">🗺️ The plan</a>
+      <a href="#reset">🌱 7-day reset</a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle evening mode" title="Toggle evening mode">🌙</button>
+    <a class="nav-kb" href="index.html">🧭 Command Center</a>
+  </div>
+</nav>
+
+<div class="greeting">
+  <div class="wrap greeting-inner">
+    <span class="greet-hi" id="greetHi">Hey, Alex</span>
+    <span class="greet-date" id="greetDate"></span>
+    <span class="greet-line" id="greetLine">Anchored, not overwhelmed.</span>
+  </div>
+</div>
+
+<header id="top">
+  <span class="kicker">Inner OS · the ground under the missions</span>
+  <h1>⚓ The Anchor</h1>
+  <p>From overwhelmed to anchored. The life underneath the goals.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ THE GATE: read this later ============ -->
+  <section id="intro" class="section" style="margin-top:22px" aria-label="How to use this page">
+    <div class="hero-one">
+      <div class="one-tag">⚓ How to use this page</div>
+      <p class="one-do">This is the deep one. It is not for a heavy moment.</p>
+      <p class="one-why">When there's a live deadline in front of you, this page is not the task. The task is the next small block of real work, then rest. This whole thing waits for a calm hour. Reading it while you're spinning is the exact spiral it's built to end.</p>
+      <p class="one-reframe">You don't need to find one ultimate meaning before you live. You need to live your chosen meanings with enough discipline that they become real. That's the entire page in one line.</p>
+      <p class="jump">Spiralling, panicking, or low <em>right now</em>? Skip everything → <a href="#ground">Ground yourself</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ BREAK-GLASS PROTOCOLS ============ -->
+  <section id="ground" class="section" aria-label="Grounding protocols">
+    <div class="section-head">
+      <h2>🧯 Ground yourself — the break-glass cards</h2>
+      <span class="eyebrow">When the head runs hot. Do the steps in order. Don't read the rest of the page.</span>
+    </div>
+
+    <div class="reframe">Your emotions are real. They are not always accurate. An emotion is a signal, not a verdict — listen to it, don't obey all of it. First calm the body; the mind clears after, not before.</div>
+
+    <div class="grid">
+
+      <div class="protocol">
+        <h3>🌀 When you're spiralling</h3>
+        <p class="whenline">Overthinking that feels like thinking but goes nowhere.</p>
+        <ol class="steps">
+          <li>Name it out loud: <span class="say">"This is a spiral, not a decision."</span> It feels productive. It isn't.</li>
+          <li>Physiological sigh ×6: a full inhale through the nose, then a second short sniff to top off the lungs, then a long exhale through the mouth. This turns the surge off faster than any thought.</li>
+          <li>Shrink the scope: "What is the one physical action in the next 10 minutes?" Water · a walk · one small task. Do only that.</li>
+          <li>Set the rest down: <span class="say">"The unresolved part can wait until morning."</span> Then close the tabs.</li>
+          <li>If it's past 10 PM, it isn't a thought — it's tiredness wearing a costume. Sleep. Decide in daylight.</li>
+        </ol>
+      </div>
+
+      <div class="protocol">
+        <h3>😮‍💨 When you're panicking</h3>
+        <p class="whenline">Acute — chest tight, before something big, heart racing.</p>
+        <ol class="steps">
+          <li>Feet flat on the floor. Name 5 things you see, 4 you hear, 3 you can touch. Come back into the room, out of the head.</li>
+          <li>Box breath: in 4 · hold 4 · out 4 · hold 4, ×4 rounds. If holding the breath feels worse, drop the holds and just do the physiological sigh instead. Or splash cold water on your face and wrists — it resets the nervous system directly.</li>
+          <li>One true sentence: <span class="say">"This is one moment, not my whole life. I have prepared. I only have to be present."</span></li>
+          <li>Lower the stakes on purpose. The worst case is a story, not a verdict. Your work, your people, your worth — none of it hinges on this one room.</li>
+        </ol>
+      </div>
+
+      <div class="protocol calm">
+        <h3>🌑 When you're low or empty</h3>
+        <p class="whenline">The meaning drains out and everything feels flat or pointless.</p>
+        <ol class="steps">
+          <li>This is not a truth about life. It's a signal your meaning-system is tired. Do not believe its conclusions.</li>
+          <li>Do the smallest embodied good: a shower, sunlight, a short walk, one glass of water, a message to someone you love. Body first, meaning later.</li>
+          <li>No big decisions and no life-audits in this state. Nothing gets decided while empty.</li>
+          <li>One small grounding ritual even if it feels flat — a few quiet minutes, one page of a book, one deep breath. Showing up dry <em>is</em> the practice, not the failure.</li>
+          <li>If the heaviness holds for more than ~2 weeks, or every morning feels like lead, that's not a mood — talk to someone (below). No shame in it.</li>
+        </ol>
+      </div>
+
+      <div class="protocol gold">
+        <h3>🩶 When shame hits after a slip</h3>
+        <p class="whenline">After a lost evening, a broken streak, or a habit you're trying to change.</p>
+        <ol class="steps">
+          <li>Stop the second arrow. The slip is one thing; the shame-spiral that triggers the next slip is the real damage.</li>
+          <li>Name it flat, no drama: <span class="say">"I slipped. It's information, not identity."</span></li>
+          <li>One small repair, now: water · shower · ten-minute walk · one small task. Re-enter life; don't punish yourself out of it.</li>
+          <li>Reset the counter without self-hatred. Day 1 again is still the path — not a failure of the path.</li>
+        </ol>
+      </div>
+
+    </div>
+
+    <div class="support">
+      <h3>🤝 Support is part of the system, not the last resort</h3>
+      <p style="font-size:.9rem;margin:0 0 8px">You don't need more vision — you need more <em>containers</em>. People are containers too. Secrecy is what makes everything heavy.</p>
+      <ul>
+        <li><b>Say it out loud to one person</b> — your partner, a parent, or a close friend. The true sentence, spoken once, loses half its weight.</li>
+        <li><b>The appointment you've been putting off</b> — the checkup, the hard conversation, the admin task — is maintenance, not embarrassment. Book it. It quietly removes a large, humming source of background stress.</li>
+        <li><b>A therapist or counsellor is structure, not failure.</b> A good one is simply another well-built container — exactly the thing you keep saying you need.</li>
+        <li><b>If a night gets very dark:</b> reach a crisis line. In the US, call or text <span class="num">988</span> (Suicide &amp; Crisis Lifeline, 24×7); elsewhere, look up your local line and keep the number somewhere you can find it fast. If tonight itself feels unbearable — or you catch yourself thinking about not being here — don't wait the two weeks; that's exactly the moment these are for.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ DAILY ANCHORS: the containment system ============ -->
+  <section id="anchors" class="section" aria-label="Daily anchors">
+    <div class="section-head">
+      <h2>⚓ The containment system — daily minimum anchors</h2>
+      <span class="eyebrow">Not a perfect routine. A minimum one — so your mind doesn't decide the whole day from scratch.</span>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="anchors">
+        <div class="anchor-block">
+          <p class="h">☀️ Morning — three anchors</p>
+          <ul>
+            <li><b>Stillness:</b> a few quiet minutes — breath, a note of gratitude, or just sitting.</li>
+            <li><b>Body:</b> a 15–20 min walk, or light movement.</li>
+            <li><b>Work:</b> one deep block — before the phone, before the noise.</li>
+          </ul>
+        </div>
+        <div class="anchor-block">
+          <p class="h">🎯 Afternoon — one thing</p>
+          <ul>
+            <li>One execution task. Not "build the whole life."</li>
+            <li>One ticket · one study block · one Fieldnotes step · one pottery hour.</li>
+            <li>Finish it before opening anything else.</li>
+          </ul>
+        </div>
+        <div class="anchor-block">
+          <p class="h">🌙 Night — three lines, no autopsy</p>
+          <ul>
+            <li>"Today I did…"</li>
+            <li>"Tomorrow I will…"</li>
+            <li>"I set the unresolved part down for the night."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🧭 Meaning in three layers</h3>
+        <p><b>Take in</b> — books, music, walks, the things that fill you back up. This is nourishment. You already love it.</p>
+        <p><b>Practice</b> — the small daily reps: movement, stillness, the study block. This is alignment. This is where you resist — so make it minimum, not ideal.</p>
+        <p><b>Live it</b> — how you speak to your partner, handle money, eat, work, show up for family. This is the proof.</p>
+        <p class="one-why" style="font-family:var(--serif);font-style:italic;color:var(--accent2)">Input is nourishment. Practice is alignment. How you treat people is proof. Don't make the practice an exam — make it a floor.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧊 The focus reset — an experiment, not a verdict</h3>
+        <p>Run a clean 60–90 day stretch of whatever quietly drains you: <b>less late-night scrolling, fewer numbing habits</b>, sleep before midnight, a daily walk, one work block. Frame it as an experiment, not a moral test.</p>
+        <p>What you're proving to yourself: <span class="say" style="font-family:var(--serif);font-style:italic;color:var(--accent2)">"I can relax without a crutch. I can feel depth without a shortcut. I can do hard things clear-headed."</span></p>
+        <p style="font-size:.86rem;color:var(--muted)">The habit helped you unwind. Then it started helping you avoid. That's the line. Not forever — long enough for your system to prove it can rest on its own.</p>
+      </div>
+    </div>
+
+    <div class="reframe" style="margin-top:16px">The minimum practice, on a hard day: sit · breathe · three sincere minutes · one small intention · one honest note to yourself · one request for steadiness. Then slowly build back. No drama.</div>
+  </section>
+
+  <!-- ============ PHILOSOPHY ============ -->
+  <section id="philosophy" class="section" aria-label="Your philosophy">
+    <div class="section-head">
+      <h2>🧭 Your philosophy — grounded, calm, ambitious</h2>
+      <span class="eyebrow">Not nihilism. Not hustle-bro. Not vague positivity. The lived center.</span>
+    </div>
+    <div class="creed">
+      <ul>
+        <li><b>Earn well</b>, but do not worship money.</li>
+        <li><b>Love deeply</b>, but do not turn love into a performance.</li>
+        <li><b>Keep a practice</b>, but do not use it to dodge discipline.</li>
+        <li><b>Build your ventures</b>, but through small tests, not fantasy.</li>
+        <li><b>Use your tools</b> to produce artifacts, not infinite analysis.</li>
+        <li><b>Enjoy life</b>, but do not let pleasure become the master.</li>
+        <li><b>Accept that meaning isn't handed to you</b> — and still choose care, craft, beauty, and love at the lived center.</li>
+      </ul>
+      <p class="anchor-line">"Life may not hand me fixed meaning. So I will live inside chosen, cared-for commitments."</p>
+      <p class="commitments"><b>Partner · Family · Health · Work · Rest · Craft · Learning · Money · Service · Growth.</b> That is enough.</p>
+    </div>
+  </section>
+
+  <!-- ============ WHO YOU ARE: the honest audit (heavy — collapsed) ============ -->
+  <section id="audit" class="section" aria-label="The honest audit">
+    <div class="section-head">
+      <h2>🪞 Who you are — the honest audit</h2>
+      <span class="eyebrow">Collapsed on purpose. Open it when you're steady, not when you're low.</span>
+    </div>
+
+    <details class="zone">
+      <summary>🔎 The core pattern — read this one line first <span class="zsub">what actually keeps repeating</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <div class="reframe" style="margin-top:6px">You are not empty, and not fake. This page is for people who <b>generate too much meaning without enough containers</b>. Work becomes destiny. A relationship becomes a test of worth. A practice becomes cosmic proof. A quick hit becomes a shortcut. So your nervous system has no "ordinary task" category left. That's the pattern — not stupidity, not weakness. Meaning overload + escape habits + fear of executing + weak daily structure.</div>
+      </div>
+    </details>
+
+    <details class="zone">
+      <summary>💪 Strengths — the real material <span class="zsub">the good audit</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <div class="grid">
+          <div class="card"><h3>What you actually have</h3>
+            <p>Real craft depth in your field — the kind that only comes from years of shipping and debugging. Genuine curiosity and taste. The ability to synthesise complex systems. Strong bonds with the people you love. A hunger to provide and to build. Serious imagination for your side ventures — Fieldnotes' product instinct, the hands-on pull of a weekend craft. Willingness to self-audit. The ability to feel deeply. The desire to become better, not just to feel better.</p>
+            <p class="one-why" style="font-family:var(--serif);font-style:italic;color:var(--accent2)">Your problem is not lack of material. It's conversion — thought into action, feeling into care, intention into practice, ambition into calendar blocks, dreams into small tests.</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="zone">
+      <summary>⚠️ The traps — named, so you can catch them <span class="zsub">your weaknesses, without cruelty</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <div class="grid">
+          <div class="card">
+            <h3>The six traps</h3>
+            <p><b>1. You over-symbolise.</b> One meeting becomes destiny; one missed practice becomes total failure. Make things smaller.</p>
+            <p><b>2. You confuse intensity with truth.</b> If it feels cosmic or painful, you treat it as more real. Often the most real thing is boring: sleep, work, save, rest, repeat.</p>
+            <p><b>3. You're addicted to meta-analysis.</b> "Why am I thinking this? Is this feeling true?" Useful sometimes, deadly when constant.</p>
+            <p><b>4. You use beautiful projects as escape doors.</b> The hard, dull task feels humiliating, so the shiny side-project feels alive. The projects aren't the problem — the timing is.</p>
+            <p><b>5. You lack minimum daily anchors.</b> Without them, your mind decides every day from scratch. Exhausting.</p>
+            <p><b>6. You shame yourself after coping.</b> Escape → punish → feel worse → escape again. That loop is the one to break.</p>
+          </div>
+          <div class="card">
+            <h3>🎭 Emotions are signals, not verdicts</h3>
+            <ul class="signals">
+              <li><span class="emo">Anxiety</span> says <span class="ok">"this matters."</span> It does <span class="no">not</span> mean "you will fail."</li>
+              <li><span class="emo">Jealousy</span> says <span class="ok">"I want growth."</span> Not <span class="no">"my life is worthless."</span></li>
+              <li><span class="emo">Regret</span> says <span class="ok">"I value lost time."</span> Not <span class="no">"I wasted my life."</span></li>
+              <li><span class="emo">Craving</span> says <span class="ok">"I want intensity, release, comfort."</span> Not <span class="no">"this is what I truly need."</span></li>
+              <li><span class="emo">Emptiness</span> says <span class="ok">"my meaning-system is exhausted."</span> Not <span class="no">"life has no value."</span></li>
+            </ul>
+            <p style="margin-top:10px;font-size:.86rem;color:var(--muted)">And on guilt: complex motives aren't wrongdoing. Ask the simpler questions — did I lie? did I avoid repair? did I use someone's trust unfairly? If yes, repair. If no, stop prosecuting yourself.</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="zone">
+      <summary>🌗 What feeds you · what drains you <span class="zsub">the four happinesses, and the leaks</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <div class="grid">
+          <div class="card"><h3>🕊️ Peace</h3><p>A calm home rhythm; closeness with your partner without pressure; quiet mornings, a walk, light food, good sleep; the people you love safe and near. Settling happiness.</p></div>
+          <div class="card"><h3>🏅 Pride</h3><p>Doing well at work; telling your best work stories cleanly; building something real with your own hands; Fieldnotes finding its first true users; "I handled it." Competence happiness.</p></div>
+          <div class="card"><h3>🎨 Beauty</h3><p>Design and craft; photography and a cinematic eye; good food, good coffee, clean work; music you love. Aesthetic happiness — a plain earn-eat-sleep life will suffocate you.</p></div>
+          <div class="card"><h3>🌱 Meaning</h3><p>Feeling part of something larger; presence and gratitude; wanting life to be more than consumption; service to the people and places you care about. Depth happiness — the one that quietly answers the emptiness.</p></div>
+        </div>
+        <div class="rule" style="margin-top:16px">The most dangerous sentence in your head: <b>"Before I do this, I need to understand my entire life."</b> No. Sometimes before understanding life you drink water, take a walk, work 45 minutes, speak gently to someone you love, and sleep. Drains: turning every event into proof of worth · imaginary comparison timelines · seven missions at once · endless analysis loops · needing perfect clarity before acting · shame after a slip · late-night existential audits.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ THE COMPOUNDING PLAN ============ -->
+  <section id="plan" class="section" aria-label="The compounding plan">
+    <div class="section-head">
+      <h2>🗺️ The compounding plan — sequenced, not parallel</h2>
+      <span class="eyebrow">One main mission. Many cared-for side streams. No chaos.</span>
+    </div>
+
+    <div class="rule">You are not short on vision — you're short on <b>sequencing</b>. Everything cannot be "main" at once. This arc's main mission: <b>ship Operation Launch Week + reset the nervous system.</b> Everything else runs as a limited side stream underneath a steady daily base. No living in 2030 inside this month.</div>
+
+    <ul class="timeline">
+      <li class="phase">
+        <span class="horizon">This week</span>
+        <h3>Ship the launch, then rest — don't start a new project</h3>
+        <ul>
+          <li><b>The launch:</b> get Fieldnotes into its first 50 beta users' hands. Calm, present, one milestone not the whole future. Debrief the same evening.</li>
+          <li><b>After:</b> rest, and one admin move — swap the dashboard hero to the next mission. No heavy new planning.</li>
+          <li><b>Daily base ON:</b> sleep before midnight · one walk · one grounding minute · one gentle action toward your partner · fewer numbing habits.</li>
+          <li><b>Capture, don't act:</b> every new idea goes to the inbox. Nothing else launches this week.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <details class="zone">
+      <summary>🔭 The longer arc — 30 / 60 / 90 days · 1 year <span class="zsub">open when calm, not tonight</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <ul class="timeline" style="margin-top:6px">
+      <li class="phase">
+        <span class="horizon">30 days</span>
+        <h3>Close the launch loop · first clean proof</h3>
+        <ul>
+          <li><b>Work:</b> land the outcome — read the first cohort's feedback and make one clean decision about what's next. Not endless re-deciding.</li>
+          <li><b>Reset:</b> 30 clean days logged. The first evidence, not an idea.</li>
+          <li><b>Relationship:</b> that appointment or conversation you've been avoiding — booked and done. One unhurried weekly time with your partner, no agenda.</li>
+          <li><b>Base:</b> grounding minimum on ≥20 of 30 days · 3 walks/week · steady sleep. Don't add more.</li>
+        </ul>
+      </li>
+      <li class="phase">
+        <span class="horizon">60 days</span>
+        <h3>Settle the rhythm · one honest venture test</h3>
+        <ul>
+          <li><b>Work:</b> settled into the decision — steady if you're iterating, pipeline warm if you're exploring.</li>
+          <li><b>Fieldnotes (2–4 h/wk):</b> one real test — one feature shipped, a simple metric tracked, 20–50 <em>real</em> users, written feedback. Not a brand. Not a fantasy.</li>
+          <li><b>Reset holding:</b> 60 days. Notice you can rest clear-headed.</li>
+          <li><b>Life admin:</b> start the concrete checklist for whatever move or change is coming — the logistics, not the dream version.</li>
+        </ul>
+      </li>
+      <li class="phase">
+        <span class="horizon">90 days</span>
+        <h3>One craft milestone · decide the venture on evidence</h3>
+        <ul>
+          <li><b>Work:</b> fully landed; first impact story forming.</li>
+          <li><b>Pottery:</b> one finished, shareable piece or small series — documented, photographed, given or sold. Craft-first. <b>No big outreach until the work itself is good.</b></li>
+          <li><b>Fieldnotes:</b> decide on the evidence — retention, usage, hours per week → keep pushing, pivot, or park as an honest hobby.</li>
+          <li><b>Self:</b> file a quarterly review. The reset is now just how you live.</li>
+        </ul>
+      </li>
+      <li class="phase" style="border-left-color:var(--gold)">
+        <span class="horizon" style="color:var(--gold-ink);background:var(--pill-found-bg)">1 year</span>
+        <h3>The staged base — in order, not all at once</h3>
+        <ul>
+          <li><b>1.</b> Work rhythm solid. <b>2.</b> Savings rate set and money tracked. <b>3.</b> Relationship and home rhythm warm and safe. <b>4.</b> One Fieldnotes milestone real. <b>5.</b> Pottery tested as a craft, not an identity gamble. <b>6.</b> The bigger life plan begun — only after cashflow and direction are clear.</li>
+          <li><b>The person:</b> calmer, stronger body, clear-headed by default, present partner, earning well, one shipped product, one finished craft, a daily grounding practice.</li>
+          <li class="one-why" style="font-family:var(--serif);font-style:italic;color:var(--accent2);list-style:none;margin-left:-18px;padding-left:0">From overwhelmed to anchored. That is the only trip worth planning this year.</li>
+        </ul>
+      </li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="zone" style="margin-top:16px">
+      <summary>🪷 Reflection prompts — once, slowly (not nightly) <span class="zsub">on a walk, in nature, or after a quiet minute</span><span class="chev">▶</span></summary>
+      <div class="zone-body">
+        <div class="card"><h3>Journal these once, slowly — not as a nightly autopsy</h3>
+          <ol style="padding-left:18px;font-size:.92rem;line-height:1.7">
+            <li>What am I calling "depth" that is actually avoidance?</li>
+            <li>Where am I using my practice to grow, and where to dodge responsibility?</li>
+            <li>What kind of partner do I want to become in ordinary daily life — not just emotionally?</li>
+            <li>What does "enough money" mean for the next 3 years — in real numbers, not fantasy?</li>
+            <li>Which dream needs action this month, and which needs to wait respectfully?</li>
+            <li>What am I afraid will happen if I actually become disciplined?</li>
+            <li>What emotion do I keep trying not to feel clear-headed?</li>
+            <li>What would a calm, well-earning, present version of me do this week?</li>
+          </ol>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ 7-DAY RESET ============ -->
+  <section id="reset" class="section" aria-label="The 7-day reset">
+    <div class="section-head">
+      <h2>🌱 The 7-day reset — start after the deadline</h2>
+      <span class="eyebrow">Don't solve existence this week. Just do these. Ticks save to this device.</span>
+    </div>
+    <div class="card" style="max-width:760px">
+      <p class="sub" style="color:var(--muted);font-size:.85rem;margin:0 0 10px">Reset each week. This is the whole plan for a hard week — nothing more required.</p>
+      <ul class="check">
+        <li><input type="checkbox" id="rst1"><label for="rst1">Fewer numbing habits — one clear day at a time.</label></li>
+        <li><input type="checkbox" id="rst2"><label for="rst2">Sleep before midnight (as much as possible).</label></li>
+        <li><input type="checkbox" id="rst3"><label for="rst3">One 60–90 minute deep-work / build block.</label></li>
+        <li><input type="checkbox" id="rst4"><label for="rst4">One 10–20 minute walk.</label></li>
+        <li><input type="checkbox" id="rst5"><label for="rst5">One minimum grounding practice — even if it feels flat.</label></li>
+        <li><input type="checkbox" id="rst6"><label for="rst6">One gentle action toward your partner / family.</label></li>
+        <li><input type="checkbox" id="rst7"><label for="rst7">One night-line: "What did I do today that proves I didn't abandon myself?"</label></li>
+      </ul>
+    </div>
+    <div class="reframe" style="margin-top:16px">Stabilise work and income. Get calmer in body and mind. Make the home feel safe and good. Ship one Fieldnotes milestone. Test pottery as a craft. Build the bigger dream after cashflow and direction are clear. In that order. That will do more for your life than any peak experience.</div>
+  </section>
+
+  <footer>
+    <p class="close-line">You do not need life to feel cosmic every day. Peace can come from ordinary repetition, done with care.</p>
+    <p>⚓ The Anchor · part of <a class="back" href="index.html">LifeOS — Command Center</a> · parked until a calm hour.</p>
+  </footer>
+
+</div>
+
+<script>
+  /* ---- Theme (shared key with the rest of the OS) ---- */
+  function effectiveTheme(){
+    return document.documentElement.getAttribute('data-theme')
+      || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  }
+  function updateThemeIcon(){
+    const btn=document.getElementById('themeToggle'); if(!btn) return;
+    btn.textContent = effectiveTheme()==='dark' ? '☀️' : '🌙';
+  }
+  function toggleTheme(){
+    const next = effectiveTheme()==='dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('lifeos_theme', next); }catch(e){}
+    updateThemeIcon();
+  }
+  updateThemeIcon();
+
+  /* ---- Identity: read from lifeos.config.json (falls back to the demo persona) ---- */
+  let LIFEOS = { owner:{ name:'Alex Rivera', shortName:'Alex', greeting:'Hey, Alex', locale:'en-US' } };
+
+  /* ---- Greeting: config owner.greeting + a time-of-day English warmth ---- */
+  function renderGreeting(){
+    const now=new Date(), h=now.getHours();
+    const en = h<5?'rest well' : h<12?'good morning' : h<16?'good afternoon' : h<20?'good evening' : 'wind down soon';
+    const greet = (LIFEOS.owner && LIFEOS.owner.greeting)
+      || ('Hey, ' + ((LIFEOS.owner && (LIFEOS.owner.shortName||LIFEOS.owner.name)) || 'there'));
+    const locale = (LIFEOS.owner && LIFEOS.owner.locale) || undefined;
+    const hi=document.getElementById('greetHi'); if(hi) hi.textContent = greet;
+    const dt=document.getElementById('greetDate');
+    if(dt) dt.textContent = now.toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' · ' + en;
+    const lines=['Anchored, not overwhelmed.','One main mission. Many cared-for side streams.','Signals, not verdicts.','Smaller world, sharper focus.','Body first; the mind clears after.'];
+    const el=document.getElementById('greetLine'); if(el) el.textContent = lines[now.getDate() % lines.length];
+  }
+  async function loadConfig(){
+    let cfg = null;
+    for(const f of ['../lifeos.config.json','lifeos.config.json','../lifeos.config.example.json','lifeos.config.example.json']){
+      try{ const r = await fetch(f, {cache:'no-store'}); if(r.ok){ cfg = await r.json(); break; } }catch(e){}
+    }
+    if(cfg){ LIFEOS = Object.assign({}, LIFEOS, cfg, { owner: Object.assign({}, LIFEOS.owner, cfg.owner||{}) }); }
+    renderGreeting();
+  }
+  renderGreeting();  // immediate paint with demo defaults
+  loadConfig();      // then apply config if reachable (no-op on bare file://)
+
+  /* ---- 7-day reset checkboxes — own key so the main dashboard never clobbers them ---- */
+  (function(){
+    const KEY='lifeos_anchor';
+    const boxes = () => document.querySelectorAll('ul.check input[type=checkbox]');
+    function save(){ const s={}; boxes().forEach(b=>s[b.id]=b.checked); try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){} }
+    function load(){ let s={}; try{s=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){} boxes().forEach(b=>{ if(s[b.id])b.checked=true; }); }
+    document.body.addEventListener('change',(e)=>{ if(e.target.matches('ul.check input[type=checkbox]')) save(); });
+    load();
+  })();
+
+  /* Note: this page intentionally has no ../ repo-file links, so it needs no hosted-link rewrite. */
+
+  /* ---- Ported dock: mobile FAB / bottom-sheet ---- */
+  (function(){
+    var dock=document.getElementById('dock'), fab=document.getElementById('dockFab'), scrim=document.getElementById('dockScrim');
+    if(!dock||!fab) return;
+    function open(){ dock.classList.add('open'); fab.setAttribute('aria-expanded','true'); if(scrim) scrim.hidden=false; var f=dock.querySelector('.dock-btn'); if(f) f.focus(); }
+    function close(){ if(!dock.classList.contains('open')) return; dock.classList.remove('open'); fab.setAttribute('aria-expanded','false'); if(scrim) scrim.hidden=true; fab.focus(); }
+    fab.addEventListener('click', function(){ dock.classList.contains('open')?close():open(); });
+    if(scrim) scrim.addEventListener('click', close);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+    dock.addEventListener('click', function(e){ if(e.target.closest('a')) close(); });
+  })();
+</script>
+</body>
+</html>

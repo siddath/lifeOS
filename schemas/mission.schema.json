@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lifeos/mission",
+  "title": "Hero mission",
+  "description": "The single current focus. Swapping this file re-renders the whole dashboard hero (header, countdown, one-thing, week planner, evidence). Nothing else hardcodes the mission.",
+  "type": "object",
+  "required": ["slug", "hero"],
+  "properties": {
+    "slug": { "type": "string", "description": "Namespaces this mission's week/evidence checkbox keys so ticks never carry across mission swaps." },
+    "hero": {
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "kicker": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "gate": { "type": "string", "description": "ISO 8601 datetime the countdown targets." },
+        "gateLabel": { "type": "string" },
+        "gatePassedTitle": { "type": "string" },
+        "gatePassedMessage": { "type": "string" },
+        "mission": { "type": "string" },
+        "oneThing": {
+          "type": "object",
+          "properties": {
+            "tag": { "type": "string" },
+            "do": { "type": "string" },
+            "why": { "type": "string" },
+            "reframe": { "type": "string" }
+          }
+        },
+        "rule": { "type": "string", "description": "May contain simple inline HTML (<strong>, <em>)." },
+        "reframeStrip": { "type": "string" }
+      }
+    },
+    "week": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "sub": { "type": "string" },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "theme": { "type": "string" },
+              "items": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "pill": { "type": "string" },
+        "sub": { "type": "string" },
+        "items": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

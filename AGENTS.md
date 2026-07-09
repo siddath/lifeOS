@@ -1,0 +1,82 @@
+# AGENTS.md — Rules of engagement for AI sessions
+
+> Read this first. It tells any AI agent (Claude Code, or any other) how this LifeOS vault is organized and how to work inside it. This is a reusable **pattern**, not one person's story. Identity and settings live in `lifeos.config.json`; the words below use `{{owner}}` wherever your name would go. Anywhere you see `<!-- lifeos:fill -->`, replace it with something true for you and delete the marker.
+
+## Who this is for
+
+<!-- lifeos:fill --> One paragraph on the owner: who `{{owner}}` is, what they do, where they are, and what matters right now. Keep it short — the agent reads this to calibrate tone and priorities, not to memorize a biography.
+
+**North Star:** <!-- lifeos:fill --> one sentence naming the life `{{owner}}` is building — the thing every mission ultimately serves.
+
+The agent should treat this section as the standing context for every session. When it goes stale, update it; don't work around it.
+
+## The operating principle
+
+The whole system exists to move `{{owner}}` from *Think → Plan → Improve the plan → Think again* to **Think once → Build → Measure → Improve.**
+
+Every week must end with **evidence (artifacts), not ideas.** A session that ends with a longer to-do list instead of one shipped thing has failed, even if the to-do list is excellent.
+
+**Spiral guardrail.** This system is built for people who over-plan under pressure. When `{{owner}}` is spiraling — reopening decisions, widening scope, planning instead of doing — **name it plainly and push them to ship one concrete thing.** Small and honest beats complete and imaginary. Structure calms the spiral; more options feed it.
+
+## One hero mission at a time
+
+There is always exactly **one** active hero mission — the single most important outcome right now. Everything else runs in maintenance mode until the hero closes.
+
+- The hero renders entirely from `dashboard/mission.json` (see the lifecycle below). Nothing else hardcodes it.
+- If a task doesn't serve the active mission, it goes to the parking lot — **except** the always-OK basics: relationship/family time, sleep, food, health, and unavoidable admin. Those are never parked.
+- Do not let `{{owner}}` reopen every project at once. Naming that pull ("that's the spiral — one hero at a time") is part of the job.
+
+## File map
+
+The vault is plain Markdown + JSON so it stays portable, greppable, and yours. Folders are numbered so they sort in order.
+
+- `00_START_HERE.md` — the daily home base / index. Where a session starts.
+- `01_Focus/` — the current mission's working files: study/prep notes, plans, checklists, scripts specific to the hero mission.
+- `02_Areas/` — the standing life areas (one file per area code from `lifeos.config.json`), plus `02_Areas/knowledge_base/` — the searchable "about you" notes that power the knowledge base.
+- `03_Projects/` — ongoing ventures and projects, each with its own notes and (optionally) subagent roles.
+- `04_AI_Workflow/` — how AI runs this vault: the orchestrator/subagent pattern, the master prompt, the model-orchestration map.
+- `05_Checklists/` — reusable checklists (topic-wise and situational).
+- `06_Trackers/` — the live state layer: `tasks.md`, `habits.md`, `reminders.md`, `inbox.md`, `evidence.md`. This is the shared memory that skills and subagents read and write.
+- `templates/` — blank templates (daily journal, weekly review, project story, decision log).
+- `dashboard/` — the interactive dashboard (`index.html`) whose hero renders from `mission.json`.
+- `api/` — serverless sync functions (e.g. optional two-way Notion sync).
+- `schemas/` — the JSON Schemas that define the data contracts (config, mission, tasks, habits, finance, knowledge base). When in doubt about a shape, read the schema.
+- `reviews/` — filed weekly reviews (`YYYY-Www.md`) — the memory for the "Measure" step.
+- `examples/alex/` — a fully worked demo instance (the "Alex Rivera" persona) so a fresh clone renders and reads end-to-end before you personalize it.
+- `archive/` — closed hero missions and retired `mission.json` snapshots.
+
+## Data contracts
+
+Live state has schemas in `schemas/`. Skills and sync code should honor them:
+
+- `lifeos.config.schema.json` — identity, area codes, enabled modules. Read `lifeos.config.json` for the current instance.
+- `mission.schema.json` — the hero mission (`dashboard/mission.json`).
+- `tasks.schema.json`, `habits.schema.json`, `finance.schema.json`, `kb.schema.json` — trackers and knowledge base.
+
+Area codes are defined once in `lifeos.config.json`. Every task/note tags one of those codes — don't invent new area strings ad hoc.
+
+## Mission lifecycle — how to swap the hero
+
+The dashboard hero (header, countdown, one-thing, week planner, evidence) renders entirely from `dashboard/mission.json`. Swapping the hero is a small, mechanical edit — not a rewrite. The `mission-swap` skill automates it; the steps are:
+
+1. **Snapshot the old mission.** Copy the current `dashboard/mission.json` to `archive/mission_<old-slug>.json`. Move any mission-specific working folder under `archive/<old-slug>/`.
+2. **Write the new `mission.json`.** New `slug`, new `hero` block (kicker, title, subtitle, `gate` date, `gateLabel`, `oneThing`, `rule`), new `week` rows, new `evidence` items. Validate against `schemas/mission.schema.json`.
+3. **Reset the check state.** The `slug` namespaces the week/evidence checkbox keys so ticks never carry across missions — pick a fresh slug and the previous mission's ticks won't bleed in. Clear or archive the old mission's persisted checks.
+4. **Update the pointers.** Refresh the hero line in `00_START_HERE.md` and the "current state" note in this file so the written context matches the dashboard.
+
+That's the whole swap — a ~10-minute edit.
+
+## Rules of engagement
+
+1. **Everything answers one question:** *does this serve the active hero mission?* If no, it's parked — except relationship/family time, sleep, food, health, and admin-critical items, which are always allowed.
+2. **Don't over-plan.** Prefer shipping a usable artifact over a perfect plan. When `{{owner}}` is planning a third time, that's the signal to ship.
+3. **Keep tone direct and calm.** Structure helps someone who spirals under pressure; walls of options don't.
+4. **Preserve `{{owner}}`'s entries.** When updating trackers, append — don't overwrite.
+5. **Log evidence, not ideas.** Every session that ships something adds a line to `06_Trackers/evidence.md`.
+6. **Privacy first.** A personal LifeOS holds sensitive detail (finances, relationships, IDs). Keep your instance private. For anything public, extract a sanitized showcase instead of publishing the vault. <!-- lifeos:fill --> add any owner-specific privacy rules.
+7. **Self-describing on purpose.** Any session can get oriented from `CLAUDE.md` → `AGENTS.md` → `00_START_HERE.md` → `06_Trackers/`. Keep that chain accurate.
+
+## Sync
+
+- Source of truth is this Git repo. Optionally mirror to Notion and/or host `dashboard/` (see `04_AI_Workflow/` and `api/`).
+- The repo doubles as an Obsidian vault: relative Markdown links (not wikilinks), YAML frontmatter on content files (`title`/`area`/`type`/`tags`/`updated`). When you add a note, give it frontmatter so it joins the computed layer.

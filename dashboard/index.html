@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🧭 LifeOS — Command Center</title>
+<style>
+  :root{
+    /* "Hearth" palette — daytime: paper, terracotta, warm gold */
+    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#8a7f6f;
+    --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
+    --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
+    --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
+    --navbg:rgba(250,246,239,.92);
+    --rule-bg:#fff4ec; --reframe-bg:#fdf6e3;
+    --pill-hero-bg:#fbe3d8; --pill-maint-bg:#e4efe9; --pill-found-bg:#f5eccf;
+    --tint-remember:#f5eccf; --tint-strength:#e4efe9; --tint-watch:#fbe3d8; --tint-novelty:#eae4f2;
+    --gold-ink:#8a6d1b; /* legible gold text on light chips */
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    /* Motion + ambient (Temple Courtyard at Dusk) */
+    --ease:cubic-bezier(.2,.7,.3,1); --dur-1:150ms; --dur-2:300ms; --dur-3:450ms;
+    --ambient-a:rgba(180,80,42,.07); --ambient-b:rgba(201,162,75,.06); --lattice-dot:rgba(120,90,50,.45);
+    --glass:color-mix(in srgb, var(--card) 78%, transparent);
+  }
+  /* Evening: the same warm-lit world after dark — deep espresso + brightened terracotta, never a cold invert */
+  :root[data-theme="dark"]{
+    --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+    --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
+    --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+    --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+    --navbg:rgba(25,20,16,.9);
+    --rule-bg:#2a201a; --reframe-bg:#26201a;
+    --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f;
+    --tint-remember:#332916; --tint-strength:#1c3a31; --tint-watch:#3a241c; --tint-novelty:#2c2440; --gold-ink:#e6c06a; --ambient-a:rgba(224,122,78,.08); --ambient-b:rgba(217,180,95,.06); --lattice-dot:rgba(240,230,210,.32);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]):not([data-theme="dark"]){
+      --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+      --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
+      --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+      --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+      --navbg:rgba(25,20,16,.9);
+      --rule-bg:#2a201a; --reframe-bg:#26201a;
+      --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f;
+      --tint-remember:#332916; --tint-strength:#1c3a31; --tint-watch:#3a241c; --tint-novelty:#2c2440; --gold-ink:#e6c06a; --ambient-a:rgba(224,122,78,.08); --ambient-b:rgba(217,180,95,.06); --lattice-dot:rgba(240,230,210,.32);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--sans);
+       background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 64px;
+       transition:background .4s ease,color .4s ease}
+  :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
+
+  /* Slim sticky top nav */
+  .topnav{position:sticky;top:0;z-index:50;background:var(--navbg);
+          -webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+          border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(60,45,20,.05)}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .topnav{background:var(--card)} }
+  .topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .topnav .brand{font-weight:700;font-size:.92rem;color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
+  .topnav .brand span{color:var(--muted);font-weight:600}
+  .nav-links{display:flex;gap:2px;flex-wrap:wrap;flex:1;min-width:0}
+  .nav-links a{color:var(--ink);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px;transition:background .15s,color .15s}
+  .nav-links a:hover,.nav-links a:focus-visible{background:var(--line)}
+  .nav-kb{background:var(--accent2);color:#fff !important;text-decoration:none;font-size:.8rem;font-weight:700;
+          padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow)}
+  .nav-kb:hover,.nav-kb:focus-visible{filter:brightness(1.08)}
+  .theme-toggle{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+          width:34px;height:34px;font-size:.95rem;cursor:pointer;flex:none;line-height:1;transition:background .15s,transform .2s}
+  .theme-toggle:hover{background:var(--line);transform:rotate(-15deg)}
+  @media(max-width:640px){.topnav .nav-inner{padding:8px 12px}.nav-links{order:3;width:100%}.nav-links a{font-size:.76rem;padding:4px 8px}}
+
+  /* Personal greeting band — his home, in his language, before the mission */
+  .greeting{background:var(--card);border-bottom:1px solid var(--line)}
+  .greeting-inner{display:flex;align-items:baseline;gap:12px;padding:9px 16px;flex-wrap:wrap}
+  .greet-hi{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--accent)}
+  .greet-date{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .greet-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.86rem;margin-left:auto}
+  @media(max-width:640px){.greet-line{margin-left:0;width:100%}}
+
+  header{background:var(--header-grad);color:#fff;padding:26px 20px 22px;
+         text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 12% 20%,rgba(255,255,255,.10),transparent 42%),
+    radial-gradient(circle at 88% 80%,rgba(0,0,0,.12),transparent 45%);pointer-events:none}
+  /* A faint dot-lattice behind the hero — quiet texture, not decoration for its own sake */
+  header::before{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.9) 1.1px,transparent 1.3px);
+    background-size:22px 22px;background-position:center;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
+  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:1.85rem;letter-spacing:.2px;position:relative;text-wrap:balance}
+  header p{margin:6px 0 0;opacity:.94;font-size:.95rem;position:relative}
+  header .kicker{display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+         opacity:.82;font-weight:700;margin-bottom:6px;position:relative}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+  /* Section rhythm + headers */
+  .section{scroll-margin-top:72px;margin:30px 0 0}
+  .section-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-bottom:6px;
+         border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .section-head h2{margin:0;font-size:1.12rem;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .section-head .eyebrow{font-size:.74rem;color:var(--muted)}
+
+  .countdown{display:flex;justify-content:center;gap:12px;margin:18px auto 8px;flex-wrap:wrap;min-height:88px}
+  .cd-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;
+          min-width:84px;text-align:center;box-shadow:var(--shadow)}
+  .cd-box .num{font-size:2rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+  .cd-box .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .mission{text-align:center;color:var(--muted);font-size:.9rem;margin:4px 0 22px}
+
+  /* Hero: the one thing */
+  .hero-one{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+         border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);max-width:900px;margin:0 auto 16px}
+  .hero-one .one-tag{font-size:.7rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+  .hero-one .one-do{font-size:1.24rem;font-weight:700;margin:6px 0 4px;line-height:1.35}
+  .hero-one .one-why{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.98rem;margin:0}
+  .hero-one .one-reframe{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);
+         font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:.95rem}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 4px;font-size:1.05rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .card .sub{color:var(--muted);font-size:.8rem;margin:0 0 12px}
+  .pill{display:inline-block;font-size:.68rem;padding:2px 9px;border-radius:999px;font-weight:600;
+        text-transform:uppercase;letter-spacing:.5px}
+  .pill.hero{background:var(--pill-hero-bg);color:var(--accent)}
+  .pill.maint{background:var(--pill-maint-bg);color:var(--accent2)}
+  .pill.found{background:var(--pill-found-bg);color:var(--gold-ink)}
+  ul.check{list-style:none;margin:0;padding:0}
+  ul.check li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  ul.check li:last-child{border-bottom:none}
+  ul.check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent2);cursor:pointer;flex:none}
+  ul.check label{cursor:pointer;font-size:.92rem}
+  ul.check input:checked + label{color:var(--muted);text-decoration:line-through}
+  .day{margin-bottom:14px}
+  .day h3{margin:0 0 4px;font-size:.95rem;color:var(--accent)}
+  .day .theme{font-size:.78rem;color:var(--muted);margin:0 0 6px}
+  .progress{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:10px 0 2px}
+  .progress > div{height:100%;background:linear-gradient(90deg,var(--accent2),var(--gold));width:0;transition:width .4s}
+  .rule{background:var(--rule-bg);border-left:4px solid var(--accent);padding:12px 16px;border-radius:8px;
+        font-size:.9rem;margin:0 auto 18px;max-width:900px}
+  .links a{color:var(--accent2);text-decoration:none;font-size:.9rem}
+  .links a:hover{text-decoration:underline}
+
+  /* Calming reframe strip (saffron/gold, gentle — never an alarm) */
+  .reframe{background:var(--reframe-bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:8px;
+        font-family:var(--serif);font-style:italic;color:var(--ink);opacity:.92;font-size:.95rem;margin:0 auto 18px;max-width:900px}
+
+  /* Collapsible maintenance / after-Saturday zone */
+  details.zone{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+        margin:0 0 16px;overflow:hidden}
+  details.zone > summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;
+        font-size:1.02rem;font-weight:700;user-select:none}
+  details.zone > summary::-webkit-details-marker{display:none}
+  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:.85rem;transition:transform .2s;flex:none}
+  details.zone[open] > summary .chev{transform:rotate(90deg)}
+  details.zone > summary:hover{background:#fbf7ef}
+  details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:.78rem}
+  details.zone .zone-body{padding:0 20px 20px}
+  details.zone .zone-body .grid{margin-top:2px}
+  /* Nested cards inside a zone lose their own frame to avoid box-in-box */
+  details.zone .zone-body .card{box-shadow:none;background:var(--bg)}
+  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:28px}
+  .reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;
+         padding:6px 12px;font-size:.78rem;cursor:pointer;margin-top:8px}
+  .two-col{columns:2;column-gap:18px}
+  @media(max-width:520px){.two-col{columns:1}}
+  .syncbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
+           background:var(--card);border:1px solid var(--line);border-radius:14px;
+           padding:10px 14px;margin:0 auto 18px;max-width:900px;box-shadow:var(--shadow)}
+  .syncbar .st{font-weight:700;font-size:.85rem;color:var(--accent2)}
+  .sync-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+            padding:6px 14px;font-size:.8rem;cursor:pointer;text-decoration:none;transition:all .15s;font-weight:600}
+  .sync-btn:hover{background:var(--line)}
+  .sync-btn.primary{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .sync-msg{font-size:.76rem;color:var(--muted);width:100%;text-align:center}
+
+  /* Daily Wisdom quote card */
+  .quote-card{border-radius:18px;padding:26px 28px;margin:0 auto 18px;max-width:900px;color:#fff;
+              box-shadow:var(--shadow);position:relative;overflow:visible;transition:background .6s ease}
+  .quote-card::before{content:"“";position:absolute;top:6px;left:12px;font-size:6rem;font-family:var(--serif);
+              color:rgba(255,255,255,.14);line-height:1;pointer-events:none}
+  .quote-card blockquote.q-text{margin:0 0 10px;font-family:var(--serif);font-size:1.22rem;
+              line-height:1.5;font-style:italic;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.28)}
+  .quote-card .q-author{font-size:.8rem;opacity:.9;font-weight:600;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.28)}
+  .quote-card .q-tradition{font-size:.72rem;opacity:.72;font-style:italic;margin-top:3px;position:relative;z-index:1}
+  .quote-card .q-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1}
+  .quote-card button{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
+              color:#fff;border-radius:999px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:background var(--dur-1)}
+  .quote-card button:hover{background:rgba(255,255,255,.3)}
+  .quote-card .q-icon[aria-pressed="true"]{color:var(--gold);border-color:var(--gold)}
+  .quote-card .q-next{margin-left:auto}
+  .q-filter-wrap{position:relative}
+  .q-filter-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:6;min-width:210px;max-height:280px;overflow:auto;
+    background:var(--glass);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+    border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:8px;display:flex;flex-direction:column;gap:2px}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .q-filter-pop{background:var(--card)} }
+  .q-filter-pop[hidden]{display:none}
+  .q-filter-pop button{background:transparent;border:none;color:var(--ink);text-align:left;padding:7px 10px;
+    border-radius:8px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;text-shadow:none}
+  .q-filter-pop button:hover{background:var(--line)}
+  .q-filter-pop button.active{background:color-mix(in srgb,var(--accent2) 18%,transparent)}
+  .q-toast{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.42);color:#fff;font-size:.72rem;
+    padding:4px 10px;border-radius:999px;z-index:3}
+  .q-toast[hidden]{display:none}
+
+  /* Editable task/habit manager */
+  .ed-row,.ed-hrow{display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .ed-row:last-child,.ed-hrow:last-child{border-bottom:none}
+  .ed-title,.ed-hname{flex:1 1 180px;min-width:120px;border:none;background:transparent;font-size:.92rem;
+              color:var(--ink);padding:4px 2px;border-radius:6px}
+  .ed-title:focus,.ed-hname:focus{background:var(--card);box-shadow:0 0 0 2px var(--gold);outline:none}
+  .ed-area{border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:.72rem;
+              background:var(--bg);cursor:pointer;color:var(--ink)}
+  .ed-prio{border:none;border-radius:999px;padding:3px 10px;font-size:.7rem;font-weight:700;cursor:pointer;color:#fff}
+  .ed-prio.prio-P1{background:var(--accent)}
+  .ed-prio.prio-P2{background:var(--gold)}
+  .ed-prio.prio-P3{background:#9a9186}
+  .ed-due{border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:.74rem;background:var(--bg);color:var(--ink)}
+  .ed-sync-dot{width:9px;height:9px;border-radius:50%;background:#ddd3c0;flex:none}
+  .ed-sync-dot.synced{background:var(--accent2)}
+  .ed-del,.ed-hdel{border:none;background:transparent;color:var(--muted);font-size:1.1rem;cursor:pointer;
+              line-height:1;padding:2px 6px;border-radius:6px}
+  .ed-del:hover,.ed-hdel:hover{background:#fbe3d8;color:var(--accent)}
+  .ed-row.ed-done-row .ed-title{color:var(--muted);text-decoration:line-through}
+  .ed-star{border:none;background:transparent;font-size:1.05rem;color:#ddd3c0;cursor:pointer}
+  .ed-star.on{color:var(--gold)}
+  .ed-days{display:flex;gap:4px}
+  .ed-day{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+              color:var(--muted);font-size:.66rem;font-weight:700;cursor:pointer}
+  .ed-day.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .ed-addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .ed-addrow input[type=text]{flex:1 1 260px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;
+              font-size:.88rem;background:var(--bg);color:var(--ink)}
+  .ed-addrow button{border:none;background:var(--accent2);color:#fff;border-radius:10px;padding:8px 16px;
+              font-size:.85rem;font-weight:600;cursor:pointer}
+  .ed-hint{font-size:.72rem;color:var(--muted);margin:8px 0 0}
+  .ed-hint code{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+  .ed-empty{color:var(--muted);font-size:.85rem;font-style:italic;padding:8px 0}
+  .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--ink)}
+  .status-dot{width:9px;height:9px;border-radius:50%;background:#9a9186}
+  .status-dot.pending{background:var(--gold)}
+  .status-dot.syncing{background:var(--gold)}
+  html.motion-ok .status-dot.syncing{animation:pulse 1s infinite}
+  .status-dot.synced{background:var(--accent2)}
+  .status-dot.error{background:#c0392b}
+  /* Future sync states (state machine lands in Stream 1) — all palette-warm, no cold hues */
+  .status-dot.offline{background:transparent;border:1.5px solid var(--muted)}
+  .status-dot.local-only{background:transparent;border:1.5px dashed #b9a98f}
+  .status-dot.idle{background:#b9a98f}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* ---- Reflect: personality mirror + daily review ---- */
+  .mirror-quote{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--ink);
+        border-left:4px solid var(--gold);padding:8px 0 8px 14px;margin:4px 0 12px;min-height:52px}
+  .mirror-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .mirror-kind{font-size:.66rem;text-transform:uppercase;letter-spacing:.6px;font-weight:700;padding:2px 9px;border-radius:999px;
+        background:var(--tint-remember);color:var(--gold-ink)}
+  .mirror-kind.strength{background:var(--tint-strength);color:var(--accent2)}
+  .mirror-kind.watch{background:var(--tint-watch);color:var(--accent)}
+  .mirror-kind.remember{background:var(--tint-remember);color:var(--gold-ink)}
+  .mirror-kind.novelty{background:var(--tint-novelty);color:#8a6fc0}
+  .mini-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+        padding:5px 12px;font-size:.78rem;cursor:pointer;font-weight:600;transition:background .15s}
+  .mini-btn:hover{background:var(--line)}
+  .rate-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .rate-row:last-of-type{border-bottom:none}
+  .rate-row .rlabel{flex:1;min-width:150px;font-size:.9rem}
+  .rate-dots{display:flex;gap:4px}
+  .rate-dots button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+        cursor:pointer;font-size:.72rem;color:var(--muted);padding:0;transition:all .12s}
+  .rate-dots button.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .dr-field{margin:10px 0 0}
+  .dr-field label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:3px}
+  .dr-field textarea,.dr-field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;
+        font:inherit;font-size:.88rem;background:var(--card);color:var(--ink);resize:vertical}
+  .grat-row{display:flex;gap:6px;align-items:center;margin:5px 0}
+  .grat-row span{color:var(--gold);font-weight:700}
+
+  /* ---- Finance & investments ---- */
+  .fin-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:4px 0 14px}
+  .fin-tile{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center}
+  .fin-tile .v{font-size:1.15rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .fin-tile .v.pos{color:var(--accent2)} .fin-tile .v.neg{color:#c0392b}
+  .fin-tile .k{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:2px}
+  .fin-connect{background:var(--rule-bg);border:1px dashed var(--accent);border-radius:12px;padding:12px 14px;font-size:.86rem;margin:4px 0 12px}
+  table.holdings{width:100%;border-collapse:collapse;font-size:.84rem;margin-top:6px}
+  table.holdings th,table.holdings td{text-align:right;padding:6px 8px;border-bottom:1px dashed var(--line)}
+  table.holdings th:first-child,table.holdings td:first-child{text-align:left}
+  table.holdings td.pos{color:var(--accent2)} table.holdings td.neg{color:#c0392b}
+  .budget-row{display:flex;align-items:center;gap:8px;margin:6px 0}
+  .budget-row .bname{flex:1;font-size:.86rem}
+  .budget-bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;flex:2;min-width:80px}
+  .budget-bar > div{height:100%;background:linear-gradient(90deg,var(--accent2),var(--gold))}
+  .budget-row .bamt{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* ============================================================
+     SHARED UTILITIES & NEW COMPONENTS (dock · composer · motion ·
+     quote experience · daily-review stepper). Appended by the UX
+     revamp; later phases add their blocks below this marker.
+     ============================================================ */
+
+  /* ---- Phase 1 · Temple Courtyard at Dusk: ambient + motion ---- */
+  /* Ambient light layer — two slow radials + a faint full-page dot lattice, behind everything. */
+  #ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    background:
+      radial-gradient(55% 50% at 18% 22%, var(--ambient-a), transparent 68%),
+      radial-gradient(50% 45% at 82% 78%, var(--ambient-b), transparent 68%);
+    background-repeat:no-repeat;background-size:150% 150%,150% 150%;background-position:0% 0%,100% 100%}
+  #ambient::before{content:"";position:absolute;inset:0;opacity:.05;
+    background-image:radial-gradient(var(--lattice-dot) 1px,transparent 1.4px);background-size:22px 22px}
+  html.motion-ok #ambient{animation:ambientDrift 60s ease-in-out infinite alternate}
+  @keyframes ambientDrift{from{background-position:0% 0%,100% 100%}to{background-position:28% 18%,72% 84%}}
+  /* Time-of-day tint — set via data-daypart on <html> (morning gold · evening terracotta · night teal-espresso) */
+  :root[data-daypart="morning"]{--ambient-a:rgba(201,162,75,.08);--ambient-b:rgba(87,184,155,.05)}
+  :root[data-daypart="afternoon"]{--ambient-a:rgba(180,80,42,.06);--ambient-b:rgba(201,162,75,.06)}
+  :root[data-daypart="evening"]{--ambient-a:rgba(180,80,42,.09);--ambient-b:rgba(138,60,31,.07)}
+  :root[data-daypart="night"]{--ambient-a:rgba(31,111,92,.08);--ambient-b:rgba(74,55,40,.09)}
+
+  /* Reveal-on-scroll — hidden state applied ONLY when JS adds .js-reveal-ready, and only under motion-ok,
+     so content is always visible with JS off or Reduce Motion on. One-way (observer unobserves after reveal). */
+  html.motion-ok [data-reveal].js-reveal-ready{opacity:0;transform:translateY(14px);
+    transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
+  html.motion-ok [data-reveal].js-reveal-ready.in{opacity:1;transform:none}
+
+  /* Section-active gold underline (driven by the existing IntersectionObserver) */
+  .section-head{position:relative}
+  .section-head::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;
+    background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;
+    transition:transform var(--dur-2) var(--ease)}
+  .section-active .section-head::after{transform:scaleX(1)}
+
+  /* Diya micro-interactions — one-shot gold glow on completion; press feedback on controls */
+  @keyframes diyaGlow{0%{box-shadow:0 0 0 0 rgba(201,162,75,.55)}100%{box-shadow:0 0 0 12px rgba(201,162,75,0)}}
+  html.motion-ok .diya-glow{animation:diyaGlow .5s ease-out;border-radius:8px}
+  html.motion-ok .mini-btn:active,html.motion-ok .sync-btn:active,html.motion-ok .reset:active,
+  html.motion-ok .composer-add:active,html.motion-ok .dock-btn:active,html.motion-ok .chip:active{transform:scale(.97)}
+
+  /* swapFade cross-fade helper (quotes, mirror, review steps) */
+  html.motion-ok .fading{opacity:0;transition:opacity 200ms var(--ease)}
+  .quote-card blockquote.q-text,.quote-card .q-author{transition:opacity var(--dur-2) var(--ease)}
+
+  /* ---- Phase 2 · Floating left dock ---- */
+  .dock{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:60;
+    display:flex;flex-direction:column;gap:3px;padding:8px 8px 12px;width:52px;
+    background:var(--glass);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+    border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+    overflow:hidden;transition:width var(--dur-2) var(--ease)}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .dock{background:var(--card)} }
+  .dock:hover,.dock:focus-within{width:174px}
+  .dock-sync,.dock-nav,.dock-pages{display:flex;flex-direction:column;gap:2px}
+  .dock-sep{height:1px;background:var(--line);margin:4px 6px;flex:none}
+  .dock-btn{display:flex;align-items:center;gap:10px;white-space:nowrap;border:none;background:transparent;
+    color:var(--ink);text-decoration:none;cursor:pointer;font:inherit;font-size:.82rem;font-weight:600;
+    padding:8px;border-radius:10px;min-height:36px;line-height:1;transition:background var(--dur-1) var(--ease)}
+  .dock-btn:hover,.dock-btn:focus-visible{background:var(--line)}
+  .dock-btn .status-dot{flex:none}
+  .dock-label{opacity:0;width:0;overflow:hidden;white-space:nowrap;transition:opacity var(--dur-2) var(--ease)}
+  .dock:hover .dock-label,.dock:focus-within .dock-label{opacity:1;width:auto}
+  .dock-nav a.active{background:color-mix(in srgb,var(--gold) 22%,transparent);position:relative}
+  .dock-nav a.active::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;
+    border-radius:0 3px 3px 0;background:var(--accent)}
+  .dock-thread{position:absolute;right:5px;top:12px;bottom:12px;width:2px;opacity:.55;border-radius:2px;overflow:hidden;
+    background-image:radial-gradient(var(--lattice-dot) 1px,transparent 1.2px);background-size:2px 7px}
+  #dockThreadFill{position:absolute;left:0;top:0;width:100%;height:0;border-radius:2px;
+    background:linear-gradient(180deg,var(--gold),var(--accent))}
+  .dock-fab{display:none}
+  .dock-scrim{display:none}
+  @media(min-width:900px){
+    .wrap{padding-left:76px}
+    .topnav .nav-links{display:none}
+  }
+  @media(max-width:899px){
+    .dock{display:none}
+    .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
+      width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;
+      background:var(--header-grad);box-shadow:var(--shadow)}
+    html.motion-ok .dock-fab:active{transform:scale(.94)}
+    .dock-fab .fab-dot{position:absolute;top:8px;right:8px;border:2px solid var(--card)}
+    .dock.open{display:flex;flex-direction:column;gap:8px;width:auto;left:12px;right:12px;bottom:80px;top:auto;
+      transform:none;max-height:70vh;overflow:auto;padding:14px}
+    .dock.open .dock-label{opacity:1;width:auto}
+    .dock.open .dock-sync{flex-direction:row;gap:6px}
+    .dock.open .dock-sync .dock-btn{flex:1;justify-content:center}
+    .dock.open .dock-nav,.dock.open .dock-pages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .dock.open .dock-nav a,.dock.open .dock-pages a{flex-direction:column;gap:4px;text-align:center;
+      font-size:.68rem;min-height:56px;justify-content:center}
+    .dock.open .dock-thread{display:none}
+    .dock-scrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,15,10,.35)}
+    .dock-scrim[hidden]{display:none}
+    html.motion-ok .dock.open{animation:sheetUp var(--dur-2) var(--ease)}
+    @keyframes sheetUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+    body{padding-bottom:88px}
+  }
+
+  /* ---- Phase 3 · Task composer ---- */
+  .composer{margin-top:10px}
+  .composer-main{display:flex;gap:8px;flex-wrap:wrap}
+  .composer-main input[type=text]{flex:1 1 260px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+    font-size:.9rem;background:var(--bg);color:var(--ink)}
+  .composer-main input[type=text]:focus{outline:none;box-shadow:0 0 0 2px var(--gold);background:var(--card)}
+  .composer-add{border:none;background:var(--accent2);color:#fff;border-radius:10px;padding:9px 18px;
+    font-size:.88rem;font-weight:600;cursor:pointer;transition:filter var(--dur-1)}
+  .composer-add:hover{filter:brightness(1.06)}
+  .composer-opts{margin-top:10px}
+  .composer-opts[hidden]{display:none}
+  .chip-row{display:flex;gap:6px;align-items:center;margin:0 0 8px;overflow-x:auto;padding-bottom:2px;
+    scrollbar-width:thin}
+  .chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px;
+    font-size:.76rem;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;
+    transition:background var(--dur-1),border-color var(--dur-1),transform var(--dur-1)}
+  .chip:hover{background:var(--line)}
+  .chip:focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold)}
+  .chip.suggest{border-color:var(--gold);border-style:dashed}          /* last-used hint — NOT applied unless clicked */
+  .chip.auto{border-color:var(--accent2);border-style:dashed;color:var(--accent2)}  /* the parser default */
+  .chip.parsed{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 15%,transparent)}  /* live NL echo */
+  .chip.on{background:var(--accent2);border-color:var(--accent2);color:#fff}         /* explicitly chosen */
+  .chip.prio-P1.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip.prio-P2.on{background:var(--gold);border-color:var(--gold);color:#3a2c10}
+  .chip.prio-P3.on{background:#9a9186;border-color:#9a9186;color:#fff}
+  .composer-hint{margin-top:2px}
+  .composer-date{border:1px solid var(--line);border-radius:8px;padding:4px 6px;font-size:.74rem;
+    background:var(--bg);color:var(--ink);flex:none}
+  .composer-date[hidden]{display:none}
+
+  /* ---- Phase 4 · Daily review stepper ---- */
+  .dr-rest-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:1.02rem;margin:2px 0 12px}
+  .dr-begin{border:none;background:var(--accent);color:#fff;border-radius:999px;padding:9px 18px;
+    font-size:.9rem;font-weight:600;cursor:pointer;transition:filter var(--dur-1)}
+  .dr-begin:hover{filter:brightness(1.06)}
+  .dr-dots{display:flex;gap:7px;margin-top:14px}
+  .dr-dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block;transition:background var(--dur-2)}
+  .dr-dots i.on{background:var(--gold)}
+  .dr-showall{font-size:.76rem;color:var(--accent2);text-decoration:none;font-weight:600}
+  .dr-showall:hover{text-decoration:underline}
+  #drStepper{min-height:220px;display:flex;flex-direction:column}
+  .dr-stepbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+    font-size:.78rem;color:var(--muted);font-weight:600}
+  .dr-step{flex:1}
+  .dr-step[hidden]{display:none}
+  .dr-step-h{margin:0 0 10px;font-size:1.05rem;outline:none}
+  .dr-step .rate-dots button{width:32px;height:32px;font-size:.8rem}
+  .dr-micro{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.85rem;margin:12px 0 0}
+  .dr-divider{border-top:1px dashed var(--line);margin:12px 0}
+  .dr-mood{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .dr-mood button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+    padding:8px 14px;font-size:.82rem;font-weight:600;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+  .dr-mood button.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .dr-onething{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+    font-family:var(--serif);font-size:1.1rem;background:var(--card);color:var(--ink)}
+  .dr-onething:focus{outline:none;box-shadow:0 0 0 2px var(--gold)}
+  .dr-more{margin-top:6px}
+  .dr-more[hidden]{display:none}
+  .grat-row[hidden]{display:none}
+  .dr-nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
+  .dr-nav button:disabled{opacity:.4;cursor:default}
+  .dr-next{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  #drStepper.dr-flat #drStepIndicator,#drStepper.dr-flat .dr-nav{display:none}
+  #drStepper.dr-flat .dr-step{display:block}
+  #drStepper.dr-flat .dr-step + .dr-step{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px}
+</style>
+<script>/* Set theme + motion capability before paint to avoid a flash */(function(){try{var t=localStorage.getItem('lifeos_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}try{document.documentElement.classList.toggle('motion-ok',!matchMedia('(prefers-reduced-motion: reduce)').matches);}catch(e){document.documentElement.classList.add('motion-ok');}})();</script>
+</head>
+<body>
+<div id="ambient" aria-hidden="true"></div>
+
+<!-- Floating left dock: always-available navigation + live sync surface (rail on desktop, FAB->sheet on mobile) -->
+<nav id="dock" class="dock" aria-label="Quick navigation and sync">
+  <div class="dock-sync">
+    <button class="dock-btn dock-sync-btn" id="dockSyncBtn" onclick="flushQueue()" aria-live="polite" title="Sync status — click to push now">
+      <span class="status-dot" data-sync-dot></span>
+      <span class="dock-label" data-sync-text>Local only</span>
+    </button>
+    <button class="dock-btn" onclick="pullFromNotion()" title="Pull from Notion">⬇ <span class="dock-label">Pull</span></button>
+    <button class="dock-btn" onclick="flushQueue()" title="Push to Notion">⬆ <span class="dock-label">Push</span></button>
+  </div>
+  <div class="dock-sep" role="presentation"></div>
+  <div class="dock-nav">
+    <a class="dock-btn" href="#hero" title="The one thing">🎯 <span class="dock-label">One thing</span></a>
+    <a class="dock-btn" href="#work" title="This week">🗓️ <span class="dock-label">This week</span></a>
+    <a class="dock-btn" href="#daily" title="Daily basics">🔁 <span class="dock-label">Daily</span></a>
+    <a class="dock-btn" href="#reflect" title="Reflect">🪞 <span class="dock-label">Reflect</span></a>
+    <a class="dock-btn" href="#finance" title="Finance">💰 <span class="dock-label">Finance</span></a>
+    <a class="dock-btn" href="#later" title="After the gate">🌱 <span class="dock-label">Later</span></a>
+    <a class="dock-btn" href="#vision" title="Vision">🌅 <span class="dock-label">Vision</span></a>
+    <a class="dock-btn" href="#reference" title="Reference">🧠 <span class="dock-label">Reference</span></a>
+  </div>
+  <div class="dock-sep" role="presentation"></div>
+  <div class="dock-pages">
+    <a class="dock-btn" href="anchor.html" title="Inner OS — The Anchor">⚓ <span class="dock-label">Inner OS</span></a>
+    <a class="dock-btn" href="knowledge.html" title="Knowledge Base">📚 <span class="dock-label">Knowledge</span></a>
+  </div>
+  <div class="dock-thread" aria-hidden="true"><div id="dockThreadFill"></div></div>
+</nav>
+<button id="dockFab" class="dock-fab" aria-expanded="false" aria-controls="dock" aria-label="Open navigation and sync">🧭<span class="status-dot fab-dot" data-sync-dot></span></button>
+<div id="dockScrim" class="dock-scrim" hidden></div>
+
+<nav class="topnav" aria-label="Section navigation">
+  <div class="nav-inner">
+    <a class="brand" href="#top" id="brandName">🧭 LifeOS <span>· Command Center</span></a>
+    <div class="nav-links">
+      <a href="#hero">🎯 The one thing</a>
+      <a href="#work">🗓️ This week</a>
+      <a href="#daily">🔁 Daily</a>
+      <a href="#reflect">🪞 Reflect</a>
+      <a href="#finance">💰 Finance</a>
+      <a href="#later">🌱 After the gate</a>
+      <a href="#vision">🌅 Vision</a>
+      <a href="#reference">🧠 Reference</a>
+      <a href="anchor.html">⚓ Inner OS</a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle evening mode" title="Toggle evening mode">🌙</button>
+    <a class="nav-kb" href="knowledge.html">📚 About Me / Knowledge Base</a>
+  </div>
+</nav>
+
+<div class="greeting">
+  <div class="wrap greeting-inner">
+    <span class="greet-hi" id="greetHi">Hey, Alex</span>
+    <span class="greet-date" id="greetDate"></span>
+    <span class="greet-line" id="greetLine">One thing at a time. Enjoy the ride.</span>
+  </div>
+</div>
+
+<header id="top">
+  <span class="kicker" id="heroKicker">Hero mission · one thing at a time</span>
+  <h1 id="heroTitle">🚀 Operation Launch Week</h1>
+  <p id="heroSubtitle">Ship Fieldnotes to its first 50 beta users — calm, finished, real</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ HERO ZONE: the one thing ============ -->
+  <section id="hero" class="section" style="margin-top:0" aria-label="The one thing">
+    <div class="countdown" id="countdown"></div>
+    <p class="mission" id="heroMission">Calm. Prepared. Sharp. Clear about my value.</p>
+
+    <div class="hero-one">
+      <div class="one-tag" id="heroOneTag">🎯 The one thing right now</div>
+      <p class="one-do" id="heroOneDo">Do the day's top interview task — and only that.</p>
+      <p class="one-why" id="heroOneWhy">Pick the P1 at the top of Tasks below. Finish it before you open anything else. That is the win.</p>
+      <p class="one-reframe" id="heroOneReframe">No spiral. Enough for launch means: the core loop works, it feels finished, real people can use it. You don't need perfect — you need shipped.</p>
+    </div>
+
+    <div class="rule" id="heroRule">⏱️ <strong>This week's rule:</strong> every task answers — <em>"Does this help ship the beta?"</em> If yes, do it. If no, park it. Always-OK: Sam · sleep · food · health · unavoidable family/admin.</div>
+
+    <div class="reframe" id="heroReframe">Think once → Build → Measure → Improve. This week ends with evidence, not ideas.</div>
+
+    <div class="progress"><div id="progbar"></div></div>
+    <p class="mission" id="progtext">0% of tracked items done</p>
+
+    <!-- Daily Wisdom -->
+    <div class="quote-card" id="quoteCard">
+      <blockquote class="q-text"></blockquote>
+      <div class="q-author"></div>
+      <div class="q-tradition" id="qTradition"></div>
+      <div class="q-controls">
+        <button class="q-icon" id="qFav" onclick="toggleFav()" aria-pressed="false" title="Save to favorites" aria-label="Save to favorites">♡</button>
+        <button class="q-icon" id="qShare" onclick="shareQuote()" title="Share this quote" aria-label="Share this quote">↗ Share</button>
+        <div class="q-filter-wrap">
+          <button class="q-icon" id="qFilterBtn" onclick="toggleFilterPop()" aria-expanded="false" aria-haspopup="true" title="Filter by theme" aria-label="Filter quotes by theme">Filter ▾</button>
+          <div class="q-filter-pop" id="qFilterPop" hidden role="menu" aria-label="Quote themes"></div>
+        </div>
+        <button class="q-next" onclick="nextQuote()">Next wisdom →</button>
+      </div>
+      <span class="q-toast" id="qToast" hidden></span>
+    </div>
+
+    <!-- Sync bar: dashboard <-> Notion -->
+    <div class="syncbar">
+      <span class="st">🔄 Sync</span>
+      <span class="status-pill" aria-live="polite"><span class="status-dot" id="statusDot" data-sync-dot></span><span id="statusText" data-sync-text>Local only</span></span>
+      <a class="sync-btn primary" id="openNotionBtn" href="#" target="_blank" rel="noopener" hidden>Open Notion</a>
+      <button class="sync-btn" onclick="exportState()">💾 Export backup</button>
+      <button class="sync-btn" onclick="importState()">📥 Import backup</button>
+      <span class="sync-msg" id="syncMsg">Edits to Tasks/Habits below queue an automatic sync to Notion · see <a href="../docs/connectors/notion.md">setup guide</a>.</span>
+    </div>
+  </section>
+
+  <!-- ============ ACTIVE WORK: this week ============ -->
+  <section id="work" class="section" aria-label="This week's work">
+    <div class="section-head">
+      <h2>🗓️ This week — the work that moves the mission</h2>
+      <span class="eyebrow">Tasks, habits and the day-by-day plan. Start at the top; one block at a time.</span>
+    </div>
+  <div class="grid">
+
+    <!-- Live Task Manager -->
+    <div class="card" style="grid-column:1/-1">
+      <h2>✏️ Tasks <span class="pill found">live · syncs to Notion</span></h2>
+      <p class="sub">Add, edit, re-prioritize below. Every change queues an automatic sync to your Notion Tasks DB.</p>
+      <div id="taskList"></div>
+      <div class="composer" id="taskComposer">
+        <div class="composer-main">
+          <input type="text" id="taskQuickAdd" placeholder="Add a task — just type the title…" aria-label="New task title" autocomplete="off">
+          <button class="composer-add" id="composerAddBtn" onclick="addTaskFromQuickAdd()">Add</button>
+        </div>
+        <div class="composer-opts" id="composerOpts" hidden>
+          <div class="chip-row" role="radiogroup" aria-label="Area" id="composerAreas"></div>
+          <div class="chip-row" role="radiogroup" aria-label="Priority" id="composerPrio"></div>
+          <div class="chip-row" role="radiogroup" aria-label="Due" id="composerDue"></div>
+          <p class="ed-hint composer-hint">Power path: type <code>#area</code>, <code>P1</code>–<code>P3</code>, <code>due:tomorrow</code> in the title — chips follow along. Nothing chosen? It files as 🧘 Mindset · P3 · no due.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Habit Tracker -->
+    <div class="card" style="grid-column:1/-1">
+      <h2>🔁 Habits <span class="pill found">live · syncs to Notion</span></h2>
+      <p class="sub">This week's matrix. ★ = keystone habit. Click a day letter to toggle it.</p>
+      <div id="habitList"></div>
+      <div class="ed-addrow">
+        <input type="text" id="habitQuickAdd" placeholder="Add a new habit… Enter to add">
+        <button onclick="addHabitFromQuickAdd()">+ Add</button>
+      </div>
+      <div id="habitHistory" class="ed-hint" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Week planner (rendered from mission.json; static markup below is the offline fallback) -->
+    <div class="card" style="grid-column:1/-1">
+      <h2 id="heroWeekTitle">🗓️ The Week — Mon → Sat</h2>
+      <p class="sub" id="heroWeekSub">One theme per day. Tick as you go (saves on this device).</p>
+      <div class="grid" id="weekGrid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+        <div class="day">
+          <h3>Week 1 · Core loop + onboarding</h3>
+          <p class="theme">The one flow a new user must love</p>
+          <ul class="check" data-group="week">
+            <li><input type="checkbox" id="w1"><label for="w1">Nail capture → organize → recall</label></li>
+            <li><input type="checkbox" id="w2"><label for="w2">First-run onboarding (empty states)</label></li>
+            <li><input type="checkbox" id="w3"><label for="w3">Fix the top-5 known bugs</label></li>
+            <li><input type="checkbox" id="w4"><label for="w4">Dogfood it a full day</label></li>
+          </ul>
+        </div>
+        <div class="day">
+          <h3>Week 2 · Polish + performance</h3>
+          <p class="theme">Make it feel finished and fast</p>
+          <ul class="check" data-group="week">
+            <li><input type="checkbox" id="w5"><label for="w5">Loading + error states everywhere</label></li>
+            <li><input type="checkbox" id="w6"><label for="w6">Mobile layout pass</label></li>
+            <li><input type="checkbox" id="w7"><label for="w7">Cut cold-start time</label></li>
+            <li><input type="checkbox" id="w8"><label for="w8">Landing page v1</label></li>
+          </ul>
+        </div>
+        <div class="day">
+          <h3>Week 3 · Beta plumbing</h3>
+          <p class="theme">The machinery around the product</p>
+          <ul class="check" data-group="week">
+            <li><input type="checkbox" id="w9"><label for="w9">Signup + waitlist flow</label></li>
+            <li><input type="checkbox" id="w10"><label for="w10">In-app feedback capture</label></li>
+            <li><input type="checkbox" id="w11"><label for="w11">Activation-funnel analytics</label></li>
+            <li><input type="checkbox" id="w12"><label for="w12">Line up the first 20 testers</label></li>
+          </ul>
+        </div>
+        <div class="day">
+          <h3>Week 4 · Launch + first cohort</h3>
+          <p class="theme">Ship it and watch</p>
+          <ul class="check" data-group="week">
+            <li><input type="checkbox" id="w13"><label for="w13">Final QA on the core loop</label></li>
+            <li><input type="checkbox" id="w14"><label for="w14">Send the first 50 invites</label></li>
+            <li><input type="checkbox" id="w15"><label for="w15">Onboard cohort 1 live</label></li>
+            <li><input type="checkbox" id="w16"><label for="w16">Fix top-3 friction points</label></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /work grid -->
+  </section>
+
+  <!-- ============ DAILY: non-negotiables + health ============ -->
+  <section id="daily" class="section" aria-label="Daily basics">
+    <div class="section-head">
+      <h2>🔁 Daily basics — keep the base solid</h2>
+      <span class="eyebrow">Non-negotiables and health. These protect you while you sprint. Reset each morning.</span>
+    </div>
+  <div class="grid">
+
+    <!-- Daily non-negotiables -->
+    <div class="card">
+      <h2>🔁 Daily Non-Negotiables <span class="pill hero">protect these</span></h2>
+      <p class="sub">Reset these each morning</p>
+      <ul class="check" data-group="daily">
+        <li><input type="checkbox" id="d1"><label for="d1">20–30 min walk</label></li>
+        <li><input type="checkbox" id="d2"><label for="d2">Water 2–3 L</label></li>
+        <li><input type="checkbox" id="d3"><label for="d3">Breathing 4-2-6 (AM + PM)</label></li>
+        <li><input type="checkbox" id="d4"><label for="d4">2 focused build blocks</label></li>
+        <li><input type="checkbox" id="d5"><label for="d5">One shipped thing, however small</label></li>
+        <li><input type="checkbox" id="d6"><label for="d6">20–30 min with Sam (no work talk)</label></li>
+        <li><input type="checkbox" id="d7"><label for="d7">Skincare AM + PM</label></li>
+        <li><input type="checkbox" id="d8"><label for="d8">Sleep before 11:30</label></li>
+      </ul>
+      <button class="reset" onclick="resetGroup('daily')">↺ Reset daily for a new day</button>
+    </div>
+
+    <!-- Health Protocol -->
+    <div class="card">
+      <h2>💪 Health Protocol <span class="pill found">ongoing</span></h2>
+      <p class="sub">Build muscle, move daily, sleep right — layer in one at a time</p>
+      <ul class="check" data-group="health">
+        <li><input type="checkbox" id="h1"><label for="h1">Workout (dumbbells / pull-up bar / calisthenics)</label></li>
+        <li><input type="checkbox" id="h2"><label for="h2">10,000 steps</label></li>
+        <li><input type="checkbox" id="h3"><label for="h3">Morning sunlight 6–9 AM</label></li>
+        <li><input type="checkbox" id="h4"><label for="h4">Meditation 10–15 min</label></li>
+        <li><input type="checkbox" id="h5"><label for="h5">Water ~3 L</label></li>
+        <li><input type="checkbox" id="h6"><label for="h6">Vitamins / supplements</label></li>
+        <li><input type="checkbox" id="h7"><label for="h7">Read 30 min</label></li>
+        <li><input type="checkbox" id="h8"><label for="h8">Sleep early, 7+ hrs</label></li>
+      </ul>
+      <button class="reset" onclick="resetGroup('health')">↺ Reset daily</button>
+    </div>
+
+  </div><!-- /daily grid -->
+  </section>
+
+  <!-- ============ REFLECT: personality mirror + daily review ============ -->
+  <section id="reflect" class="section" aria-label="Reflect">
+    <div class="section-head">
+      <h2>🪞 Reflect — mirror &amp; daily review</h2>
+      <span class="eyebrow">Two minutes, honest, then rest. No spiral.</span>
+    </div>
+    <div class="grid">
+
+      <!-- Personality Mirror -->
+      <div class="card">
+        <h2>🪞 Personality Mirror</h2>
+        <p class="sub">A calm nudge — a strength to lean on, a pattern to watch, an anchor to remember.</p>
+        <div class="mirror-meta"><span class="mirror-kind" id="mirrorKind">remember</span></div>
+        <blockquote class="mirror-quote" id="mirrorText">…</blockquote>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="mini-btn" onclick="nextMirror()">↻ Another</button>
+          <button class="mini-btn" onclick="boredomBreaker()">✨ Boredom-breaker</button>
+          <a class="mini-btn" href="knowledge.html#" onclick="sessionStorage.setItem('kbq','personality')">📚 Full mirror</a>
+        </div>
+      </div>
+
+      <!-- Daily Review -->
+      <div class="card" style="grid-column:auto">
+        <h2>🌙 Daily Review <span class="pill found" id="drDate">today</span></h2>
+
+        <!-- Resting state (default) — short and calm; the form lives behind "Begin" -->
+        <div id="drRest">
+          <p class="dr-rest-line" id="drRestLine">Two gentle minutes, then rest.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="dr-begin" id="drBeginBtn" onclick="drBegin()">Begin — 4 small steps</button>
+            <button class="mini-btn" id="drRestCopy" onclick="copyReview()" hidden>📋 Copy for journal</button>
+            <a class="dr-showall" href="#" onclick="drToggleShowAll();return false">Show all</a>
+          </div>
+          <div class="dr-dots" id="drDots" aria-hidden="true"></div>
+        </div>
+
+        <!-- 4-step stepper — one visible at a time; autosaves everything -->
+        <div id="drStepper" hidden>
+          <div class="dr-stepbar"><span id="drStepIndicator" aria-live="polite">1 of 4</span>
+            <a class="dr-showall" href="#" onclick="drToggleShowAll();return false">Show all</a></div>
+
+          <div class="dr-step" id="drStep1">
+            <h3 class="dr-step-h" tabindex="-1">How did the day feel?</h3>
+            <div id="drRatings"></div>
+            <p class="dr-micro">First feeling, not analysis. 3 is a fine answer.</p>
+          </div>
+
+          <div class="dr-step" id="drStep2" hidden>
+            <h3 class="dr-step-h" tabindex="-1">With Sam</h3>
+            <div class="dr-mood" id="drMood" role="radiogroup" aria-label="Presence with Sam"></div>
+            <div class="dr-field">
+              <label for="drPresence">One honest line (optional)</label>
+              <textarea id="drPresence" rows="2" placeholder="One honest line…"></textarea>
+            </div>
+            <div class="dr-divider"></div>
+            <div class="dr-field">
+              <label for="drOverthink">Anything looping? Name it and let it wait (optional)</label>
+              <textarea id="drOverthink" rows="2" placeholder="Name it — then let it wait."></textarea>
+            </div>
+            <p class="dr-micro">Presence over productivity. One line is plenty.</p>
+          </div>
+
+          <div class="dr-step" id="drStep3" hidden>
+            <h3 class="dr-step-h" tabindex="-1">Three small thanks</h3>
+            <div class="grat-row"><span>1</span><input id="drG1" placeholder="Something specific…"></div>
+            <div class="grat-row" id="drG2Row"><span>2</span><input id="drG2" placeholder="Small counts…"></div>
+            <div class="grat-row" id="drG3Row"><span>3</span><input id="drG3" placeholder="…"></div>
+            <button class="mini-btn dr-more" id="drMoreThanks" onclick="drMoreThanks()">+ one more</button>
+            <p class="dr-micro">Filter coffee counts. Small counts.</p>
+          </div>
+
+          <div class="dr-step" id="drStep4" hidden>
+            <h3 class="dr-step-h" tabindex="-1">Tomorrow's one thing</h3>
+            <input id="drOneThing" class="dr-onething" placeholder="Just one.">
+            <p class="dr-micro">Just one. The rest is parked, not forgotten.</p>
+          </div>
+
+          <div class="dr-nav">
+            <button class="mini-btn" id="drBack" onclick="drStep(-1)">← Back</button>
+            <button class="mini-btn dr-next" id="drNext" onclick="drNext()">Next →</button>
+          </div>
+        </div>
+
+        <span class="sync-msg" id="drMsg" style="display:block;margin-top:10px"></span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ FINANCE & INVESTMENTS ============ -->
+  <section id="finance" class="section" aria-label="Finance and investments">
+    <div class="section-head">
+      <h2>💰 Finance &amp; Investments</h2>
+      <span class="eyebrow">Net worth · monthly budget · broker portfolio. Awareness, not impulse.</span>
+    </div>
+    <div class="grid">
+
+      <!-- Portfolio (broker) -->
+      <div class="card" style="grid-column:1/-1">
+        <h2>📈 Portfolio <span class="pill maint" id="finSource">Broker</span></h2>
+        <p class="sub" id="finUpdated">Loading…</p>
+        <div id="finConnect"></div>
+        <div class="fin-summary" id="finSummary"></div>
+        <div id="finHoldings"></div>
+      </div>
+
+      <!-- Net worth -->
+      <div class="card">
+        <h2>🏦 Net Worth</h2>
+        <p class="sub">Assets − liabilities. Update at the monthly review.</p>
+        <div id="netWorth"></div>
+      </div>
+
+      <!-- Budget -->
+      <div class="card">
+        <h2>🧾 Monthly Budget <span class="pill found" id="budgetMonth"></span></h2>
+        <p class="sub">Give every dollar a job.</p>
+        <div id="budgetList"></div>
+      </div>
+
+    </div>
+    <p class="mission" style="margin-top:10px">Connect live data: see the <a href="../docs/connectors/README.md">broker connector guide</a>. Capital-protection first — this view is for awareness, not trading impulses.</p>
+  </section>
+
+  <!-- ============ AFTER SATURDAY: collapsed by default ============ -->
+  <section id="later" class="section" aria-label="After the gate">
+    <div class="section-head">
+      <h2>🌱 After the gate — parked, not forgotten</h2>
+      <span class="eyebrow">Alive, not abandoned. Kept out of sight so it can't nag at 1 AM. Open only when you have room.</span>
+    </div>
+
+    <details class="zone">
+      <summary>
+        🌱 Side projects &amp; life — maintenance mode
+        <span class="zsub">Fieldnotes · Weekend Pottery · Family &amp; Sam · Learning</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="grid">
+
+    <!-- Side project cards -->
+    <div class="card">
+      <h2>🌱 Side projects <span class="pill maint">maintenance</span></h2>
+      <p class="sub">Alive, not abandoned — one tiny artifact each</p>
+      <ul class="check" data-group="life">
+        <li><input type="checkbox" id="l1"><label for="l1">📓 Fieldnotes: write one changelog entry</label></li>
+        <li><input type="checkbox" id="l2"><label for="l2">🏺 Pottery: photograph this week's pieces</label></li>
+        <li><input type="checkbox" id="l3"><label for="l3">❤️ Tell family about the launch plan</label></li>
+        <li><input type="checkbox" id="l4"><label for="l4">📷 5–10 casual photos (no pressure)</label></li>
+      </ul>
+    </div>
+
+    <!-- Ventures: Pottery + Learning -->
+    <div class="card">
+      <h2>🚀 Ventures <span class="pill maint">after launch</span></h2>
+      <p class="sub">Weekend Pottery build-out + a learning goal</p>
+      <ul class="check" data-group="ventures">
+        <li><input type="checkbox" id="v1"><label for="v1">🏺 Pottery: price + list 5 pieces online</label></li>
+        <li><input type="checkbox" id="v2"><label for="v2">🏺 Restock studio supplies</label></li>
+        <li><input type="checkbox" id="v3"><label for="v3">🤝 Reach out to one local market/fair</label></li>
+        <li><input type="checkbox" id="v4"><label for="v4">📚 Learning: finish the current course module</label></li>
+        <li><input type="checkbox" id="v5"><label for="v5">📚 Build one small demo from what you learned</label></li>
+      </ul>
+    </div>
+
+    <!-- Family & Sam -->
+    <div class="card">
+      <h2>❤️ Family & Sam <span class="pill found">after launch</span></h2>
+      <p class="sub">Concrete plans, not vague "spend time"</p>
+      <ul class="check" data-group="family">
+        <li><input type="checkbox" id="f1"><label for="f1">🍽️ Special dinner with Sam (plan it)</label></li>
+        <li><input type="checkbox" id="f2"><label for="f2">🚗 Weekend visit to family</label></li>
+        <li><input type="checkbox" id="f3"><label for="f3">📞 Weekly call with parents</label></li>
+        <li><input type="checkbox" id="f4"><label for="f4">📄 Renew the apartment lease</label></li>
+        <li><input type="checkbox" id="f5" checked><label for="f5">✅ Booked the anniversary trip (done)</label></li>
+      </ul>
+    </div>
+
+        </div><!-- /life-os zone grid -->
+      </div><!-- /zone-body -->
+    </details>
+
+    <details class="zone">
+      <summary>
+        📦 Evidence — celebrate what shipped
+        <span class="zsub">Week ends with evidence, not ideas</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="grid">
+
+    <!-- Evidence -->
+    <div class="card">
+      <h2 id="evidenceTitle">📦 Evidence <span class="pill found">artifacts</span></h2>
+      <p class="sub" id="evidenceSub">These are wins. Tick them and mean it.</p>
+      <ul class="check" data-group="evidence" id="evidenceList">
+        <li><input type="checkbox" id="e1"><label for="e1">✅ Core loop shipped</label></li>
+        <li><input type="checkbox" id="e2"><label for="e2">✅ 7 days of health basics</label></li>
+        <li><input type="checkbox" id="e3"><label for="e3">✅ Time with Sam (present, no work-dumping)</label></li>
+        <li><input type="checkbox" id="e4"><label for="e4">✅ Landing page live</label></li>
+        <li><input type="checkbox" id="e5"><label for="e5">✅ First beta invites sent</label></li>
+      </ul>
+    </div>
+
+        </div><!-- /evidence zone grid -->
+      </div><!-- /zone-body -->
+    </details>
+  </section>
+
+  <!-- ============ VISION: the year & the 5-year picture ============ -->
+  <section id="vision" class="section" aria-label="Life architecture">
+    <div class="section-head">
+      <h2>🌅 Life architecture — the year &amp; the 5-year picture</h2>
+      <span class="eyebrow">One gate, not the kingdom. This is the kingdom — parallel compounding across seven streams.</span>
+    </div>
+    <div class="grid">
+
+      <div class="card">
+        <h2>🌅 One-Year Vision <span class="pill found">Jul '26 → Jul '27</span></h2>
+        <p class="sub">60–75% execution of this = a massive portion of the life goals already alive.</p>
+        <ul class="check" style="list-style:none;margin:0;padding:0">
+          <li style="border-bottom:1px dashed var(--line);padding:6px 0">💼 A role with better balance and room to build</li>
+          <li style="border-bottom:1px dashed var(--line);padding:6px 0">📓 Fieldnotes reaches real, retained users</li>
+          <li style="border-bottom:1px dashed var(--line);padding:6px 0">🏺 Weekend Pottery covers its own costs</li>
+          <li style="border-bottom:1px dashed var(--line);padding:6px 0">🤖 A serious builder portfolio</li>
+          <li style="padding:6px 0">🧘 Fewer panic/regret loops · calmer daily rhythm</li>
+        </ul>
+        <p class="links" style="margin:10px 0 0">📖 <a href="../02_Areas/one_year_vision.template.md">Full one-year vision + month-by-month themes</a></p>
+      </div>
+
+      <div class="card">
+        <h2>🏡 Home Vision <span class="pill maint">5-year</span></h2>
+        <p class="sub">The calm version: a home that fits the life, not the other way around.</p>
+        <p style="font-size:.9rem;margin:0 0 8px">A place with light and space to work · a small studio for pottery · room for family to stay · low-maintenance and sustainable.</p>
+        <p style="font-size:.86rem;color:var(--muted);margin:0">Big purchases in strict order, one at a time. Don't let nice-to-haves eat the home fund.</p>
+        <p class="links" style="margin:10px 0 0">📖 <a href="../02_Areas/house_vision.template.md">Full home &amp; big-purchase plan</a></p>
+      </div>
+
+      <div class="card">
+        <h2>🧯 Panic Parking Lot <span class="pill hero">use when spiraling</span></h2>
+        <p class="sub">Write the thought → label it (regret / fear / fantasy / comparison / real task) → convert to one action.</p>
+        <blockquote class="mirror-quote" style="min-height:auto">"This is not my final chance. This is one serious attempt. My life is bigger than this event."</blockquote>
+        <p class="links" style="margin:6px 0 0">📖 <a href="../02_Areas/panic_parking_lot.template.md">Open the parking lot + calm evidence folder</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ QUICK REFERENCE ============ -->
+  <section id="reference" class="section" aria-label="Quick reference">
+    <div class="section-head">
+      <h2>🧠 Quick reference — the whole repo, one tap away</h2>
+      <span class="eyebrow">Open a file only when you need it. Everything is written down so you don't have to hold it in your head.</span>
+    </div>
+
+    <!-- Quick reference -->
+    <div class="card">
+      <h2>🧠 Quick Reference</h2>
+      <p class="sub">Tap the repo files for detail</p>
+      <div class="links" style="columns:2;column-gap:18px">
+
+        <p style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🎯 Focus (current mission)</p>
+        <p>🧭 <a href="../01_Focus/README.md">Focus — the current mission workspace</a></p>
+        <p>📅 <a href="../01_Focus/plan.template.md">Mission plan (template)</a></p>
+
+        <p style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🌱 Areas</p>
+        <p>🌟 <a href="../02_Areas/north_star.template.md">North Star</a></p>
+        <p>🌅 <a href="../02_Areas/one_year_vision.template.md">One-Year Vision</a></p>
+        <p>🏡 <a href="../02_Areas/house_vision.template.md">Home Vision</a></p>
+        <p>🧯 <a href="../02_Areas/panic_parking_lot.template.md">Panic Parking Lot</a></p>
+        <p>📊 <a href="../02_Areas/life_audit.template.md">Life Audit</a></p>
+        <p>🧘 <a href="../02_Areas/wellbeing_routine.template.md">Wellbeing</a></p>
+        <p>❤️ <a href="../02_Areas/relationships.template.md">Relationships & Family</a></p>
+        <p>🔄 <a href="../02_Areas/routines.template.md">Routines</a></p>
+
+        <p style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">📊 Trackers</p>
+        <p>✅ <a href="../06_Trackers/tasks.template.md">Tasks (P1/P2/P3)</a></p>
+        <p>📥 <a href="../06_Trackers/inbox.template.md">Inbox</a></p>
+        <p>🔁 <a href="../06_Trackers/habits.template.md">Habits</a></p>
+        <p>⏰ <a href="../06_Trackers/reminders.template.md">Reminders</a></p>
+        <p>💰 <a href="../06_Trackers/finance.template.md">Finance</a></p>
+        <p>📦 <a href="../06_Trackers/evidence.template.md">Evidence log</a></p>
+
+        <p style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🚀 Projects</p>
+        <p>📓 <a href="../03_Projects/README.md">Your projects</a></p>
+
+        <p style="color:var(--accent);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🤖 AI &amp; Knowledge</p>
+        <p>⚓ <a href="anchor.html">The Anchor — Inner OS (grounding guide)</a></p>
+        <p>📚 <a href="knowledge.html">About Me / Knowledge Base</a></p>
+        <p>🔧 <a href="../04_AI_Workflow/subagents.md">Sub-agents</a></p>
+        <p>📜 <a href="../04_AI_Workflow/master_prompt.md">Master Prompt</a></p>
+        <p>🔄 <a href="../docs/connectors/notion.md">Notion Sync Setup</a></p>
+        <p>🗺️ <a href="../docs/ROADMAP.md">Roadmap</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="one-reframe" style="font-family:var(--serif);font-style:italic;color:var(--muted);max-width:640px;margin:0 auto 12px">One hero mission at a time. Do the one thing, stay close to the people you love, sleep well. That is the win.</p>
+    <span id="footerCredit">Built with LifeOS · data saved locally in your browser</span> ·
+    <button class="reset" onclick="resetAll()">↺ Reset everything</button>
+  </footer>
+</div>
+
+<script>
+  /* ============================================================
+     MISSION LOADER — the whole hero (header, countdown, one-thing,
+     week planner, evidence) renders from dashboard/mission.json so
+     the dashboard never hardcodes a single mission. Swap that file
+     to change the hero. Static HTML is the offline fallback.
+     ============================================================ */
+  let target = new Date("2026-08-22T09:00:00-07:00").getTime();  // default; overridden by mission.json
+  let missionGate = null;  // {label, passedTitle, passedMessage}
+  let missionSlug = '';    // set from mission.json; namespaces week/evidence check keys (§D-8)
+  // "level-up" -> "level-up:"  ·  empty slug -> "" (legacy un-prefixed ids, matches static fallback markup)
+  function missionKeyPrefix(){
+    // full slug (not initials) so two missions never collide on the same prefix — a fresh slug is always a clean slate
+    return missionSlug ? missionSlug.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+':' : '';
+  }
+
+  function setText(id, val){ const el=document.getElementById(id); if(el!=null && val!=null) el.textContent=val; }
+  function setHTML(id, val){ const el=document.getElementById(id); if(el!=null && val!=null) el.innerHTML=val; }
+
+  function tick(){
+    const now = Date.now();
+    const cd = document.getElementById('countdown');
+    let d = target - now;
+    if(d<=0 && missionGate && missionGate.passedMessage){
+      cd.innerHTML = `<div class="cd-box" style="min-width:auto;padding:16px 22px"><div class="lbl" style="letter-spacing:.5px">✓ ${missionGate.label||'Gate'} passed</div><div class="num" style="font-size:1rem;margin-top:4px;font-weight:600">${missionGate.passedMessage}</div></div>`;
+      return;
+    }
+    d = Math.max(0, d);
+    const days = Math.floor(d/86400000); d-=days*86400000;
+    const hrs = Math.floor(d/3600000); d-=hrs*3600000;
+    const min = Math.floor(d/60000); d-=min*60000;
+    const sec = Math.floor(d/1000);
+    const b = [["Days",days],["Hours",hrs],["Min",min],["Sec",sec]];
+    cd.innerHTML = b.map(x=>
+      `<div class="cd-box"><div class="num">${String(x[1]).padStart(2,'0')}</div><div class="lbl">${x[0]}</div></div>`
+    ).join("");
+  }
+
+  function renderMission(m){
+    if(!m) return;
+    if(m.slug) missionSlug = m.slug;   // namespace this mission's week/evidence check keys (§D-8)
+    const h = m.hero||{};
+    const passed = h.gate && (new Date(h.gate).getTime() <= Date.now());
+    setText('heroKicker', h.kicker);
+    setText('heroTitle', passed && h.gatePassedTitle ? h.gatePassedTitle : h.title);
+    setText('heroSubtitle', h.subtitle);
+    setText('heroMission', h.mission);
+    if(h.oneThing){
+      setText('heroOneTag', h.oneThing.tag); setText('heroOneDo', h.oneThing.do);
+      setText('heroOneWhy', h.oneThing.why); setText('heroOneReframe', h.oneThing.reframe);
+    }
+    setHTML('heroRule', h.rule); setText('heroReframe', h.reframeStrip);
+    if(h.gate){ target = new Date(h.gate).getTime(); missionGate = {label:h.gateLabel, passedMessage:h.gatePassedMessage}; }
+    // Week planner
+    if(m.week){
+      setText('heroWeekTitle', m.week.title); setText('heroWeekSub', m.week.sub);
+      const grid = document.getElementById('weekGrid');
+      if(grid && Array.isArray(m.week.days)){
+        let n=0;
+        grid.innerHTML = m.week.days.map(day=>{
+          const items = (day.items||[]).map(t=>{ n++; const id=missionKeyPrefix()+'w'+n;
+            return `<li><input type="checkbox" id="${id}"><label for="${id}">${escHtml(t)}</label></li>`; }).join('');
+          return `<div class="day"><h3>${escHtml(day.title)}</h3><p class="theme">${escHtml(day.theme||'')}</p><ul class="check" data-group="week">${items}</ul></div>`;
+        }).join('');
+      }
+    }
+    // Evidence
+    if(m.evidence){
+      setHTML('evidenceTitle', `${escHtml(m.evidence.title)} <span class="pill found">${escHtml(m.evidence.pill||'artifacts')}</span>`);
+      setText('evidenceSub', m.evidence.sub);
+      const ev = document.getElementById('evidenceList');
+      if(ev && Array.isArray(m.evidence.items)){
+        ev.innerHTML = m.evidence.items.map((t,i)=>{ const id=missionKeyPrefix()+'e'+(i+1);
+          return `<li><input type="checkbox" id="${id}"><label for="${id}">${escHtml(t)}</label></li>`; }).join('');
+      }
+    }
+  }
+  function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // Persistent checkboxes (wired AFTER mission render so dynamic rows get listeners + saved state)
+  const boxes = () => document.querySelectorAll('ul.check input[type=checkbox]');
+  function save(){ const s={}; boxes().forEach(b=>s[b.id]=b.checked); localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress(); }
+  function load(){ const s=JSON.parse(localStorage.getItem('lifeos')||'{}'); boxes().forEach(b=>{ if(s[b.id])b.checked=true; }); updateProgress(); }
+  function updateProgress(){
+    const all=[...boxes()]; const done=all.filter(b=>b.checked).length;
+    const pct = all.length? Math.round(done/all.length*100):0;
+    document.getElementById('progbar').style.width=pct+'%';
+    document.getElementById('progtext').textContent=`${done}/${all.length} items done · ${pct}%`;
+  }
+  function resetGroup(g){ document.querySelectorAll(`ul.check[data-group="${g}"] input`).forEach(b=>b.checked=false); save(); }
+  function resetAll(){ if(confirm('Reset all checkboxes?')){ boxes().forEach(b=>b.checked=false); save(); } }
+
+  // One-time migration (§D-8): drop legacy index-keyed week/evidence ticks (w1.., e1..) from the
+  // `lifeos` blob so a previous mission's saved state can't pre-check a new mission's items.
+  // Current + future missions store slug-namespaced keys (lu:w1 …) which never collide.
+  function migrateCheckKeys(){
+    try{
+      if(localStorage.getItem('lifeos_checks_migrated_v1')) return;
+      const s = JSON.parse(localStorage.getItem('lifeos')||'{}'); let changed=false;
+      Object.keys(s).forEach(k=>{ if(/^[we]\d+$/.test(k)){ delete s[k]; changed=true; } });
+      if(changed) localStorage.setItem('lifeos', JSON.stringify(s));
+      localStorage.setItem('lifeos_checks_migrated_v1','1');
+    }catch(e){}
+  }
+
+  let checksWired=false;
+  function initChecks(){
+    migrateCheckKeys();
+    if(!checksWired){ document.body.addEventListener('change',(e)=>{ if(e.target.matches('ul.check input[type=checkbox]')) save(); }); checksWired=true; }
+    load();
+  }
+
+  async function loadMission(){
+    try{
+      const r = await fetch('mission.json',{cache:'no-store'});
+      if(r.ok) renderMission(await r.json());
+    }catch(e){ /* keep static fallback content */ }
+    finally{ initChecks(); tick(); setInterval(tick,1000); }
+  }
+  loadMission();
+
+  /* ============================================================
+     THEME (day / evening) — warm light or warm dark, his choice,
+     defaulting to the OS preference. Persisted on this device.
+     ============================================================ */
+  function effectiveTheme(){
+    return document.documentElement.getAttribute('data-theme')
+      || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  }
+  function updateThemeIcon(){
+    const btn=document.getElementById('themeToggle'); if(!btn) return;
+    const dark = effectiveTheme()==='dark';
+    btn.textContent = dark ? '☀️' : '🌙';
+    btn.title = dark ? 'Switch to day' : 'Switch to evening';
+    btn.setAttribute('aria-label', btn.title);
+  }
+  function toggleTheme(){
+    const next = effectiveTheme()==='dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('lifeos_theme', next); }catch(e){}
+    updateThemeIcon();
+  }
+  updateThemeIcon();
+
+  /* ============================================================
+     GREETING — config owner.greeting + a time-of-day English warmth.
+     ============================================================ */
+  function renderGreeting(){
+    const now=new Date(), h=now.getHours();
+    // Time-of-day tint for the ambient layer: morning gold · evening terracotta · night espresso
+    const daypart = h<5?'night' : h<12?'morning' : h<16?'afternoon' : h<20?'evening' : 'night';
+    document.documentElement.setAttribute('data-daypart', daypart);
+    const en = h<5?'rest well' : h<12?'good morning' : h<16?'good afternoon' : h<20?'good evening' : 'wind down soon';
+    const greet = (LIFEOS.owner && LIFEOS.owner.greeting)
+      || ('Hey, ' + ((LIFEOS.owner && (LIFEOS.owner.shortName||LIFEOS.owner.name)) || 'there'));
+    const locale = (LIFEOS.owner && LIFEOS.owner.locale) || undefined;
+    const hi=document.getElementById('greetHi'); if(hi) hi.textContent = greet;
+    const dt=document.getElementById('greetDate');
+    if(dt) dt.textContent = now.toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' · ' + en;
+    const lines=['One thing at a time. Enjoy the ride.','Presence over productivity.','Evidence, not ideas.','Think once → build → measure → improve.','Smaller world, sharper focus.'];
+    const el=document.getElementById('greetLine'); if(el) el.textContent = lines[now.getDate() % lines.length];
+  }
+
+  /* ============================================================
+     HOSTED LINK FIX — on Vercel only dashboard/ is served, so the
+     ../ repo-file links 404. When not browsing locally, point them
+     at GitHub instead. Local file:// browsing keeps relative links.
+     ============================================================ */
+  function rewriteRepoLinks(){
+    if(location.protocol==='file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
+    const BASE = (LIFEOS.repo && LIFEOS.repo.url) ? LIFEOS.repo.url.replace(/\/?$/,'/') : '';
+    if(!BASE) return;  // no repo.url configured -> leave relative links (they simply 404 on a bare deploy; that's fine)
+    document.querySelectorAll('a[href^="../"]').forEach(a=>{
+      if(a.dataset.repoRewritten) return;
+      a.href = BASE + a.getAttribute('href').replace(/^\.\.\//,'');
+      a.target='_blank'; a.rel='noopener'; a.dataset.repoRewritten='1';
+    });
+  }
+
+  /* ============================================================
+     DAILY WISDOM — a curated set of public-domain / attributed quotes:
+     action, equanimity, quieting the loop, craft, love, ventures, patience.
+     ============================================================ */
+  // Inline offline fallback (the 24 originals, retagged to the new theme taxonomy). quotes.json — loaded
+  // below like mission.json — carries the full curated ~51 and swaps this in when reachable. JSON.parse
+  // of a template literal keeps apostrophes unescaped and matches the file's shape exactly.
+  const THEMES_FALLBACK = JSON.parse(`{
+    "action":{"label":"Karma yoga · act, release","grad":["#8a3c1f","#b4502a"]},
+    "equanimity":{"label":"Equanimity","grad":["#1f6f5c","#134e3f"]},
+    "overthinking":{"label":"Quiet the loop","grad":["#4a3728","#2b2620"]},
+    "patience":{"label":"Patience · long game","grad":["#1f6f5c","#6b8f5e"]},
+    "courage":{"label":"Courage","grad":["#7a331b","#a8442a"]},
+    "confidence":{"label":"Self-belief","grad":["#6b5312","#8a6d1b"]},
+    "love":{"label":"Love · presence","grad":["#8c2f4f","#b4502a"]},
+    "craft":{"label":"Craft · reps","grad":["#78350f","#b45309"]},
+    "ventures":{"label":"Building things","grad":["#5c4022","#8a6d1b"]},
+    "grounding":{"label":"Grounding","grad":["#3d3327","#1f6f5c"]}
+  }`);
+  const QUOTES_FALLBACK = JSON.parse(`[
+    {"id":"gita-2-47","text":"You have the right to work, but never to the fruit of work.","author":"Bhagavad Gita 2.47","tradition":"gita","themes":["action"]},
+    {"id":"gita-2-48","text":"Perform your duty equipoised, abandoning all attachment to success or failure. Such equanimity is called yoga.","author":"Bhagavad Gita 2.48","tradition":"gita","themes":["equanimity","action"]},
+    {"id":"marcus-mind-power","text":"You have power over your mind — not outside events. Realize this, and you will find strength.","author":"Marcus Aurelius, Meditations","tradition":"stoic","themes":["equanimity"]},
+    {"id":"marcus-impediment","text":"The impediment to action advances action. What stands in the way becomes the way.","author":"Marcus Aurelius, Meditations","tradition":"stoic","themes":["action"]},
+    {"id":"marcus-be-one","text":"Waste no more time arguing about what a good man should be. Be one.","author":"Marcus Aurelius, Meditations","tradition":"stoic","themes":["overthinking"]},
+    {"id":"epictetus-react","text":"It's not what happens to you, but how you react to it that matters.","author":"Epictetus","tradition":"stoic","themes":["equanimity"]},
+    {"id":"seneca-imagination","text":"We suffer more often in imagination than in reality.","author":"Seneca, Letters from a Stoic","tradition":"stoic","themes":["overthinking"]},
+    {"id":"seneca-luck","text":"Luck is what happens when preparation meets opportunity.","author":"attributed to Seneca","tradition":"stoic","themes":["craft"]},
+    {"id":"laotzu-journey","text":"A journey of a thousand miles begins with a single step.","author":"Lao Tzu, Tao Te Ching","tradition":"taoist","themes":["patience"]},
+    {"id":"laotzu-nature","text":"Nature does not hurry, yet everything is accomplished.","author":"Lao Tzu","tradition":"taoist","themes":["patience"]},
+    {"id":"brucelee-water","text":"Be water, my friend.","author":"Bruce Lee","tradition":"modern","themes":["patience","equanimity"]},
+    {"id":"naval-longterm","text":"Play long-term games with long-term people.","author":"Naval Ravikant","tradition":"modern","themes":["ventures"]},
+    {"id":"rumi-clever-wise","text":"Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.","author":"Rumi","tradition":"sufi","themes":["overthinking"]},
+    {"id":"rumi-wound-light","text":"The wound is the place where the light enters you.","author":"Rumi","tradition":"sufi","themes":["confidence","grounding"]},
+    {"id":"gibran-work-love","text":"Work is love made visible.","author":"Kahlil Gibran, The Prophet","tradition":"sufi","themes":["craft","ventures"]},
+    {"id":"gibran-togetherness","text":"Let there be spaces in your togetherness, and let the winds of the heavens dance between you. Love one another, but make not a bond of love.","author":"Kahlil Gibran, The Prophet","tradition":"sufi","themes":["love"]},
+    {"id":"vivekananda-arise","text":"Arise, awake, and stop not till the goal is reached.","author":"Swami Vivekananda","tradition":"vivekananda","themes":["action"]},
+    {"id":"vivekananda-believe-self","text":"You cannot believe in God until you believe in yourself.","author":"Swami Vivekananda","tradition":"vivekananda","themes":["confidence"]},
+    {"id":"confucius-slowly","text":"It does not matter how slowly you go as long as you do not stop.","author":"Confucius","tradition":"confucian","themes":["patience"]},
+    {"id":"frankl-change-self","text":"When we are no longer able to change a situation, we are challenged to change ourselves.","author":"Viktor Frankl, Man's Search for Meaning","tradition":"modern","themes":["equanimity"]},
+    {"id":"jobs-love-work","text":"The only way to do great work is to love what you do.","author":"Steve Jobs","tradition":"modern","themes":["craft"]},
+    {"id":"robbins-problem-gift","text":"Every problem is a gift — without problems we would not grow.","author":"Tony Robbins","tradition":"modern","themes":["grounding"]}
+  ]`);
+  let QUOTES = QUOTES_FALLBACK, QTHEMES = THEMES_FALLBACK, curQuote = QUOTES[0];
+  const LEGACY_THEME = {career:'action', stoicism:'equanimity', general:'grounding'};
+  const TRADITION_LABEL = {gita:'Bhagavad Gita', upanishad:'Upanishad', vivekananda:'Vivekananda',
+    stoic:'Stoic', sufi:'Sufi', modern:'Modern', taoist:'Taoist', confucian:'Confucian'};
+  function normTheme(t){ return LEGACY_THEME[t] || t; }
+  function dayOfYear(){ const now=new Date(); const start=new Date(now.getFullYear(),0,0); return Math.floor((now-start)/86400000); }
+  function qFavs(){ try{ return JSON.parse(localStorage.getItem('lifeos_quote_favs')||'[]'); }catch(e){ return []; } }
+  function qFilter(){ try{ return localStorage.getItem('lifeos_quote_filter')||'all'; }catch(e){ return 'all'; } }
+  function quotePool(){
+    const f=qFilter();
+    if(f==='favorites'){ const favs=new Set(qFavs()); const p=QUOTES.filter(q=>favs.has(q.id)); return p.length?p:QUOTES; }
+    if(f==='all') return QUOTES;
+    const p=QUOTES.filter(q=>(q.themes||[]).map(normTheme).includes(f)); return p.length?p:QUOTES;
+  }
+  function dailyPick(p){ return p[dayOfYear() % p.length]; }
+  function pickInitial(){
+    const p=quotePool(); if(!p.length) return QUOTES[0];
+    const todayKey=new Date().toISOString().slice(0,10), sameDay=localStorage.getItem('lifeos_quote_date')===todayKey;
+    if(sameDay){
+      const id=localStorage.getItem('lifeos_quote_id');
+      if(id){ const q=p.find(x=>x.id===id)||QUOTES.find(x=>x.id===id); if(q) return q; }
+      const legacy=parseInt(localStorage.getItem('lifeos_quote_idx')||'',10);   // graceful pre-slug migration
+      if(!isNaN(legacy) && QUOTES[legacy]) return QUOTES[legacy];
+    }
+    const q=dailyPick(p);
+    try{ localStorage.setItem('lifeos_quote_date',todayKey); localStorage.setItem('lifeos_quote_id',q.id);
+      localStorage.setItem('lifeos_quote_idx',String(QUOTES.indexOf(q))); }catch(e){}
+    return q;
+  }
+  function paintQuote(q){
+    if(!q) return; curQuote=q;
+    const el=document.getElementById('quoteCard');
+    const th=(q.themes||[]).map(normTheme)[0]||'grounding';
+    const grad=(QTHEMES[th]&&QTHEMES[th].grad) || (QTHEMES.grounding&&QTHEMES.grounding.grad) || ['#3d3327','#1f6f5c'];
+    el.style.background='linear-gradient(135deg,'+grad[0]+','+grad[1]+')';
+    swapFade(el.querySelector('.q-text'), ()=>{
+      el.querySelector('.q-text').textContent='“'+q.text+'”';
+      el.querySelector('.q-author').textContent='— '+q.author;
+      const tr=document.getElementById('qTradition'); if(tr) tr.textContent=TRADITION_LABEL[q.tradition]||'';
+      const fav=document.getElementById('qFav'); const isFav=qFavs().includes(q.id);
+      fav.textContent=isFav?'♥':'♡'; fav.setAttribute('aria-pressed', isFav?'true':'false');
+    });
+  }
+  function renderQuote(){ paintQuote(curQuote); }
+  function nextQuote(){
+    const p=quotePool(); if(!p.length) return;
+    const i=p.findIndex(x=>x.id===curQuote.id); const nq=p[(i+1+p.length)%p.length];
+    try{ localStorage.setItem('lifeos_quote_id',nq.id); localStorage.setItem('lifeos_quote_idx',String(QUOTES.indexOf(nq))); }catch(e){}
+    paintQuote(nq);
+  }
+  function toggleFav(){
+    const favs=qFavs(); const i=favs.indexOf(curQuote.id);
+    if(i>=0) favs.splice(i,1); else favs.push(curQuote.id);
+    try{ localStorage.setItem('lifeos_quote_favs',JSON.stringify(favs)); }catch(e){}
+    const fav=document.getElementById('qFav'); const isFav=favs.includes(curQuote.id);
+    fav.textContent=isFav?'♥':'♡'; fav.setAttribute('aria-pressed', isFav?'true':'false');
+  }
+  function qToast(msg){ const t=document.getElementById('qToast'); if(!t) return; t.textContent=msg; t.hidden=false; setTimeout(()=>{ t.hidden=true; }, 1600); }
+  function shareQuote(){
+    const text='“'+curQuote.text+'” — '+curQuote.author;
+    if(navigator.share){ navigator.share({text}).catch(()=>{}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>qToast('Copied'), ()=>window.prompt('Copy:',text)); }
+    else window.prompt('Copy:',text);
+  }
+  function buildFilterPop(){
+    const pop=document.getElementById('qFilterPop'); if(!pop) return; const cur=qFilter();
+    let html='<button data-f="all" class="'+(cur==='all'?'active':'')+'">All wisdom</button>';
+    html+='<button data-f="favorites" class="'+(cur==='favorites'?'active':'')+'">♥ Favorites</button>';
+    Object.keys(QTHEMES).forEach(k=>{ html+='<button data-f="'+k+'" class="'+(cur===k?'active':'')+'">'+QTHEMES[k].label+'</button>'; });
+    pop.innerHTML=html;
+  }
+  function closeFilterPop(){ const pop=document.getElementById('qFilterPop'), btn=document.getElementById('qFilterBtn');
+    if(pop) pop.hidden=true; if(btn) btn.setAttribute('aria-expanded','false'); }
+  function toggleFilterPop(){
+    const pop=document.getElementById('qFilterPop'), btn=document.getElementById('qFilterBtn');
+    if(pop.hidden){ buildFilterPop(); pop.hidden=false; btn.setAttribute('aria-expanded','true'); }
+    else closeFilterPop();
+  }
+  function setQuoteFilter(f){
+    if(f==='favorites' && !qFavs().some(id=>QUOTES.some(q=>q.id===id))){ qToast('No favorites yet — showing all'); f='all'; }
+    try{ localStorage.setItem('lifeos_quote_filter',f); }catch(e){}
+    const p=quotePool(); const nq=p.length?dailyPick(p):QUOTES[0];
+    try{ localStorage.setItem('lifeos_quote_id',nq.id); }catch(e){}
+    paintQuote(nq); buildFilterPop(); closeFilterPop();
+  }
+  document.getElementById('qFilterPop').addEventListener('click',(e)=>{ const b=e.target.closest('button[data-f]'); if(b) setQuoteFilter(b.dataset.f); });
+  document.addEventListener('click',(e)=>{ const pop=document.getElementById('qFilterPop'); if(pop && !pop.hidden && !e.target.closest('.q-filter-wrap')) closeFilterPop(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ const pop=document.getElementById('qFilterPop'); if(pop && !pop.hidden){ closeFilterPop(); document.getElementById('qFilterBtn').focus(); } } });
+
+  async function loadQuotes(){
+    try{
+      const r=await fetch('quotes.json',{cache:'no-store'});
+      if(r.ok){ const data=await r.json();
+        if(data && Array.isArray(data.quotes) && data.quotes.length){ QUOTES=data.quotes; if(data.themes) QTHEMES=data.themes; } }
+    }catch(e){ /* inline fallback stays */ }
+    curQuote=pickInitial(); paintQuote(curQuote); buildFilterPop();
+  }
+  curQuote=pickInitial(); paintQuote(curQuote); buildFilterPop();   // instant paint from fallback (file:// safe)
+  loadQuotes();                                                     // swap in the full set when reachable
+
+  /* ============================================================
+     LIVE TASKS + HABITS — editable, auto-syncing to Notion
+     ============================================================ */
+  // Identity + areas come from lifeos.config.json (falls back to the demo persona below, which
+  // mirrors lifeos.config.example.json). emoji is the single source of truth for area glyphs (§I).
+  let LIFEOS = {
+    product:{ display:'LifeOS' },
+    owner:{ name:'Alex Rivera', shortName:'Alex', greeting:'Hey, Alex', locale:'en-US', currency:'USD' },
+    areas:[
+      {code:'career',label:'Career',emoji:'💼'}, {code:'health',label:'Health',emoji:'💪'},
+      {code:'relationship',label:'Relationship',emoji:'❤️'}, {code:'family',label:'Family',emoji:'👨‍👩‍👧'},
+      {code:'fieldnotes',label:'Fieldnotes',emoji:'📓'}, {code:'pottery',label:'Pottery',emoji:'🏺'},
+      {code:'finance',label:'Finance',emoji:'💰'}, {code:'admin',label:'Admin',emoji:'🗂️'},
+      {code:'learning',label:'Learning',emoji:'📚'}, {code:'mindset',label:'Mindset',emoji:'🧘'}
+    ],
+    repo:{ url:'' }, deployment:{ notionPageUrl:'' }
+  };
+  let AREA_META = {}, AREA_CODES = [];
+  function rebuildAreas(){
+    AREA_META = {};
+    (LIFEOS.areas||[]).forEach(a=>{ AREA_META[a.code] = { label:a.label, emoji:a.emoji||'' }; });
+    AREA_CODES = Object.keys(AREA_META);
+  }
+  rebuildAreas();
+  const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
+  const DAY_LABEL = {mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri',sat:'Sat',sun:'Sun'};
+
+  function uid(){ return 'id'+Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+  function escAttr(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function nowIso(){ return new Date().toISOString(); }
+  function currentWeekMonday(){
+    const d = new Date(); const day = d.getDay(); const diff = (day===0? -6 : 1-day);
+    const monday = new Date(d); monday.setDate(d.getDate()+diff);
+    return monday.toISOString().slice(0,10);
+  }
+
+  function getTasks(){ return JSON.parse(localStorage.getItem('lifeos_tasks_v1')||'[]'); }
+  function setTasks(t){ localStorage.setItem('lifeos_tasks_v1', JSON.stringify(t)); }
+  function getHabits(){ return JSON.parse(localStorage.getItem('lifeos_habits_v1')||'[]'); }
+  function setHabits(h){ localStorage.setItem('lifeos_habits_v1', JSON.stringify(h)); }
+
+  function seedIfEmpty(){
+    if(!localStorage.getItem('lifeos_tasks_v1')){
+      const now = nowIso();
+      const seed = [
+        {title:'Nail the core capture → recall loop', area:'fieldnotes', priority:'P1', due:''},
+        {title:'Write first-run onboarding copy', area:'fieldnotes', priority:'P1', due:''},
+        {title:'Fix the top-5 known bugs', area:'career', priority:'P1', due:''},
+        {title:'20-30 min with Sam, no work talk', area:'relationship', priority:'P1', due:''},
+        {title:'Plan a special dinner with Sam', area:'relationship', priority:'P3', due:''},
+        {title:'Photograph this week\'s pottery pieces', area:'pottery', priority:'P3', due:''},
+        {title:'Finish the current course module', area:'learning', priority:'P3', due:''},
+        {title:'Renew the apartment lease', area:'admin', priority:'P3', due:''},
+      ].map(t=>({ id: uid(), status:'open', notionId:null, updatedAt: now, ...t }));
+      setTasks(seed);
+    }
+    if(!localStorage.getItem('lifeos_habits_v1')){
+      const now = nowIso(); const weekOf = currentWeekMonday();
+      const names = ['Workout / strength','10k steps','Morning sunlight','Meditation 10-15 min','Water ~3 L','Vitamins','Read 30 min','Sleep early 7+ hrs','Time with Sam','Deep-work block'];
+      const keystones = new Set(['Sleep early 7+ hrs','Workout / strength','Time with Sam','Meditation 10-15 min']);
+      const seed = names.map(n=>({ id: uid(), name:n, keystone: keystones.has(n), active:true, cadence:'Daily', weekOf,
+        days:{mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false}, notionId:null, updatedAt: now }));
+      setHabits(seed);
+    }
+  }
+  seedIfEmpty();
+
+  // ---- Habit-week rollover: archive last week's matrix so streaks aren't lost ----
+  function getHabitHistory(){ return JSON.parse(localStorage.getItem('lifeos_habits_history_v1')||'{}'); }
+  function setHabitHistory(h){ localStorage.setItem('lifeos_habits_history_v1', JSON.stringify(h)); }
+  function rollHabitWeekIfNeeded(){
+    const cur = currentWeekMonday(); const habits = getHabits();
+    if(!habits.some(h=>h.weekOf && h.weekOf!==cur)) return;
+    const hist = getHabitHistory();
+    habits.forEach(h=>{ if(h.weekOf && h.weekOf!==cur){
+      hist[h.weekOf] = hist[h.weekOf] || {};
+      hist[h.weekOf][h.name] = DAYS.filter(d=>h.days && h.days[d]).length;
+    }});
+    setHabitHistory(hist);
+    habits.forEach(h=>{ if(h.weekOf!==cur){ h.weekOf=cur;
+      h.days={mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false}; h.updatedAt=nowIso(); }});
+    setHabits(habits);
+  }
+  rollHabitWeekIfNeeded();
+  function renderHabitHistory(){
+    const el=document.getElementById('habitHistory'); if(!el) return;
+    const hist=getHabitHistory(); const weeks=Object.keys(hist).sort().reverse().slice(0,4);
+    if(!weeks.length){ el.textContent=''; return; }
+    el.innerHTML = '📈 Past weeks — ' + weeks.map(w=>{
+      const vals=Object.values(hist[w]); const tot=vals.reduce((a,b)=>a+b,0); const max=vals.length*7;
+      return `<span title="week of ${w}">${w.slice(5)}: <strong>${tot}/${max}</strong></span>`;
+    }).join(' · ');
+  }
+
+  // ---- Quick-add natural-language parsing ----
+  function resolveDueToken(tok){
+    const t = tok.toLowerCase(); const today = new Date();
+    const fmt = (d)=>d.toISOString().slice(0,10);
+    if(t==='today') return fmt(today);
+    if(t==='tomorrow'){ const d=new Date(today); d.setDate(d.getDate()+1); return fmt(d); }
+    if(t==='sat'){ const d=new Date(today); const add=(6-d.getDay()+7)%7||7; d.setDate(d.getDate()+add); return fmt(d); }
+    if(/^\d{4}-\d{2}-\d{2}$/.test(tok)) return tok;
+    return '';
+  }
+  function parseQuickAdd(input){
+    let text = input.trim(); let area='mindset', priority='P3', due='';
+    const areaMatch = text.match(/#(\w+)/);
+    if(areaMatch){ const raw=areaMatch[1].toLowerCase(); if(AREA_CODES.includes(raw)) area=raw; text=text.replace(areaMatch[0],'').trim(); }
+    const prioMatch = text.match(/\bP([123])\b/i);
+    if(prioMatch){ priority='P'+prioMatch[1]; text=text.replace(prioMatch[0],'').trim(); }
+    const dueMatch = text.match(/due:(\S+)/i);
+    if(dueMatch){ due=resolveDueToken(dueMatch[1]); text=text.replace(dueMatch[0],'').trim(); }
+    text = text.replace(/\s{2,}/g,' ').trim();
+    return { title:text, area, priority, due };
+  }
+
+  // ---- Rendering ----
+  function taskRowHTML(t){
+    const areaOpts = AREA_CODES.map(a=>`<option value="${a}" ${a===t.area?'selected':''}>${AREA_META[a].label}</option>`).join('');
+    return `<div class="ed-row ${t.status==='done'?'ed-done-row':''}" data-id="${t.id}">
+      <input type="checkbox" class="ed-done" ${t.status==='done'?'checked':''} title="Mark done">
+      <input type="text" class="ed-title" value="${escAttr(t.title)}" placeholder="Task title">
+      <select class="ed-area" title="Area">${areaOpts}</select>
+      <button class="ed-prio prio-${t.priority}" title="Click to cycle priority">${t.priority}</button>
+      <input type="date" class="ed-due" value="${t.due||''}" title="Due date">
+      <span class="ed-sync-dot ${t.notionId?'synced':''}" title="${t.notionId?'Synced to Notion':'Not yet synced'}"></span>
+      <button class="ed-del" title="Delete">×</button>
+    </div>`;
+  }
+  function sortTasks(a,b){
+    const da=a.status==='done'?1:0, db=b.status==='done'?1:0; if(da!==db) return da-db;
+    const pr={P1:0,P2:1,P3:2}; return (pr[a.priority]??3)-(pr[b.priority]??3);
+  }
+  function renderTasks(){
+    const list = getTasks().slice().sort(sortTasks);
+    document.getElementById('taskList').innerHTML = list.map(taskRowHTML).join('') || '<p class="ed-empty">No tasks yet — add one below.</p>';
+  }
+  function habitRowHTML(h){
+    const dayBtns = DAYS.map(d=>`<button class="ed-day ${h.days[d]?'on':''}" data-day="${d}" title="${DAY_LABEL[d]}">${DAY_LABEL[d][0]}</button>`).join('');
+    return `<div class="ed-hrow" data-id="${h.id}">
+      <button class="ed-star ${h.keystone?'on':''}" title="Keystone habit">★</button>
+      <input type="text" class="ed-hname" value="${escAttr(h.name)}" placeholder="Habit name">
+      <div class="ed-days">${dayBtns}</div>
+      <span class="ed-sync-dot ${h.notionId?'synced':''}" title="${h.notionId?'Synced to Notion':'Not yet synced'}"></span>
+      <button class="ed-hdel" title="Delete">×</button>
+    </div>`;
+  }
+  function renderHabits(){
+    const list = getHabits();
+    document.getElementById('habitList').innerHTML = list.map(habitRowHTML).join('') || '<p class="ed-empty">No habits yet — add one below.</p>';
+  }
+
+  // ---- Mutations ----
+  function updateTask(id, patch){
+    const tasks = getTasks(); const t = tasks.find(x=>x.id===id); if(!t) return;
+    Object.assign(t, patch, {updatedAt: nowIso()}); setTasks(tasks);
+    queueSync('task','upsert', t);
+  }
+  function deleteTask(id){
+    const tasks = getTasks(); const idx = tasks.findIndex(x=>x.id===id); if(idx<0) return;
+    const [removed] = tasks.splice(idx,1); setTasks(tasks);
+    queueSync('task','delete', removed); renderTasks();
+  }
+  function addTaskFromQuickAdd(){
+    const raw = composer.input.value.trim(); if(!raw) return;
+    const r = resolveComposer(); if(!r.title) return;
+    const t = { id:uid(), title:r.title, area:r.area, priority:r.priority, due:r.due, status:'open', notionId:null, updatedAt:nowIso() };
+    const tasks = getTasks(); tasks.push(t); setTasks(tasks);
+    queueSync('task','upsert', t);
+    try{ localStorage.setItem('lifeos_composer_last_area', r.area); }catch(e){}
+    // Reset for the next task: title cleared, selections back to auto, options stay open, refocus (§C).
+    composer.input.value=''; composer.sel={area:null,priority:null,due:null,dueDate:''};
+    const dateEl=document.getElementById('composerDate'); if(dateEl){ dateEl.hidden=true; dateEl.value=''; }
+    renderTasks();
+    requestAnimationFrame(()=>{ const row=document.querySelector('.ed-row[data-id="'+t.id+'"]'); if(row) diyaGlow(row); });
+    refreshComposerChips(); composer.input.focus();
+  }
+  function updateHabit(id, patch){
+    const habits = getHabits(); const h = habits.find(x=>x.id===id); if(!h) return;
+    Object.assign(h, patch, {updatedAt: nowIso()}); setHabits(habits);
+    queueSync('habit','upsert', h);
+  }
+  function deleteHabit(id){
+    const habits = getHabits(); const idx = habits.findIndex(x=>x.id===id); if(idx<0) return;
+    const [removed] = habits.splice(idx,1); setHabits(habits);
+    queueSync('habit','delete', removed); renderHabits();
+  }
+  function addHabitFromQuickAdd(){
+    const input = document.getElementById('habitQuickAdd'); const raw = input.value.trim(); if(!raw) return;
+    const h = { id:uid(), name:raw, keystone:false, active:true, cadence:'Daily', weekOf:currentWeekMonday(),
+      days:{mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false}, notionId:null, updatedAt:nowIso() };
+    const habits = getHabits(); habits.push(h); setHabits(habits);
+    queueSync('habit','upsert', h); input.value=''; renderHabits();
+  }
+
+  // ---- Event delegation ----
+  document.getElementById('taskList').addEventListener('change', (e)=>{
+    const row = e.target.closest('.ed-row'); if(!row) return; const id = row.dataset.id;
+    if(e.target.classList.contains('ed-done')){
+      updateTask(id, {status: e.target.checked?'done':'open'});
+      row.classList.toggle('ed-done-row', e.target.checked);
+    } else if(e.target.classList.contains('ed-title')){ updateTask(id, {title: e.target.value}); }
+    else if(e.target.classList.contains('ed-area')){ updateTask(id, {area: e.target.value}); }
+    else if(e.target.classList.contains('ed-due')){ updateTask(id, {due: e.target.value}); }
+  });
+  document.getElementById('taskList').addEventListener('click', (e)=>{
+    const row = e.target.closest('.ed-row'); if(!row) return; const id = row.dataset.id;
+    if(e.target.classList.contains('ed-prio')){
+      const cur = getTasks().find(t=>t.id===id); if(!cur) return;
+      const order=['P1','P2','P3']; const next = order[(order.indexOf(cur.priority)+1)%3];
+      updateTask(id, {priority: next}); e.target.textContent = next; e.target.className = 'ed-prio prio-'+next;
+    } else if(e.target.classList.contains('ed-del')){ deleteTask(id); }
+  });
+  document.getElementById('taskQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addTaskFromQuickAdd(); }});
+
+  /* ---- Task composer (chips + presets; §C defaults, §I emoji) ----
+     Rule (§C): "touched" = an explicit chip CLICK only. Opening the panel does not touch anything.
+     Untouched chips render an "auto" state showing what the parser will decide. On submit, per dimension:
+       typed NL token  >  explicitly clicked chip  >  parser default (mindset / P3 / no due).
+     So identical input (same title text + same clicks) ALWAYS yields an identical task. */
+  const composer = {
+    opts: document.getElementById('composerOpts'),
+    input: document.getElementById('taskQuickAdd'),
+    sel: {area:null, priority:null, due:null, dueDate:''},   // explicit clicks only
+    lastArea(){ try{ return localStorage.getItem('lifeos_composer_last_area')||''; }catch(e){ return ''; } }
+  };
+  // Which NL tokens are actually present in the title (parseQuickAdd returns defaults, so it can't tell us this).
+  function composerNL(){
+    const v = composer.input.value;
+    const am = v.match(/#(\w+)/); const area = (am && AREA_CODES.includes(am[1].toLowerCase())) ? am[1].toLowerCase() : null;
+    const pm = v.match(/\bP([123])\b/i); const priority = pm ? 'P'+pm[1] : null;
+    const dm = v.match(/due:(\S+)/i); const due = dm ? dm[1].toLowerCase() : null;
+    return {area, priority, due};
+  }
+  function buildComposerChips(){
+    document.getElementById('composerAreas').innerHTML = AREA_CODES.map(code=>{
+      const m=AREA_META[code];
+      return `<button type="button" class="chip" role="radio" aria-checked="false" data-dim="area" data-val="${code}"><span aria-hidden="true">${m.emoji||''}</span>${m.label}</button>`;
+    }).join('');
+    document.getElementById('composerPrio').innerHTML = ['P1','P2','P3'].map(p=>
+      `<button type="button" class="chip prio-${p}" role="radio" aria-checked="false" data-dim="prio" data-val="${p}">${p}</button>`).join('');
+    document.getElementById('composerDue').innerHTML = [['today','Today'],['tomorrow','Tomorrow'],['sat','Sat'],['pick','📅'],['none','None']].map(([v,l])=>
+      `<button type="button" class="chip" role="radio" aria-checked="false" data-dim="due" data-val="${v}">${l}</button>`).join('')
+      + '<input type="date" class="composer-date" id="composerDate" hidden aria-label="Pick a due date">';
+  }
+  function nlDueChip(tok){
+    if(!tok) return null;
+    if(tok==='today'||tok==='tomorrow'||tok==='sat') return tok;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(tok)) return 'pick';
+    return null;
+  }
+  function refreshComposerChips(){
+    const nl=composerNL(), last=composer.lastArea();
+    document.querySelectorAll('#composerAreas .chip').forEach(ch=>{ const v=ch.dataset.val;
+      ch.classList.remove('on','parsed','suggest','auto');
+      if(composer.sel.area===v) ch.classList.add('on');
+      else if(nl.area===v) ch.classList.add('parsed');
+      else if(!composer.sel.area && !nl.area && last && last===v) ch.classList.add('suggest');
+      else if(!composer.sel.area && !nl.area && !last && v==='mindset') ch.classList.add('auto');
+      ch.setAttribute('aria-checked', ch.classList.contains('on')?'true':'false');
+    });
+    document.querySelectorAll('#composerPrio .chip').forEach(ch=>{ const v=ch.dataset.val;
+      ch.classList.remove('on','parsed','auto');
+      if(composer.sel.priority===v) ch.classList.add('on');
+      else if(nl.priority===v) ch.classList.add('parsed');
+      else if(!composer.sel.priority && !nl.priority && v==='P3') ch.classList.add('auto');
+      ch.setAttribute('aria-checked', ch.classList.contains('on')?'true':'false');
+    });
+    const ndc=nlDueChip(nl.due);
+    document.querySelectorAll('#composerDue .chip').forEach(ch=>{ const v=ch.dataset.val;
+      ch.classList.remove('on','parsed','auto');
+      if(composer.sel.due===v) ch.classList.add('on');
+      else if(ndc===v) ch.classList.add('parsed');
+      else if(!composer.sel.due && !ndc && v==='none') ch.classList.add('auto');
+      ch.setAttribute('aria-checked', ch.classList.contains('on')?'true':'false');
+    });
+  }
+  function resolveComposer(){
+    const nl=composerNL(); const parsed=parseQuickAdd(composer.input.value);   // parsed.title has NL tokens stripped
+    const area = nl.area ? nl.area : (composer.sel.area || 'mindset');
+    const priority = nl.priority ? nl.priority : (composer.sel.priority || 'P3');
+    let due='';
+    if(nl.due) due = resolveDueToken(nl.due);
+    else if(composer.sel.due==='pick') due = composer.sel.dueDate||'';
+    else if(composer.sel.due && composer.sel.due!=='none') due = resolveDueToken(composer.sel.due);
+    return { title:parsed.title, area, priority, due };
+  }
+  // Wiring
+  buildComposerChips();
+  composer.input.addEventListener('focus', ()=>{ composer.opts.hidden=false; });
+  composer.input.addEventListener('input', ()=>{ composer.opts.hidden=false; refreshComposerChips(); });
+  composer.input.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ composer.opts.hidden=true; } });
+  composer.opts.addEventListener('click', (e)=>{
+    const ch=e.target.closest('.chip'); if(!ch) return;
+    const dim=ch.dataset.dim, val=ch.dataset.val;
+    if(dim==='area') composer.sel.area = (composer.sel.area===val? null : val);
+    else if(dim==='prio') composer.sel.priority = (composer.sel.priority===val? null : val);
+    else if(dim==='due'){
+      composer.sel.due = (composer.sel.due===val? null : val);
+      const dateEl=document.getElementById('composerDate');
+      if(dateEl){ if(composer.sel.due==='pick'){ dateEl.hidden=false; dateEl.focus(); } else dateEl.hidden=true; }
+    }
+    refreshComposerChips();
+  });
+  composer.opts.addEventListener('change', (e)=>{
+    if(e.target.id==='composerDate'){ composer.sel.due='pick'; composer.sel.dueDate=e.target.value; refreshComposerChips(); }
+  });
+  // Arrow-key roving within each chip-row
+  document.querySelectorAll('#taskComposer .chip-row').forEach(row=>{
+    row.addEventListener('keydown', (e)=>{
+      if(e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+      const chips=[...row.querySelectorAll('.chip')]; const i=chips.indexOf(document.activeElement); if(i<0) return;
+      e.preventDefault(); const n = e.key==='ArrowRight' ? (i+1)%chips.length : (i-1+chips.length)%chips.length; chips[n].focus();
+    });
+  });
+  refreshComposerChips();
+
+  document.getElementById('habitList').addEventListener('change', (e)=>{
+    const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
+    if(e.target.classList.contains('ed-hname')){ updateHabit(id, {name: e.target.value}); }
+  });
+  document.getElementById('habitList').addEventListener('click', (e)=>{
+    const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
+    if(e.target.classList.contains('ed-star')){
+      const cur = getHabits().find(h=>h.id===id); if(!cur) return;
+      updateHabit(id, {keystone: !cur.keystone}); e.target.classList.toggle('on');
+    } else if(e.target.classList.contains('ed-day')){
+      const cur = getHabits().find(h=>h.id===id); if(!cur) return;
+      const day = e.target.dataset.day; const days = {...cur.days, [day]: !cur.days[day]};
+      updateHabit(id, {days}); e.target.classList.toggle('on');
+    } else if(e.target.classList.contains('ed-hdel')){ deleteHabit(id); }
+  });
+  document.getElementById('habitQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addHabitFromQuickAdd(); }});
+
+  renderTasks(); renderHabits(); renderHabitHistory();
+
+  /* ============================================================
+     SYNC PIPELINE — queues edits, pushes to /api/notion-sync,
+     pulls from /api/notion-pull. Degrades gracefully to
+     "local only" if the API isn't configured on Vercel yet.
+     ============================================================ */
+  const SYNC_PUSH = '/api/notion-sync', SYNC_PULL = '/api/notion-pull';
+  let syncTimer = null, apiConfigured = true;
+
+  function getQueue(){ return JSON.parse(localStorage.getItem('lifeos_syncqueue_v1')||'[]'); }
+  function setQueue(q){ localStorage.setItem('lifeos_syncqueue_v1', JSON.stringify(q)); }
+
+  // Broadcast sync state to EVERY [data-sync-dot]/[data-sync-text] surface (in-page pill + dock + FAB).
+  // Toggle state classes with classList (never className=) so co-classes like fab-dot survive.
+  // Stream 1 owns this function's callers/state machine; Stream 2 only owns this output mechanism.
+  const SYNC_STATES = ['pending','syncing','synced','error','offline','local-only','idle'];
+  function setStatus(state, text){
+    document.querySelectorAll('[data-sync-dot]').forEach(dot=>{
+      dot.classList.remove(...SYNC_STATES);
+      if(state) dot.classList.add(state);
+    });
+    if(text!=null) document.querySelectorAll('[data-sync-text]').forEach(el=>{ el.textContent = text; });
+  }
+  function queueSync(type, action, payload){
+    const q = getQueue(); q.push({ type, action, payload }); setQueue(q);
+    if(apiConfigured) setStatus('pending', `${q.length} change${q.length>1?'s':''} pending…`);
+    scheduleFlush();
+  }
+  function scheduleFlush(delay=1400){ clearTimeout(syncTimer); syncTimer = setTimeout(flushQueue, delay); }
+  // Optional shared secret authenticating dashboard -> serverless calls (matches SYNC_SHARED_SECRET
+  // on the server). Kept in localStorage, never committed. Empty = no header (open/dev deployments).
+  function syncHeaders(base){ const h = base||{}; let s=''; try{ s=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
+    if(s) h['X-Sync-Secret']=s; return h; }
+
+  async function flushQueue(){
+    const q = getQueue(); if(!q.length){ if(apiConfigured) setStatus('synced', lastSyncedLabel()); return; }
+    if(!apiConfigured){ setStatus('', 'Local only — see setup guide'); return; }
+    setStatus('syncing', 'Syncing…');
+    try{
+      const res = await fetch(SYNC_PUSH, { method:'POST', headers:syncHeaders({'Content-Type':'application/json'}), body: JSON.stringify({items:q}) });
+      if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); return; }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      applyResults(data.results||[]);
+      setQueue([]);
+      localStorage.setItem('lifeos_last_synced', nowIso());
+      setStatus('synced', lastSyncedLabel());
+    }catch(err){
+      setStatus('error', 'Sync error — will retry');
+      scheduleFlush(15000);
+    }
+  }
+  function lastSyncedLabel(){
+    const t = localStorage.getItem('lifeos_last_synced');
+    if(!t) return 'Synced';
+    return 'Synced ' + new Date(t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  }
+  function applyResults(results){
+    const tasks = getTasks(), habits = getHabits();
+    results.forEach(r=>{
+      if(!r.ok) return;
+      let item = tasks.find(t=>t.id===r.localId);
+      if(item){ item.notionId = r.notionId; return; }
+      item = habits.find(h=>h.id===r.localId);
+      if(item){ item.notionId = r.notionId; }
+    });
+    setTasks(tasks); setHabits(habits); renderTasks(); renderHabits();
+  }
+
+  async function pullFromNotion(){
+    setStatus('syncing', 'Pulling…');
+    try{
+      const res = await fetch(SYNC_PULL, { headers:syncHeaders() });
+      if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); syncNote('Notion sync isn’t configured yet on this deployment — see docs/connectors/notion.md'); return; }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      mergeRemoteTasks(data.tasks||[]); mergeRemoteHabits(data.habits||[]);
+      renderTasks(); renderHabits();
+      localStorage.setItem('lifeos_last_synced', nowIso());
+      setStatus('synced', lastSyncedLabel());
+      syncNote('✅ Pulled latest Tasks + Habits from Notion.');
+    }catch(err){ setStatus('error', 'Pull failed'); syncNote('⚠️ Pull failed — check your connection and try again.'); }
+  }
+  function mergeRemoteTasks(remote){
+    const tasks = getTasks();
+    remote.forEach(rt=>{
+      const existing = tasks.find(t=>t.notionId===rt.notionId);
+      if(existing){ if(!existing.updatedAt || new Date(rt.updatedAt) > new Date(existing.updatedAt)) Object.assign(existing, rt, {id:existing.id}); }
+      else tasks.push({...rt, id: uid()});
+    });
+    setTasks(tasks);
+  }
+  function mergeRemoteHabits(remote){
+    const habits = getHabits();
+    remote.forEach(rh=>{
+      const existing = habits.find(h=>h.notionId===rh.notionId);
+      if(existing){ if(!existing.updatedAt || new Date(rh.updatedAt) > new Date(existing.updatedAt)) Object.assign(existing, rh, {id:existing.id}); }
+      else habits.push({...rh, id: uid()});
+    });
+    setHabits(habits);
+  }
+
+  window.addEventListener('online', flushQueue);
+  // Try an initial pull + flush shortly after load (non-blocking, silent if API not configured).
+  setTimeout(()=>{ flushQueue(); }, 800);
+  if(getQueue().length===0) setStatus('', 'Local only');
+
+  // ---- Backup export/import (now bundles checks + tasks + habits) ----
+  function syncNote(msg){ const el=document.getElementById('syncMsg'); if(el) el.textContent=msg; }
+  function buildBackupPayload(){
+    return JSON.stringify({ checks: JSON.parse(localStorage.getItem('lifeos')||'{}'), tasks: getTasks(), habits: getHabits() });
+  }
+  function exportState(){
+    const payload = 'LIFEOS2:' + btoa(unescape(encodeURIComponent(buildBackupPayload())));
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(payload).then(
+        ()=>syncNote('✅ Copied checks + tasks + habits to clipboard — paste somewhere safe or onto another device.'),
+        ()=>window.prompt('Copy your backup code:', payload)
+      );
+    } else { window.prompt('Copy your backup code:', payload); }
+  }
+  function importState(){
+    const raw = window.prompt('Paste your exported backup code (starts with LIFEOS2: or LIFEOS:)');
+    if(!raw) return;
+    try{
+      const trimmed = raw.trim();
+      if(trimmed.startsWith('LIFEOS2:')){
+        const json = decodeURIComponent(escape(atob(trimmed.replace(/^LIFEOS2:/,''))));
+        const data = JSON.parse(json);
+        localStorage.setItem('lifeos', JSON.stringify(data.checks||{}));
+        setTasks(data.tasks||[]); setHabits(data.habits||[]);
+        load(); renderTasks(); renderHabits();
+        syncNote('✅ Imported — checks, tasks, and habits restored on this device.');
+      } else {
+        const json = decodeURIComponent(escape(atob(trimmed.replace(/^LIFEOS:/,''))));
+        JSON.parse(json);
+        localStorage.setItem('lifeos', json);
+        load();
+        syncNote('✅ Imported checks (legacy backup). Tasks/Habits unchanged.');
+      }
+    }catch(e){ syncNote('⚠️ That code didn\'t look right. Make sure you pasted the full backup code.'); }
+  }
+
+  /* ============================================================
+     NAV UX — remember which "After Saturday" zones are open,
+     and highlight the current section in the top nav on scroll.
+     Additive only; no existing behavior is touched.
+     ============================================================ */
+  (function(){
+    // Persist <details.zone> open/closed state so the calm default sticks.
+    document.querySelectorAll('details.zone').forEach((d,i)=>{
+      const key = 'lifeos_zone_'+i;
+      const saved = localStorage.getItem(key);
+      if(saved==='open') d.open = true;
+      else if(saved==='closed') d.open = false;
+      d.addEventListener('toggle', ()=> localStorage.setItem(key, d.open?'open':'closed'));
+    });
+
+    // Active-section highlight in the sticky nav.
+    const navLinks = [...document.querySelectorAll('.nav-links a')];
+    const map = {};
+    navLinks.forEach(a=>{ const id=a.getAttribute('href').slice(1); if(id) map[id]=a; });
+    const sections = Object.keys(map).map(id=>document.getElementById(id)).filter(Boolean);
+    if('IntersectionObserver' in window && sections.length){
+      const style = document.createElement('style');
+      style.textContent = '.nav-links a.active{background:var(--accent);color:#fff !important}';
+      document.head.appendChild(style);
+      // Single source of truth for "active section" — updates topnav links, dock links (Phase 2),
+      // and the section-head gold underline from one callback.
+      window.__setActiveSection = function(id){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        const link = map[id]; if(link) link.classList.add('active');
+        document.querySelectorAll('.dock-nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+        sections.forEach(s=>s.classList.toggle('section-active', s.id===id));
+      };
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(en=>{ if(en.isIntersecting) window.__setActiveSection(en.target.id); });
+      }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+      sections.forEach(s=>io.observe(s));
+    }
+  })();
+
+  /* ============================================================
+     PERSONALITY MIRROR — rotating anchors + boredom-breaker
+     ============================================================ */
+  const MIRROR = [
+    {kind:'remember', text:'Think once → Build → Measure → Improve. Evidence, not ideas.'},
+    {kind:'remember', text:'One hero mission at a time. Everything else is paused, not abandoned.'},
+    {kind:'strength', text:'You build systems that carry you when motivation dips. When anxious, build one small thing.'},
+    {kind:'watch', text:'Overthinking loop: you re-decide settled calls. Decide once, log it, move on.'},
+    {kind:'watch', text:'You drop sleep and movement exactly when stressed. Protect the base first.'},
+    {kind:'remember', text:'Warmth > grand gestures. Presence is the gift. 20–30 min with Sam, no phone.'},
+    {kind:'strength', text:'You go deep and finish hard things — trust the depth you already have.'},
+    {kind:'watch', text:'Running every front at full intensity ends in freeze. Sequence; don’t sprint on all.'},
+    {kind:'remember', text:'The best role isn’t the flashiest — fair pay, a sane manager, time for the life.'},
+    {kind:'remember', text:'Relax and enjoy the ride. Intensity without enjoyment is anxiety with a to-do list.'},
+    {kind:'strength', text:'You’re honest with yourself. That honesty is the raw material for real change.'},
+    {kind:'remember', text:'“I don’t need to prove my whole life today.” One room, one thing.'}
+  ];
+  const NOVELTY = [
+    'Take a new route on today’s walk — camera in your pocket.',
+    'Swap the workout flavour: a pickup game or a long ride instead of the usual.',
+    'Try one new dish or coffee spot — that’s your scheduled novelty slot.',
+    'Visit a park or neighborhood you haven’t explored this week.',
+    'Learn one new small thing inside the current mission — a new technique, not a new project.',
+    'Change where you build for an hour — balcony, café, library. Fresh room, same goal.'
+  ];
+  function paintMirror(m){
+    document.getElementById('mirrorText').textContent = m.text;
+    const k=document.getElementById('mirrorKind'); k.textContent=m.kind; k.className='mirror-kind '+m.kind;
+  }
+  let mirrorIdx = Math.floor(Math.random()*MIRROR.length);
+  function nextMirror(){ mirrorIdx=(mirrorIdx+1)%MIRROR.length; paintMirror(MIRROR[mirrorIdx]); }
+  function boredomBreaker(){
+    const t=NOVELTY[Math.floor(Math.random()*NOVELTY.length)];
+    document.getElementById('mirrorText').textContent=t;
+    const k=document.getElementById('mirrorKind'); k.textContent='novelty'; k.className='mirror-kind novelty';
+  }
+  paintMirror(MIRROR[mirrorIdx]);
+
+  /* ============================================================
+     DAILY REVIEW + GRATITUDE — per-day, saved on this device
+     ============================================================ */
+  const DR_AREAS = [['health','💪 Health'],['career','💼 Career / work'],['passion','🔥 Passion / ventures'],['relationships','❤️ Relationships'],['mindset','🧘 Mindset']];
+  const DR_MOODS = [['present','🙂 Present'],['mixed','😐 Mixed'],['stressed','😮‍💨 Stressed']];
+  function drKey(){ return 'lifeos_review_'+new Date().toISOString().slice(0,10); }
+  function todayLabel(){ return new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); }
+  function drState(){ return JSON.parse(localStorage.getItem(drKey())||'{}'); }
+  let drStepIdx=1, drFlat=false, drLastKey=drKey();
+
+  // Persist without the "saved!" chrome — used by every autosave.
+  function drPersist(){ localStorage.setItem(drKey(), JSON.stringify(collectReview())); }
+
+  function drStatus(){
+    const s=drState();
+    const hasRating = s.ratings && Object.values(s.ratings).some(v=>v>0);
+    const hasOne = !!(s.oneThing && s.oneThing.trim());
+    const any = hasRating || hasOne || (s.presence&&s.presence.trim()) || (s.overthink&&s.overthink.trim())
+      || (s.g && s.g.some(x=>x&&x.trim())) || !!s.presenceMood;
+    if(hasRating && hasOne) return 'done';
+    if(any) return 'partial';
+    return 'empty';
+  }
+  function drStepDone(n, s){
+    if(n===1) return s.ratings && Object.values(s.ratings).some(v=>v>0);
+    if(n===2) return !!s.presenceMood || (s.presence&&s.presence.trim()) || (s.overthink&&s.overthink.trim());
+    if(n===3) return s.g && s.g.some(x=>x&&x.trim());
+    if(n===4) return !!(s.oneThing && s.oneThing.trim());
+    return false;
+  }
+  function drFirstIncomplete(){ const s=drState(); for(let n=1;n<=4;n++){ if(!drStepDone(n,s)) return n; } return 4; }
+
+  function renderReview(){
+    // Reset step state if the day rolled over mid-session.
+    if(drKey()!==drLastKey){ drLastKey=drKey(); drStepIdx=1; }
+    document.getElementById('drDate').textContent = todayLabel();
+    const s = drState();
+    // Ratings
+    document.getElementById('drRatings').innerHTML = DR_AREAS.map(([id,label])=>{
+      const val=(s.ratings&&s.ratings[id])||0;
+      const dots=[1,2,3,4,5].map(n=>`<button type="button" aria-label="${label} ${n} of 5" class="${n<=val?'on':''}" onclick="setRating('${id}',${n})">${n}</button>`).join('');
+      return `<div class="rate-row"><span class="rlabel">${label}</span><span class="rate-dots">${dots}</span></div>`;
+    }).join('');
+    // Mood chips
+    const mood=document.getElementById('drMood');
+    if(mood) mood.innerHTML = DR_MOODS.map(([v,l])=>
+      `<button type="button" role="radio" aria-checked="${s.presenceMood===v?'true':'false'}" class="${s.presenceMood===v?'on':''}" onclick="drSetMood('${v}')">${l}</button>`).join('');
+    // Text fields
+    document.getElementById('drPresence').value=s.presence||'';
+    document.getElementById('drOverthink').value=s.overthink||'';
+    document.getElementById('drG1').value=(s.g&&s.g[0])||'';
+    document.getElementById('drG2').value=(s.g&&s.g[1])||'';
+    document.getElementById('drG3').value=(s.g&&s.g[2])||'';
+    document.getElementById('drOneThing').value=s.oneThing||'';
+    // Gratitude reveal: show rows 2/3 only if they carry content (or previously revealed).
+    const g2r=document.getElementById('drG2Row'), g3r=document.getElementById('drG3Row');
+    if(g2r) g2r.hidden = !((s.g&&s.g[1]) || g2r.dataset.shown);
+    if(g3r) g3r.hidden = !((s.g&&s.g[2]) || g3r.dataset.shown);
+    const moreBtn=document.getElementById('drMoreThanks'); if(moreBtn) moreBtn.hidden = !(g2r&&g2r.hidden) && !(g3r&&g3r.hidden) ? true : (g3r && !g3r.hidden);
+    // Progress dots
+    const dotsEl=document.getElementById('drDots');
+    if(dotsEl) dotsEl.innerHTML=[1,2,3,4].map(n=>`<i class="${drStepDone(n,s)?'on':''}"></i>`).join('');
+    // Resting line + done/edit/copy affordances
+    const st=drStatus(), line=document.getElementById('drRestLine'), begin=document.getElementById('drBeginBtn'), copy=document.getElementById('drRestCopy');
+    if(line && begin && copy){
+      if(st==='done'){ line.textContent='Done for today. Thank you. 🙏'; begin.textContent='Edit'; copy.hidden=false; }
+      else if(st==='partial'){ line.textContent='Pick up where you left off.'; begin.textContent='Continue'; copy.hidden=true; }
+      else { line.textContent='Two gentle minutes, then rest.'; begin.textContent='Begin — 4 small steps'; copy.hidden=true; }
+    }
+  }
+  function setRating(area,n){ const s=drState(); s.ratings=s.ratings||{}; s.ratings[area]=n; localStorage.setItem(drKey(),JSON.stringify(s)); renderReview(); }
+  function drSetMood(v){ const s=drState(); s.presenceMood = (s.presenceMood===v? null : v); localStorage.setItem(drKey(),JSON.stringify(s)); renderReview(); }
+  function collectReview(){
+    const s=drState();   // preserves ratings + presenceMood already in storage
+    s.presence=document.getElementById('drPresence').value;
+    s.overthink=document.getElementById('drOverthink').value;
+    s.g=[document.getElementById('drG1').value,document.getElementById('drG2').value,document.getElementById('drG3').value];
+    s.oneThing=document.getElementById('drOneThing').value;
+    return s;
+  }
+  function saveReview(){ drPersist(); document.getElementById('drMsg').textContent='✅ Saved for '+todayLabel()+'.'; }
+  function copyReview(){
+    const s=collectReview(); localStorage.setItem(drKey(),JSON.stringify(s)); const r=s.ratings||{};
+    const moodPrefix = s.presenceMood ? '['+s.presenceMood+'] ' : '';
+    const md='# Daily Review — '+new Date().toISOString().slice(0,10)+'\n\n'+
+      DR_AREAS.map(([id,l])=>'- '+l+': '+(r[id]||'–')+'/5').join('\n')+
+      '\n\nPresent with Sam: '+moodPrefix+(s.presence||'')+'\nOverthinking / can wait: '+(s.overthink||'')+
+      '\n\nGratitude:\n1. '+(s.g?.[0]||'')+'\n2. '+(s.g?.[1]||'')+'\n3. '+(s.g?.[2]||'')+
+      '\n\nTomorrow’s one thing: '+(s.oneThing||'')+'\n';
+    if(navigator.clipboard) navigator.clipboard.writeText(md).then(()=>document.getElementById('drMsg').textContent='📋 Copied — paste into templates/daily_review.md or your journal.',()=>window.prompt('Copy:',md));
+    else window.prompt('Copy:',md);
+  }
+
+  // ---- Stepper controls ----
+  function drShowStep(n){
+    drStepIdx=n;
+    [1,2,3,4].forEach(i=>{ const el=document.getElementById('drStep'+i); if(el) el.hidden = i!==n; });
+    document.getElementById('drStepIndicator').textContent = n+' of 4';
+    document.getElementById('drBack').disabled = n===1;
+    document.getElementById('drNext').textContent = n===4 ? 'Finish' : 'Next →';
+    const h=document.querySelector('#drStep'+n+' .dr-step-h'); if(h) h.focus();
+  }
+  function drBegin(){
+    document.getElementById('drRest').hidden=true;
+    const st=document.getElementById('drStepper'); st.hidden=false; st.classList.remove('dr-flat'); drFlat=false;
+    document.getElementById('drMsg').textContent='';
+    drShowStep(drFirstIncomplete());
+  }
+  function drGoTo(n){ const cur=document.getElementById('drStep'+drStepIdx); swapFade(cur, ()=>drShowStep(n)); }
+  function drNext(){ if(drStepIdx<4) drGoTo(drStepIdx+1); else drFinish(); }
+  function drStep(delta){ const n=drStepIdx+delta; if(n>=1 && n<=4) drGoTo(n); }
+  function drFinish(){
+    drPersist();
+    document.getElementById('drStepper').hidden=true;
+    document.getElementById('drRest').hidden=false;
+    renderReview();
+    document.getElementById('drMsg').textContent='Saved. Sleep well — tomorrow has its one thing already. 🪔';
+  }
+  function drMoreThanks(){
+    const g2=document.getElementById('drG2Row'), g3=document.getElementById('drG3Row');
+    if(g2 && g2.hidden){ g2.hidden=false; g2.dataset.shown='1'; }
+    else if(g3 && g3.hidden){ g3.hidden=false; g3.dataset.shown='1'; }
+    if(g3 && !g3.hidden){ const mb=document.getElementById('drMoreThanks'); if(mb) mb.hidden=true; }
+  }
+  function drToggleShowAll(){
+    const st=document.getElementById('drStepper'), rest=document.getElementById('drRest');
+    drFlat=!drFlat;
+    if(drFlat){ rest.hidden=true; st.hidden=false; st.classList.add('dr-flat');
+      [1,2,3,4].forEach(i=>{ const el=document.getElementById('drStep'+i); if(el) el.hidden=false; }); }
+    else { st.classList.remove('dr-flat'); drShowStep(drStepIdx||1); }
+  }
+
+  // Autosave every field edit (no "save" as a concept).
+  ['drPresence','drOverthink','drG1','drG2','drG3','drOneThing'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.addEventListener('input', ()=>{ drPersist(); });
+  });
+  renderReview();
+
+  /* ============================================================
+     FINANCE & INVESTMENTS — reads finance-data.json + local edits
+     ============================================================ */
+  const FIN_LS='lifeos_finance_v1';
+  // Currency formatter driven by config (owner.currency / owner.locale); finance-data.json.currency wins if set.
+  function fmtMoney(n, data){ if(n==null||isNaN(n)) return '—';
+    const cur = (data && data.currency) || (LIFEOS.owner && LIFEOS.owner.currency) || 'USD';
+    const loc = (LIFEOS.owner && LIFEOS.owner.locale) || undefined;
+    try{ return new Intl.NumberFormat(loc,{style:'currency',currency:cur,maximumFractionDigits:0}).format(Number(n)); }
+    catch(e){ return (n<0?'-':'')+Math.abs(Number(n)).toLocaleString(loc); }
+  }
+  function fmtINR(n){ return fmtMoney(n); }  // back-compat alias; name is historical only
+  async function loadFinance(){
+    let data=null;
+    try{ const r=await fetch('finance-data.json',{cache:'no-store'}); if(r.ok) data=await r.json(); }catch(e){}
+    const override=JSON.parse(localStorage.getItem(FIN_LS)||'null');
+    if(override) data=Object.assign({}, data||{}, override);
+    if(!data){ document.getElementById('finUpdated').textContent='Finance data unavailable (finance-data.json not found).'; return; }
+    renderFinance(data);
+  }
+  function renderFinance(d){
+    const k=d.broker||{};
+    document.getElementById('finSource').textContent = k.connected?'Broker · live':'Broker · not connected';
+    document.getElementById('finUpdated').textContent = k.lastSync? ('Last broker sync: '+new Date(k.lastSync).toLocaleString()) : 'Not synced yet — connect a broker to populate.';
+    const connect=document.getElementById('finConnect'), summ=document.getElementById('finSummary'), hold=document.getElementById('finHoldings');
+    if(!k.connected){
+      connect.innerHTML='<div class="fin-connect">🔌 <strong>Connect a broker</strong> to see live holdings &amp; P&amp;L. Run the sync from your own machine once (see the <a href="../docs/connectors/README.md">connector guide</a>), then your portfolio renders here automatically.</div>';
+      summ.innerHTML=''; hold.innerHTML='';
+    } else {
+      connect.innerHTML='';
+      const s=k.summary||{};
+      const cls=v=> (v==null?'':(v>=0?'pos':'neg'));
+      const tiles=[['Invested',fmtINR(s.invested),''],['Current',fmtINR(s.current),''],
+        ['P&L',fmtINR(s.pnl),cls(s.pnl)],['P&L %',(s.pnlPct!=null?s.pnlPct+'%':'—'),cls(s.pnlPct)],
+        ['Day P&L',fmtINR(s.dayPnl),cls(s.dayPnl)]];
+      summ.innerHTML=tiles.map(t=>`<div class="fin-tile"><div class="v ${t[2]}">${t[1]}</div><div class="k">${t[0]}</div></div>`).join('');
+      const rows=(k.holdings||[]).map(h=>`<tr><td>${h.symbol}</td><td>${h.qty}</td><td>${fmtINR(h.avg)}</td><td>${fmtINR(h.ltp)}</td><td class="${h.pnl>=0?'pos':'neg'}">${fmtINR(h.pnl)}</td></tr>`).join('');
+      hold.innerHTML = rows? `<table class="holdings"><thead><tr><th>Symbol</th><th>Qty</th><th>Avg</th><th>LTP</th><th>P&amp;L</th></tr></thead><tbody>${rows}</tbody></table>` : '<p class="ed-empty">No holdings in the synced data.</p>';
+    }
+    const nw=d.netWorth||{assets:[],liabilities:[]};
+    const assets=(nw.assets||[]).reduce((a,x)=>a+(+x.value||0),0);
+    const liab=(nw.liabilities||[]).reduce((a,x)=>a+(+x.value||0),0);
+    const total=(nw.total!=null)?nw.total:(assets-liab);
+    document.getElementById('netWorth').innerHTML =
+      (nw.assets||[]).map(a=>`<div class="budget-row"><span class="bname">${a.name}</span><span class="bamt">${fmtINR(a.value)}</span></div>`).join('')+
+      (nw.liabilities||[]).map(a=>`<div class="budget-row"><span class="bname">− ${a.name}</span><span class="bamt">${fmtINR(a.value)}</span></div>`).join('')+
+      `<div class="budget-row" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span class="bname"><strong>Net worth</strong></span><span class="bamt"><strong>${fmtINR(total)}</strong></span></div>`;
+    const b=d.budget||{categories:[]};
+    document.getElementById('budgetMonth').textContent=b.month||'';
+    document.getElementById('budgetList').innerHTML=(b.categories||[]).map(c=>{
+      const pct=c.budget?Math.min(100,Math.round(((c.spent||0)/c.budget)*100)):0;
+      return `<div class="budget-row"><span class="bname">${c.name}</span><span class="budget-bar"><div style="width:${pct}%"></div></span><span class="bamt">${fmtINR(c.spent)} / ${fmtINR(c.budget)}</span></div>`;
+    }).join('') || '<p class="ed-empty">No budget categories yet.</p>';
+  }
+  loadFinance();
+
+  /* ============================================================
+     PHASE 1 · MOTION SYSTEM — reveal-on-scroll, swapFade cross-fade
+     helper, and diya-glow micro-interactions. All strictly under
+     html.motion-ok; a JS failure removes the pre-hidden state so
+     content can never be trapped invisible.
+     ============================================================ */
+  function motionOk(){ return document.documentElement.classList.contains('motion-ok'); }
+  const MOTION_OK = motionOk();
+
+  // swapFade(el, applyFn): fade out, mutate, fade back. Synchronous when motion is off.
+  // Checks the class live (not the const) so it's safe to call before this block's const initializes.
+  function swapFade(el, applyFn){
+    if(!el){ if(applyFn) applyFn(); return; }
+    if(!motionOk()){ if(applyFn) applyFn(); return; }
+    el.classList.add('fading');
+    let done=false;
+    const finish=()=>{ if(done) return; done=true; el.removeEventListener('transitionend',finish);
+      try{ if(applyFn) applyFn(); } finally{ requestAnimationFrame(()=>el.classList.remove('fading')); } };
+    el.addEventListener('transitionend',finish);
+    setTimeout(finish, 260); // fallback if transitionend never fires
+  }
+
+  // One-shot gold "diya" glow on an element (completion feedback).
+  function diyaGlow(el){
+    if(!el || !motionOk()) return;
+    el.classList.remove('diya-glow'); void el.offsetWidth; el.classList.add('diya-glow');
+    el.addEventListener('animationend', ()=>el.classList.remove('diya-glow'), {once:true});
+  }
+  window.diyaGlow = diyaGlow; window.swapFade = swapFade;
+
+  // Glow when any tracked checkbox or task is completed.
+  document.body.addEventListener('change',(e)=>{
+    const t=e.target;
+    if(t.matches && t.matches('ul.check input[type=checkbox]') && t.checked) diyaGlow(t.closest('li')||t);
+    else if(t.matches && t.matches('.ed-done') && t.checked) diyaGlow(t.closest('.ed-row'));
+  });
+
+  // Reveal-on-scroll: one observer, one-way. Hidden state only exists while .js-reveal-ready is present
+  // AND motion is on — so JS-off / Reduce-Motion users see everything immediately.
+  (function(){
+    if(!MOTION_OK) return;
+    try{
+      const els=[...document.querySelectorAll('.section')];
+      if(!('IntersectionObserver' in window) || !els.length) return;
+      els.forEach(el=>{ el.setAttribute('data-reveal',''); el.classList.add('js-reveal-ready'); });
+      const ro=new IntersectionObserver((entries,obs)=>{
+        entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); obs.unobserve(en.target); } });
+      }, {rootMargin:'0px 0px -8% 0px', threshold:.04});
+      els.forEach(el=>ro.observe(el));
+      // Safety: anything still hidden after 3s (observer never fired) is force-revealed.
+      setTimeout(()=>els.forEach(el=>el.classList.add('in')), 3000);
+    }catch(e){
+      document.querySelectorAll('.js-reveal-ready').forEach(el=>el.classList.remove('js-reveal-ready'));
+    }
+  })();
+
+  /* ============================================================
+     PHASE 2 · DOCK — mobile FAB/bottom-sheet behavior + the
+     thread scroll-progress fill. Sync + active-section
+     binding are already live via Phase 0's data attributes and
+     Phase 1's __setActiveSection. No sync-code changes here.
+     ============================================================ */
+  (function(){
+    const dock=document.getElementById('dock'), fab=document.getElementById('dockFab'), scrim=document.getElementById('dockScrim');
+    if(dock && fab){
+      const openSheet=()=>{ dock.classList.add('open'); fab.setAttribute('aria-expanded','true');
+        if(scrim) scrim.hidden=false; const first=dock.querySelector('.dock-btn'); if(first) first.focus(); };
+      const closeSheet=()=>{ if(!dock.classList.contains('open')) return; dock.classList.remove('open');
+        fab.setAttribute('aria-expanded','false'); if(scrim) scrim.hidden=true; fab.focus(); };
+      fab.addEventListener('click',()=> dock.classList.contains('open')?closeSheet():openSheet());
+      if(scrim) scrim.addEventListener('click',closeSheet);
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeSheet(); });
+      dock.addEventListener('click',(e)=>{ if(e.target.closest('a')) closeSheet(); }); // anchor tap closes the sheet
+    }
+    // Thread scroll-progress fill (decorative, aria-hidden; skip entirely when motion is off).
+    const fill=document.getElementById('dockThreadFill');
+    if(fill && document.documentElement.classList.contains('motion-ok')){
+      let ticking=false;
+      const upd=()=>{ ticking=false; const h=document.documentElement; const max=h.scrollHeight-h.clientHeight;
+        fill.style.height=(max>0?Math.min(1,h.scrollTop/max)*100:0)+'%'; };
+      window.addEventListener('scroll',()=>{ if(!ticking){ ticking=true; requestAnimationFrame(upd); } },{passive:true});
+      upd();
+    }
+  })();
+
+  /* ============================================================
+     CONFIG BOOTSTRAP — apply lifeos.config.json over the demo
+     defaults so identity, areas, currency, links, and greeting all
+     read from one file. Missing config -> the built-in demo persona.
+     ============================================================ */
+  function applyConfig(){
+    rebuildAreas();
+    const disp = (LIFEOS.product && LIFEOS.product.display) || 'LifeOS';
+    document.title = '🧭 ' + disp + ' — Command Center';
+    const brand = document.getElementById('brandName');
+    if(brand) brand.innerHTML = '🧭 ' + disp + ' <span>· Command Center</span>';
+    const footer = document.getElementById('footerCredit');
+    if(footer) footer.textContent = 'Built with ' + disp + ' · data saved locally in your browser';
+    const nb = document.getElementById('openNotionBtn');
+    const nu = (LIFEOS.deployment && LIFEOS.deployment.notionPageUrl) || '';
+    if(nb){ if(nu){ nb.href = nu; nb.hidden = false; } else nb.hidden = true; }
+    if(typeof renderGreeting === 'function') renderGreeting();
+    if(typeof buildComposerChips === 'function') buildComposerChips();
+    if(typeof refreshComposerChips === 'function') refreshComposerChips();
+    if(typeof renderTasks === 'function') renderTasks();
+    if(typeof rewriteRepoLinks === 'function') rewriteRepoLinks();
+  }
+  async function loadConfig(){
+    let cfg = null;
+    for(const f of ['lifeos.config.json','../lifeos.config.json','lifeos.config.example.json','../lifeos.config.example.json']){
+      try{ const r = await fetch(f, {cache:'no-store'}); if(r.ok){ cfg = await r.json(); break; } }catch(e){}
+    }
+    if(cfg){ LIFEOS = Object.assign({}, LIFEOS, cfg, { owner: Object.assign({}, LIFEOS.owner, cfg.owner||{}) }); }
+    applyConfig();
+  }
+  if(typeof renderGreeting === 'function') renderGreeting();  // immediate paint with demo defaults
+  loadConfig();
+</script>
+</body>
+</html>

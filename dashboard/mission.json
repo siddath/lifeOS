@@ -1,0 +1,42 @@
+{
+  "_comment": "The current hero mission. Swap this file to change the whole dashboard hero — header, countdown, one-thing, week planner, evidence. Nothing else hardcodes the mission. When you swap: snapshot this into archive/mission_<slug>.json first (see the mission-swap skill). 'slug' namespaces this mission's week/evidence checkbox keys so ticks never carry across mission swaps. This is demo-persona data for 'Alex Rivera'.",
+  "slug": "launch-week",
+  "hero": {
+    "kicker": "Hero mission · one thing at a time",
+    "title": "🚀 Operation Launch Week",
+    "subtitle": "Ship Fieldnotes to its first 50 beta users — calm, finished, real",
+    "gate": "2026-08-22T09:00:00-07:00",
+    "gateLabel": "beta launch day",
+    "gatePassedTitle": "🚀 Beta is live",
+    "gatePassedMessage": "You said you'd ship Fieldnotes to 50 beta users. Now the loop: onboard the first cohort, watch what they actually do, fix the top-3 friction points, and log every signup. Momentum beats polish — keep the daily block, keep it small.",
+    "mission": "Finished, not perfect. One block a day beats a weekend binge.",
+    "oneThing": {
+      "tag": "🎯 The one thing right now",
+      "do": "Do today's single build block — one feature or one fix — and ship it.",
+      "why": "Open the launch checklist, do the block for today, tick it. One finished thing is the win. Don't open the whole backlog and spiral about everything left.",
+      "reframe": "A launch is a hundred small finished things, not one heroic weekend. You're not behind — you're building the machine that makes shipping ordinary."
+    },
+    "rule": "⏱️ <strong>This month's rule:</strong> every build day, one honest block beats a perfect plan. <em>Did I ship one real thing today?</em> If yes, that day counts. Always-OK: Sam · sleep · food · health · the day job.",
+    "reframeStrip": "Think once → Build → Measure → Improve. Shipped things are evidence. Log them, don't just plan them."
+  },
+  "week": {
+    "title": "🗓️ The 4-week arc — beta-ready by launch",
+    "sub": "One theme per week. Deep, not broad. Tick as you go (saves on this device).",
+    "days": [
+      { "title": "Week 1 · Core loop + onboarding", "theme": "The one flow a new user must love",
+        "items": ["Nail the capture → organize → recall loop", "First-run onboarding (empty states)", "Fix the top-5 known bugs", "Write the 3-sentence 'what is Fieldnotes'", "Dogfood it for a full day"] },
+      { "title": "Week 2 · Polish + performance", "theme": "Make it feel finished and fast",
+        "items": ["Loading + error states everywhere", "Mobile layout pass", "Cut cold-start time", "Accessibility sweep (labels, contrast)", "Landing page v1"] },
+      { "title": "Week 3 · Beta plumbing", "theme": "The machinery around the product",
+        "items": ["Signup + waitlist flow", "Feedback capture in-app", "Basic analytics (activation funnel)", "Draft the invite email", "Line up the first 20 testers"] },
+      { "title": "Week 4 · Launch + first cohort", "theme": "Ship it and watch",
+        "items": ["Final QA pass on the core loop", "Send the first 50 invites", "Onboard cohort 1 live", "Watch session recordings", "Fix the top-3 friction points"] }
+    ]
+  },
+  "evidence": {
+    "title": "📦 Evidence by launch day",
+    "pill": "shipped, not planned",
+    "sub": "These are wins. Tick them and mean it.",
+    "items": ["✅ Core loop shipped + dogfooded a week", "✅ Landing page live", "✅ Signup + feedback flow working", "✅ 50 beta invites sent", "✅ Cohort 1 onboarded + first friction fixes logged"]
+  }
+}

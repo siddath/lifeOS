@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lifeos/habit",
+  "title": "Habit",
+  "type": "object",
+  "required": ["name", "days"],
+  "properties": {
+    "id": { "type": "string" },
+    "notionId": { "type": ["string", "null"] },
+    "name": { "type": "string" },
+    "keystone": { "type": "boolean", "description": "A foundational habit that protects the others." },
+    "active": { "type": "boolean" },
+    "cadence": { "type": "string", "description": "e.g. Daily, Weekdays, 3x/week." },
+    "weekOf": { "type": "string", "description": "Monday of the tracked week, YYYY-MM-DD." },
+    "days": {
+      "type": "object",
+      "properties": {
+        "mon": { "type": "boolean" }, "tue": { "type": "boolean" }, "wed": { "type": "boolean" },
+        "thu": { "type": "boolean" }, "fri": { "type": "boolean" }, "sat": { "type": "boolean" }, "sun": { "type": "boolean" }
+      }
+    },
+    "updatedAt": { "type": "string" }
+  }
+}

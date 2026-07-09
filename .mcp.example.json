@@ -1,0 +1,15 @@
+{
+  "_comment": "Copy to .mcp.json (gitignored) to let Claude Code / an MCP client talk to your connectors. These are optional, docs-only integrations in v1 — see docs/connectors/. Never commit real tokens; these entries use public remote endpoints or read secrets from your environment.",
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": { "NOTION_API_KEY": "${NOTION_API_KEY}" }
+    },
+    "broker": {
+      "_comment": "Example: a broker's public MCP endpoint for the (optional) finance module. Swap for your broker.",
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.your-broker.example/mcp"]
+    }
+  }
+}

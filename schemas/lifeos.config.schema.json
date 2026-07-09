@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lifeos/config",
+  "title": "LifeOS instance configuration",
+  "type": "object",
+  "required": ["owner", "areas", "modules"],
+  "properties": {
+    "product": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "display": { "type": "string" },
+        "tagline": { "type": "string" }
+      }
+    },
+    "owner": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "shortName": { "type": "string" },
+        "timezone": { "type": "string", "description": "IANA tz, e.g. America/Los_Angeles" },
+        "locale": { "type": "string", "description": "BCP-47, e.g. en-US" },
+        "currency": { "type": "string", "description": "ISO 4217, e.g. USD" },
+        "greeting": { "type": "string" }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "palette": { "type": "string" },
+        "defaultMode": { "type": "string", "enum": ["auto", "light", "dark"] }
+      }
+    },
+    "areas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "label"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "label": { "type": "string" },
+          "emoji": { "type": "string" },
+          "notion": { "type": "string", "description": "Exact Notion select-option label for this area" }
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "properties": {
+        "missions": { "type": "boolean" },
+        "trackers": { "type": "boolean" },
+        "finance": { "type": "boolean" },
+        "knowledge_base": { "type": "boolean" },
+        "anchor": { "type": "boolean" },
+        "flashcards": { "type": "boolean" }
+      }
+    },
+    "repo": {
+      "type": "object",
+      "properties": { "url": { "type": "string", "description": "GitHub blob base for repo-file links; empty = relative links only" } }
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "baseUrl": { "type": "string" },
+        "notionPageUrl": { "type": "string" }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "properties": {
+        "notion": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+        "google": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+        "github": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+        "broker": { "type": "object", "properties": { "enabled": { "type": "boolean" } } }
+      }
+    }
+  }
+}

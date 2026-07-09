@@ -1,0 +1,138 @@
+{
+  "updatedAt": "2026-07-09",
+  "entries": [
+    {
+      "id": "kb-01",
+      "area": "identity",
+      "title": "Who Alex is (the one-line story)",
+      "body": "Alex Rivera, 29, is a product engineer based in Portland, Oregon. They build calm, useful software for a living, ship a small note-taking app called Fieldnotes on the side, and spend most weekends at the pottery wheel. Alex shares a home with their partner, Sam, and is happiest with a short list and one clear thing to do next.",
+      "facets": []
+    },
+    {
+      "id": "kb-02",
+      "area": "identity",
+      "title": "Home base: Portland, Oregon",
+      "body": "Alex is settled in Portland and has no plans to move. The walkable neighborhood, the rain, the coffee, and a slower pace are all part of the calm life they're deliberately building. Day-to-day time zone is US Pacific.",
+      "facets": ["preference"]
+    },
+    {
+      "id": "kb-03",
+      "area": "values",
+      "title": "Core values: craft, calm, close relationships",
+      "body": "Three things anchor most of Alex's decisions. Craft: do fewer things and do them well. Calm: protect a low-drama, unhurried life. Close relationships: keep a small circle warm. When a choice works against all three at once, it's usually a no.",
+      "facets": ["strength"]
+    },
+    {
+      "id": "kb-04",
+      "area": "values",
+      "title": "Fewer, better, finished",
+      "body": "Alex would rather finish one real thing than start five. 'Fewer, better, finished' is the rule of thumb, and it applies to features at work, personal commitments, and even weekend plans. Saying no to the good is how the great gets shipped.",
+      "facets": ["preference", "boundary"]
+    },
+    {
+      "id": "kb-05",
+      "area": "personality",
+      "title": "Over-plans under pressure",
+      "body": "When the stakes feel high, Alex's instinct is to plan, re-plan, and research instead of starting. The tell is opening a fresh doc to 'think it through' for the third time. The counter-move is to ship one small, concrete thing within the hour and let evidence replace the loop.",
+      "facets": ["watch-out"]
+    },
+    {
+      "id": "kb-06",
+      "area": "personality",
+      "title": "Quiet by default, warm up close",
+      "body": "Alex is an introvert who recharges with solo time or a quiet evening at home with Sam, and finds large group settings draining. One-on-one they're warm, curious, and a genuinely good listener. Deep work and honest conversation are where they come alive.",
+      "facets": ["preference"]
+    },
+    {
+      "id": "kb-07",
+      "area": "career",
+      "title": "Product engineer — the day job",
+      "body": "Alex works as a product engineer: part design sense, part full-stack building, shipping features that users actually touch. They like owning a problem end to end and care more about a clean, humane experience than about clever internals nobody sees.",
+      "facets": ["strength"]
+    },
+    {
+      "id": "kb-08",
+      "area": "career",
+      "title": "What's next in the work",
+      "body": "Alex's growth edge is leading larger pieces of work without drifting into over-planning: scope tightly, delegate, trust a rough v1, and iterate in the open. The goal this year is to run one meaningful project end to end and mentor a newer engineer along the way.",
+      "facets": ["goal"]
+    },
+    {
+      "id": "kb-09",
+      "area": "health",
+      "title": "Movement: morning walk + three workouts a week",
+      "body": "Alex starts most days with a 20 to 30 minute walk before touching a screen, and does a strength session three times a week. Movement is the main mood regulator, so when the week gets loud the walk is the last thing to drop, not the first.",
+      "facets": ["routine", "strength"]
+    },
+    {
+      "id": "kb-10",
+      "area": "health",
+      "title": "Sleep and energy rhythm",
+      "body": "Alex protects sleep hard: screens down in the late evening, a consistent wake time, and no heavy work after dinner. Energy peaks in the morning, so deep work goes there and lighter admin fills the afternoon dip.",
+      "facets": ["routine", "boundary"]
+    },
+    {
+      "id": "kb-11",
+      "area": "relationship",
+      "title": "Sam — the partnership",
+      "body": "Alex's partner is Sam. The relationship runs on low drama, steady check-ins, and shared quiet: cooking together, weekend walks, and giving each other room for solo projects. A standing rule they keep is no big decisions made alone; they talk it through first.",
+      "facets": ["strength", "boundary"]
+    },
+    {
+      "id": "kb-12",
+      "area": "family",
+      "title": "Weekly call with parents",
+      "body": "Every week, usually on a Sunday, Alex calls their parents to catch up with no agenda. It's a small ritual that keeps the family close across the distance, and Alex guards the slot even in busy weeks.",
+      "facets": ["routine"]
+    },
+    {
+      "id": "kb-13",
+      "area": "fieldnotes",
+      "title": "Fieldnotes — the side-project note app",
+      "body": "Fieldnotes is Alex's side project: a fast, plain-text note-taking app built for capturing a thought in one keystroke and finding it again later. It's deliberately small, with no bloat and no accounts you don't need, and it doubles as Alex's playground for shipping without a committee.",
+      "facets": ["strength"]
+    },
+    {
+      "id": "kb-14",
+      "area": "fieldnotes",
+      "title": "Fieldnotes — current focus",
+      "body": "The current release goal is a rock-solid quick-capture box and instant search. Alex keeps the roadmap to one 'next thing' at a time and ships small updates on weekends rather than hoarding changes for a big rewrite that never lands.",
+      "facets": ["goal"]
+    },
+    {
+      "id": "kb-15",
+      "area": "pottery",
+      "title": "Weekend Pottery — the craft hobby",
+      "body": "On weekends Alex throws pots at a local studio. It's the hands-on, screen-free counterweight to a week of software: slow, tactile, and forgiving of mistakes. The point isn't a perfect bowl, it's an hour where the only thing that matters is the clay in front of them.",
+      "facets": ["preference"]
+    },
+    {
+      "id": "kb-16",
+      "area": "finance",
+      "title": "Money principles",
+      "body": "Alex keeps money boring on purpose. All amounts are in US dollars. The playbook: spend below their means, automate savings first, keep an emergency cushion, and avoid lifestyle creep as income grows. Big purchases get a cooling-off week before a yes.",
+      "facets": ["preference", "boundary"]
+    },
+    {
+      "id": "kb-17",
+      "area": "admin",
+      "title": "Life admin cadence",
+      "body": "Alex batches life admin (bills, appointments, inbox, errands) into one weekly block instead of letting it interrupt deep work. Anything under two minutes gets done on the spot; everything else goes on the list for the block.",
+      "facets": ["routine"]
+    },
+    {
+      "id": "kb-18",
+      "area": "learning",
+      "title": "Reading 20 minutes a day",
+      "body": "Alex reads at least 20 minutes a day, usually a mix of craft and design writing plus one novel for balance. Notes and highlights go straight into Fieldnotes so ideas resurface later instead of evaporating.",
+      "facets": ["routine", "strength"]
+    },
+    {
+      "id": "kb-19",
+      "area": "mindset",
+      "title": "Ship one thing at a time",
+      "body": "Alex's operating principle is think once, then build, measure, and improve, instead of think, plan, re-plan, think again. Every week should end with evidence (something shipped), not just ideas. When the planning loop starts spinning, the move is to name it out loud and ship one concrete thing.",
+      "facets": ["strength", "goal"]
+    }
+  ]
+}

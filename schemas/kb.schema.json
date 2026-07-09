@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "lifeos/kb",
+  "title": "Knowledge base",
+  "description": "The searchable 'about you' knowledge base powering knowledge.html. An AI writes this from your notes during onboarding.",
+  "type": "object",
+  "required": ["entries"],
+  "properties": {
+    "updatedAt": { "type": ["string", "null"] },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "area", "title", "body"],
+        "properties": {
+          "id": { "type": "string" },
+          "area": { "type": "string", "description": "An area code from lifeos.config.json, or 'identity'/'values'/'personality'." },
+          "title": { "type": "string" },
+          "body": { "type": "string", "description": "Markdown-ish plain text." },
+          "facets": { "type": "array", "items": { "type": "string" }, "description": "Tags for filtering, e.g. 'strength', 'watch-out', 'preference'." }
+        }
+      }
+    }
+  }
+}
