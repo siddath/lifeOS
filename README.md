@@ -5,13 +5,13 @@
 </p>
 
 <p align="center">
-  <a href="https://vercel.com/new/clone?repository-url=https://github.com/OWNER/lifeos&output-directory=dashboard">
+  <a href="https://vercel.com/new/clone?repository-url=https://github.com/siddath/lifeOS&output-directory=dashboard">
     <img src="https://vercel.com/button" alt="Deploy with Vercel">
   </a>
   &nbsp;·&nbsp; <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
 </p>
 
-> After you publish, replace `OWNER` in the deploy button (and the demo link below) with your GitHub handle.
+> The deploy button points at this repo. If you fork LifeOS, change `siddath/lifeOS` to your own handle so it deploys your copy.
 
 <!-- Screenshot: capture dashboard/index.html running the demo persona and drop it in as docs/assets/hero-desktop-light.png. Capture list: docs/assets/README.md -->
 <p align="center"><em>Screenshot goes here — see <a href="docs/assets/README.md">docs/assets/README.md</a> for the capture list.</em></p>
@@ -47,7 +47,7 @@ There's also a set of Claude Code skills (`/setup`, `/daily-brief`, `/weekly-rev
 ## Quickstart
 
 ```bash
-git clone https://github.com/OWNER/lifeos.git
+git clone https://github.com/siddath/lifeOS.git
 cd lifeos
 
 # Optional — make it yours. Skip it and you'll see the demo persona.
