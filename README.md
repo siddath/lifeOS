@@ -111,6 +111,17 @@ Import is prompt-driven against the schemas, not a rigid importer — so it work
 
 Details, including the demo persona and how the AI recognizes it as placeholder: [docs/onboarding.md](docs/onboarding.md). The placeholder convention itself is in [DEMO_DATA.md](DEMO_DATA.md).
 
+## Make it yours
+
+LifeOS ships *a* life, not a template of one — so the point isn't to fit yourself into the demo's shape, it's to rewrite the shape around you. Nothing here is fixed:
+
+- **Areas are whatever your life is actually made of.** The demo uses `career / health / relationship / fieldnotes / pottery / finance…`. Yours might be `phd / climbing / caregiving / freelance / faith`. Edit the `areas` list in `dashboard/lifeos.config.json` — codes, labels, emoji — and the task composer, the knowledge base, and Notion sync all follow.
+- **Turn off what you don't use.** The `modules` toggles (`finance`, `anchor`, `knowledge_base`…) hide whole surfaces. No money to track? Set `finance: false` and it's gone — section, nav, and all.
+- **The mission is the one thing you're driving toward right now.** Swap `dashboard/mission.json` — a job hunt, a thesis, a move, a first 10k — and the entire hero re-renders around it. When it's done, drop in the next one with a fresh `slug` and the progress resets clean.
+- **Currency, locale, greeting, theme** all live in the config, so it speaks your money and your language.
+
+You don't have to touch code for any of this. Point your AI at `AGENTS.md`, tell it what your life looks like, and it edits the config and data files for you. The config is safe to commit — identity and toggles, never secrets — and committing it is what makes a deployed dashboard render as *you* instead of Alex.
+
 ## Connectors
 
 | Connector | What v1 gives you | Setup |
