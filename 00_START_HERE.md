@@ -33,7 +33,7 @@ _(Demo persona. Swap this line whenever the hero changes — see the `mission-sw
 - [ ] <!-- lifeos:fill --> P1 —
 - [ ] <!-- lifeos:fill --> P2 —
 
-_Full lists: [`tasks.md`](06_Trackers/tasks.md) · [`reminders.md`](06_Trackers/reminders.md) · [`habits.md`](06_Trackers/habits.md) · [`inbox.md`](06_Trackers/inbox.md) · [`evidence.md`](06_Trackers/evidence.md)_
+_Full lists (blank templates — your live `tasks.md`, `habits.md`, etc. are created on first setup): [`tasks`](06_Trackers/tasks.template.md) · [`reminders`](06_Trackers/reminders.template.md) · [`habits`](06_Trackers/habits.template.md) · [`inbox`](06_Trackers/inbox.template.md) · [`evidence`](06_Trackers/evidence.template.md)_
 
 ## 🔁 Don't-skip basics
 

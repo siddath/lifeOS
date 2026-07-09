@@ -35,4 +35,4 @@ updated: 2026-07
 
 > During an intense mission, the **lighter set** (walk, water, breath, sleep) is enough. Don't let the perfect wellbeing routine become another thing you're failing at. The base is the point; the rest is upside.
 
-The keystone habits you track live in [`../06_Trackers/habits.md`](../06_Trackers/habits.md).
+The keystone habits you track live in `../06_Trackers/habits.md` (created on first setup from its [template](../06_Trackers/habits.template.md)).

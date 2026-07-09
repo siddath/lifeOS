@@ -12,7 +12,7 @@ This folder holds your **long-running projects** — the ventures, side-builds, 
 
 ## What counts as a project
 
-Anything with its own arc, its own artifacts, and a life longer than one week: a product you're shipping, a craft you sell, a business you're standing up, a course you're building. Not a task (that goes to [`../06_Trackers/tasks.md`](../06_Trackers/tasks.md)) and not a life area (that goes to [`../02_Areas/`](../02_Areas/)).
+Anything with its own arc, its own artifacts, and a life longer than one week: a product you're shipping, a craft you sell, a business you're standing up, a course you're building. Not a task (that goes to `../06_Trackers/tasks.md`, created on first setup from its [template](../06_Trackers/tasks.template.md)) and not a life area (that goes to [`../02_Areas/`](../02_Areas/)).
 
 ## Suggested layout
 

@@ -33,4 +33,4 @@ This folder holds **checklists you run more than once** — the repeatable proce
 - [ ] Rollback plan written
 ```
 
-When a checklist item is date-bound for *this* run, mirror it into [`../06_Trackers/reminders.md`](../06_Trackers/reminders.md); when it's an active to-do, into [`../06_Trackers/tasks.md`](../06_Trackers/tasks.md).
+When a checklist item is date-bound for *this* run, mirror it into `../06_Trackers/reminders.md`; when it's an active to-do, into `../06_Trackers/tasks.md`. (Those live files are created on first setup from the [`reminders`](../06_Trackers/reminders.template.md) and [`tasks`](../06_Trackers/tasks.template.md) templates.)

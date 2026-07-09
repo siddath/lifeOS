@@ -33,6 +33,6 @@ updated: 2026-07
 
 ## Close-out
 - One sentence: what this proved about me regardless of the outcome:
-- Logged in [`../06_Trackers/evidence.md`](../06_Trackers/evidence.md)? ☐
+- Logged in `../06_Trackers/evidence.md` (created on first setup from its [template](../06_Trackers/evidence.template.md))? ☐
 
 > An event is one gate, not the kingdom. The result is data. The pipeline continues either way.

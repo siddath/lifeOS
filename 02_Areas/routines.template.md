@@ -30,4 +30,4 @@ updated: 2026-07
 - <!-- lifeos:fill: e.g. life audit, north-star revisit, insurance / admin review -->
 - <!-- lifeos:fill -->
 
-> Date-bound instances of these belong in [`../06_Trackers/reminders.md`](../06_Trackers/reminders.md); the recurring definition lives here.
+> Date-bound instances of these belong in `../06_Trackers/reminders.md` (created on first setup from its [template](../06_Trackers/reminders.template.md)); the recurring definition lives here.

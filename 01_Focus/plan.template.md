@@ -42,7 +42,7 @@ updated: 2026-07
 
 ## Evidence log for this mission
 
-> Newest on top. One line per artifact shipped. This is the counter-evidence for the days your brain says "I've done nothing." Mirror the big ones into [`../06_Trackers/evidence.md`](../06_Trackers/evidence.md).
+> Newest on top. One line per artifact shipped. This is the counter-evidence for the days your brain says "I've done nothing." Mirror the big ones into `../06_Trackers/evidence.md` (created on first setup from its [template](../06_Trackers/evidence.template.md)).
 
 | Date | What shipped |
 |------|--------------|

@@ -14,11 +14,11 @@ It's powered by two serverless functions — `api/notion-sync.js` (push) and `ap
 
 ---
 
-## Step 1 — duplicate the public Notion template
+## Step 1 — create the Tasks and Habits databases
 
-Duplicate the public **LifeOS** Notion template into your own workspace. It ships two databases — **Tasks** and **Habits** — already configured with the property names and select options LifeOS expects. Duplicating (rather than building by hand) is the reliable path: the names and option labels have to match exactly.
+Create two Notion databases — **Tasks** and **Habits** — with the exact property names and select options LifeOS expects. **The property tables in [Step 4](#step-4--the-exact-property-names-the-code-expects) are the complete spec**: build both databases from them by hand (a couple of minutes each). The property names and option labels must match exactly, so copy them verbatim.
 
-Prefer to build them yourself? Use the property tables in Step 4 as the spec.
+> A prebuilt "duplicate-me" Notion template is planned but not shipped yet. Until then Step 4 is the source of truth — you can finish setup with only what's in this repo.
 
 ---
 
@@ -55,7 +55,7 @@ The sync helper (`api/_notion.js`) maps fields by **exact property name**. Match
 | Notion property | Type | Values LifeOS uses |
 |---|---|---|
 | **Task** | Title | The task text |
-| **Area** | Select | One option per area code in your `lifeos.config.json` (the `notion` label — e.g. `Career`, `Health`, `Finance`) |
+| **Area** | Select | One option per area code in your `dashboard/lifeos.config.json` (the `notion` label — e.g. `Career`, `Health`, `Finance`) |
 | **Priority** | Select | `P1 Today` · `P2 This Week` · `P3 Later` |
 | **Status** | Status | `Not started` · `In progress` · `Done` |
 | **Due** | Date | Optional due date |
@@ -64,7 +64,7 @@ LifeOS ↔ Notion mapping for the coded fields:
 
 - Priority: `P1 → "P1 Today"`, `P2 → "P2 This Week"`, `P3 → "P3 Later"`.
 - Status: `open → "Not started"`, `in-progress → "In progress"`, `done → "Done"`.
-- Area: your local area **code** maps to the option's **label** via the `notion` field in each `areas[]` entry of `lifeos.config.json`, so the two never drift.
+- Area: your local area **code** maps to the option's **label** via the `notion` field in each `areas[]` entry of `dashboard/lifeos.config.json`, so the two never drift. The sync function reads that committed config (falling back to `dashboard/lifeos.config.example.json`) to build the area map — `vercel.json`'s `functions.includeFiles` bundles `dashboard/lifeos.config*.json` into the serverless function so it resolves in production. If you never personalize the config, every task files under the example's default label (**Mindset**).
 
 ### Habits database
 
@@ -103,7 +103,7 @@ This authenticates the **dashboard → serverless** calls. The dashboard sends i
 
 ## Step 6 — sync
 
-- **Pull** hydrates local task/habit data from Notion (`api/notion-pull.js`, or the pull control in the dashboard's sync bar).
+- **Pull** hydrates local task/habit data from Notion (`api/notion-pull.js`, or the **Pull** button in the dashboard's dock).
 - **Push** sends dashboard changes up (`api/notion-sync.js`).
 
 If nothing happens, the usual causes are: the integration wasn't shared with the database (Step 3.1), a property name doesn't match exactly (Step 4), or a `collection://` id was used instead of the database id (Step 3.2).
@@ -118,4 +118,5 @@ If nothing happens, the usual causes are: the integration wasn't shared with the
 | `401 Unauthorized` on sync | The dashboard's 🔑 Sync key doesn't match `SYNC_SHARED_SECRET` on the server (or isn't set — click 🔑 Sync key). |
 | Sync runs but Notion doesn't change | Integration not added to the database's **Connections**, or a property name/type doesn't match Step 4. |
 | API rejects the database id | You used a `collection://` data-source id. Use the URL slug **before `?v=`**. |
-| Areas come back as the wrong label | An `areas[]` entry's `notion` label in `lifeos.config.json` doesn't match a Select option in the Tasks DB. |
+| Areas come back as the wrong label | An `areas[]` entry's `notion` label in `dashboard/lifeos.config.json` doesn't match a Select option in the Tasks DB. |
+| Every task files under **Mindset** | The function fell back to the example config — you haven't committed a personalized `dashboard/lifeos.config.json`. Add it (it's safe to commit) and redeploy. |

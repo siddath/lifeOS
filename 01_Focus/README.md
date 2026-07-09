@@ -32,6 +32,6 @@ When one mission closes, you snapshot it, archive it, and write the next `plan.m
 1. Copy `plan.template.md` to `plan.md`.
 2. Fill every `<!-- lifeos:fill -->` marker.
 3. Delete the guidance comments as you go.
-4. Each week, update the weekly arc and log what shipped to [`../06_Trackers/evidence.md`](../06_Trackers/evidence.md).
+4. Each week, update the weekly arc and log what shipped to `../06_Trackers/evidence.md` (created on first setup from its [template](../06_Trackers/evidence.template.md)).
 
 See [`../examples/alex/`](../examples/alex/) for a filled demo mission ("Operation Launch Week").
