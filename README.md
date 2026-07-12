@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  <strong><a href="https://lifeos-rho-navy.vercel.app">Live demo</a></strong> — the dashboard running the demo persona, exactly what a fresh clone renders.
+</p>
+
+<p align="center">
   <a href="https://vercel.com/new/clone?repository-url=https://github.com/siddath/lifeOS&output-directory=dashboard">
     <img src="https://vercel.com/button" alt="Deploy with Vercel">
   </a>
