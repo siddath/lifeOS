@@ -5,107 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <title>⚓ The Anchor — Inner OS · LifeOS</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/shared.css">
 <style>
-  :root{
-    /* "Hearth" — daytime: paper, terracotta, warm gold */
-    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555;
-    --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
-    --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
-    --header-grad:linear-gradient(135deg,#8a3c1f,#5f2a15);
-    --navbg:rgba(250,246,239,.92);
-    --rule-bg:#fff4ec; --reframe-bg:#fdf6e3;
-    --pill-hero-bg:#fbe3d8; --pill-maint-bg:#e4efe9; --pill-found-bg:#f5eccf;
-    --gold-ink:#8a6d1b;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  /* Evening: the same warm world after dark — deep espresso + brightened terracotta, never a cold invert */
-  :root[data-theme="dark"]{
-    --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
-    --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
-    --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
-    --header-grad:linear-gradient(135deg,#5a2513,#33160b);
-    --navbg:rgba(25,20,16,.9);
-    --rule-bg:#2a201a; --reframe-bg:#26201a;
-    --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f; --gold-ink:#e6c06a;
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]):not([data-theme="dark"]){
-      --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
-      --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f;
-      --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
-      --header-grad:linear-gradient(135deg,#5a2513,#33160b);
-      --navbg:rgba(25,20,16,.9);
-      --rule-bg:#2a201a; --reframe-bg:#26201a;
-      --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f; --gold-ink:#e6c06a;
-    }
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 64px;
-       transition:background .4s ease,color .4s ease}
-  :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
-  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
 
-  /* ---- Ported floating dock (shared with the dashboard) ---- */
-  .dock{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:3px;
-    padding:8px 8px 12px;width:52px;background:color-mix(in srgb,var(--card) 82%,transparent);
-    -webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
-    border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transition:width .3s cubic-bezier(.2,.7,.3,1)}
-  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.dock{background:var(--card)}}
-  .dock:hover,.dock:focus-within{width:176px}
-  .dock-sync,.dock-nav,.dock-pages{display:flex;flex-direction:column;gap:2px}
-  .dock-sep{height:1px;background:var(--line);margin:4px 6px;flex:none}
-  .dock-btn{display:flex;align-items:center;gap:10px;white-space:nowrap;border:none;background:transparent;color:var(--ink);
-    text-decoration:none;cursor:pointer;font:inherit;font-size:.82rem;font-weight:600;padding:8px;border-radius:10px;min-height:36px;line-height:1;transition:background .15s}
-  .dock-btn:hover,.dock-btn:focus-visible{background:var(--line)}
-  .dock-btn .status-dot{width:9px;height:9px;border-radius:50%;background:#9a9186;flex:none}
-  .dock-label{opacity:0;width:0;overflow:hidden;white-space:nowrap;transition:opacity .3s}
-  .dock:hover .dock-label,.dock:focus-within .dock-label{opacity:1;width:auto}
-  .dock-pages a[aria-current="page"]{background:color-mix(in srgb,var(--gold) 22%,transparent);position:relative}
-  .dock-pages a[aria-current="page"]::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
-  .dock-fab{display:none}
-  .dock-scrim{display:none}
-  @media(min-width:900px){body .wrap{padding-left:76px}}
-  @media(max-width:899px){
-    .dock{display:none}
-    .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
-      width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;background:var(--header-grad);box-shadow:var(--shadow)}
-    .dock.open{display:flex;flex-direction:column;gap:8px;width:auto;left:12px;right:12px;bottom:80px;top:auto;transform:none;max-height:70vh;overflow:auto;padding:14px}
-    .dock.open .dock-label{opacity:1;width:auto}
-    .dock.open .dock-nav,.dock.open .dock-pages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .dock.open .dock-nav a,.dock.open .dock-pages a{flex-direction:column;gap:4px;text-align:center;font-size:.68rem;min-height:56px;justify-content:center}
-    .dock-scrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,15,10,.35)}
-    .dock-scrim[hidden]{display:none}
-    body{padding-bottom:88px}
-  }
 
-  /* Slim sticky top nav */
-  .topnav{position:sticky;top:0;z-index:50;background:var(--navbg);backdrop-filter:blur(8px);
-          border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(60,45,20,.05)}
-  .topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .topnav .brand{font-weight:700;font-size:.92rem;color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
-  .topnav .brand span{color:var(--muted);font-weight:600}
-  .nav-links{display:flex;gap:2px;flex-wrap:wrap;flex:1;min-width:0}
-  .nav-links a{color:var(--ink);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:999px;transition:background .15s,color .15s}
-  .nav-links a:hover,.nav-links a:focus-visible{background:var(--line)}
-  .nav-kb{background:var(--accent2);color:#fff !important;text-decoration:none;font-size:.8rem;font-weight:700;
-          padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow)}
-  .nav-kb:hover,.nav-kb:focus-visible{filter:brightness(1.08)}
-  .theme-toggle{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
-          width:34px;height:34px;font-size:.95rem;cursor:pointer;flex:none;line-height:1;transition:background .15s,transform .2s}
-  .theme-toggle:hover{background:var(--line);transform:rotate(-15deg)}
-  @media(max-width:640px){.topnav .nav-inner{padding:8px 12px}.nav-links{order:3;width:100%}.nav-links a{font-size:.76rem;padding:4px 8px}}
 
-  /* Personal greeting band */
-  .greeting{background:var(--card);border-bottom:1px solid var(--line)}
-  .greeting-inner{display:flex;align-items:baseline;gap:12px;padding:9px 16px;flex-wrap:wrap}
-  .greet-hi{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--accent)}
-  .greet-date{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
-  .greet-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.86rem;margin-left:auto}
-  @media(max-width:640px){.greet-line{margin-left:0;width:100%}}
 
-  header{background:var(--header-grad);color:#fff;padding:26px 20px 22px;text-align:center;
+  header{background:var(--header-grad-deep);color:#fff;padding:26px 20px 22px;text-align:center;
          box-shadow:var(--shadow);position:relative;overflow:hidden}
   header::after{content:"";position:absolute;inset:0;background:
     radial-gradient(circle at 12% 20%,rgba(255,255,255,.10),transparent 42%),
@@ -115,112 +22,111 @@
     background-size:22px 22px;background-position:center;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
-  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:1.85rem;letter-spacing:.2px;position:relative;text-wrap:balance}
-  header p{margin:6px 0 0;opacity:.94;font-size:.95rem;position:relative}
-  header .kicker{display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:var(--fs-display);letter-spacing:.2px;position:relative;text-wrap:balance}
+  header p{margin:6px 0 0;opacity:.94;font-size:var(--fs-body);position:relative}
+  header .kicker{display:inline-block;font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;
          opacity:.82;font-weight:700;margin-bottom:6px;position:relative}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 
   .section{scroll-margin-top:60px;margin:30px 0 0}
   .section-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-bottom:6px;
          border-bottom:1px dashed var(--line);flex-wrap:wrap}
-  .section-head h2{margin:0;font-size:1.12rem;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
-  .section-head .eyebrow{font-size:.74rem;color:var(--muted)}
+  .section-head h2{margin:0;font-size:var(--fs-h2);letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .section-head .eyebrow{font-size:var(--fs-meta);color:var(--muted)}
 
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
-  .card h3{margin:0 0 8px;font-size:1.02rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .card p{margin:0 0 8px;font-size:.92rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:18px 20px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 8px;font-size:var(--fs-h3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .card p{margin:0 0 8px;font-size:var(--fs-body)}
   .card p:last-child{margin-bottom:0}
-  .pill{display:inline-block;font-size:.68rem;padding:2px 9px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .pill{display:inline-block;font-size:var(--fs-micro);padding:2px 9px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
   .pill.hero{background:var(--pill-hero-bg);color:var(--accent)}
   .pill.maint{background:var(--pill-maint-bg);color:var(--accent2)}
   .pill.found{background:var(--pill-found-bg);color:var(--gold-ink)}
 
   .hero-one{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
-         border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);max-width:900px;margin:0 auto 16px}
-  .hero-one .one-tag{font-size:.7rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
-  .hero-one .one-do{font-size:1.2rem;font-weight:700;margin:6px 0 4px;line-height:1.35}
-  .hero-one .one-why{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.98rem;margin:0}
+         border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow);max-width:900px;margin:0 auto 16px}
+  .hero-one .one-tag{font-size:var(--fs-micro);font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+  .hero-one .one-do{font-size:var(--fs-lead);font-weight:700;margin:6px 0 4px;line-height:1.35}
+  .hero-one .one-why{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:var(--fs-body);margin:0}
   .hero-one .one-reframe{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);
-         font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:.95rem}
-  .hero-one .jump{margin:12px 0 0;font-size:.86rem}
+         font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:var(--fs-body)}
+  .hero-one .jump{margin:12px 0 0;font-size:var(--fs-sub)}
   .hero-one .jump a{color:var(--accent);font-weight:700;text-decoration:none;border-bottom:2px solid var(--pill-hero-bg)}
   .hero-one .jump a:hover{border-color:var(--accent)}
 
-  .rule{background:var(--rule-bg);border-left:4px solid var(--accent);padding:12px 16px;border-radius:8px;
-        font-size:.9rem;margin:0 auto 18px;max-width:900px}
-  .reframe{background:var(--reframe-bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:8px;
-        font-family:var(--serif);font-style:italic;color:var(--ink);opacity:.94;font-size:.95rem;margin:0 auto 18px;max-width:900px}
+  .rule{background:var(--rule-bg);border-left:4px solid var(--accent);padding:12px 16px;border-radius:var(--r-btn);
+        font-size:var(--fs-body);margin:0 auto 18px;max-width:900px}
+  .reframe{background:var(--reframe-bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:var(--r-btn);
+        font-family:var(--serif);font-style:italic;color:var(--ink);opacity:.94;font-size:var(--fs-body);margin:0 auto 18px;max-width:900px}
 
   /* Break-glass protocol cards — retrievable, gentle, never an alarm */
   .protocol{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
-        border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+        border-radius:var(--r-card);padding:16px 18px;box-shadow:var(--shadow)}
   .protocol.calm{border-left-color:var(--accent2)}
   .protocol.gold{border-left-color:var(--gold)}
-  .protocol h3{margin:0 0 4px;font-size:1.02rem;display:flex;align-items:center;gap:8px}
-  .protocol .whenline{font-size:.78rem;color:var(--muted);margin:0 0 10px}
+  .protocol h3{margin:0 0 4px;font-size:var(--fs-h3);display:flex;align-items:center;gap:8px}
+  .protocol .whenline{font-size:var(--fs-meta);color:var(--muted);margin:0 0 10px}
   ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s}
-  ol.steps li{position:relative;padding:6px 0 6px 30px;font-size:.9rem;border-bottom:1px dashed var(--line)}
+  ol.steps li{position:relative;padding:6px 0 6px 30px;font-size:var(--fs-body);border-bottom:1px dashed var(--line)}
   ol.steps li:last-child{border-bottom:none}
   ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:6px;
         width:20px;height:20px;border-radius:50%;background:var(--pill-hero-bg);color:var(--accent);
-        font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+        font-size:var(--fs-micro);font-weight:700;display:flex;align-items:center;justify-content:center}
   .protocol.calm ol.steps li::before{background:var(--pill-maint-bg);color:var(--accent2)}
   .protocol.gold ol.steps li::before{background:var(--pill-found-bg);color:var(--gold-ink)}
   .protocol .say{font-family:var(--serif);font-style:italic;color:var(--accent2)}
 
   /* Support / signpost block */
   .support{background:var(--reframe-bg);border:1px solid var(--line);border-left:4px solid var(--gold);
-        border-radius:14px;padding:16px 18px;margin-top:16px}
-  .support h3{margin:0 0 8px;font-size:1rem}
+        border-radius:var(--r-card);padding:16px 18px;margin-top:16px}
+  .support h3{margin:0 0 8px;font-size:var(--fs-h3)}
   .support ul{margin:0;padding-left:18px}
-  .support li{font-size:.9rem;margin:5px 0}
+  .support li{font-size:var(--fs-body);margin:5px 0}
   .support .num{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
 
   /* Creed */
-  .creed{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow);max-width:900px;margin:0 auto}
+  .creed{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:20px 24px;box-shadow:var(--shadow);max-width:900px;margin:0 auto}
   .creed ul{margin:0;padding:0;list-style:none}
-  .creed li{font-family:var(--serif);font-size:1.02rem;padding:7px 0;border-bottom:1px dashed var(--line);line-height:1.5}
+  .creed li{font-family:var(--serif);font-size:var(--fs-h3);padding:7px 0;border-bottom:1px dashed var(--line);line-height:1.5}
   .creed li:last-child{border-bottom:none}
   .creed li b{font-style:normal;color:var(--accent);font-weight:600}
   .creed .anchor-line{margin-top:14px;padding-top:14px;border-top:2px solid var(--line);
-        font-family:var(--serif);font-style:italic;font-size:1.06rem;color:var(--accent2)}
-  .creed .commitments{margin-top:8px;font-size:.86rem;color:var(--muted);letter-spacing:.3px}
+        font-family:var(--serif);font-style:italic;font-size:var(--fs-h3);color:var(--accent2)}
+  .creed .commitments{margin-top:8px;font-size:var(--fs-sub);color:var(--muted);letter-spacing:.3px}
   .creed .commitments b{color:var(--gold-ink)}
 
   /* Signals not scriptures */
   .signals{margin:0;padding:0;list-style:none}
-  .signals li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+  .signals li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:var(--fs-body)}
   .signals li:last-child{border-bottom:none}
   .signals .emo{font-weight:700;color:var(--accent)}
   .signals .ok{color:var(--accent2)} .signals .no{color:var(--muted)}
 
   /* Collapsible heavy zones */
-  details.zone{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin:0 0 16px;overflow:hidden}
-  details.zone > summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;font-size:1.02rem;font-weight:700;user-select:none}
+  details.zone{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow);margin:0 0 16px;overflow:hidden}
+  details.zone > summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;font-size:var(--fs-h3);font-weight:700;user-select:none}
   details.zone > summary::-webkit-details-marker{display:none}
-  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:.85rem;transition:transform .2s;flex:none}
+  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:var(--fs-sub);transition:transform .2s;flex:none}
   details.zone[open] > summary .chev{transform:rotate(90deg)}
-  details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:.78rem}
+  details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:var(--fs-meta)}
   details.zone .zone-body{padding:0 20px 20px}
   details.zone .zone-body .card{box-shadow:none;background:var(--bg)}
 
   /* Containment / daily anchors */
   .anchors{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-  .anchor-block{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-  .anchor-block .h{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.6px;color:var(--accent2);margin:0 0 8px}
-  .anchor-block ul{margin:0;padding-left:16px;font-size:.9rem}
+  .anchor-block{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-card);padding:14px 16px}
+  .anchor-block .h{font-weight:700;font-size:var(--fs-sub);text-transform:uppercase;letter-spacing:.6px;color:var(--accent2);margin:0 0 8px}
+  .anchor-block ul{margin:0;padding-left:16px;font-size:var(--fs-body)}
   .anchor-block li{margin:4px 0}
 
   /* Compounding timeline */
   .timeline{position:relative;margin:0;padding:0;list-style:none}
-  .phase{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  .phase{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
         padding:16px 18px 16px 20px;box-shadow:var(--shadow);margin:0 0 14px;border-left:5px solid var(--accent2)}
-  .phase .horizon{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  .phase .horizon{display:inline-block;font-size:var(--fs-micro);font-weight:700;letter-spacing:1px;text-transform:uppercase;
         color:var(--accent2);background:var(--pill-maint-bg);padding:2px 10px;border-radius:999px;margin-bottom:8px}
-  .phase h3{margin:0 0 8px;font-size:1.05rem}
-  .phase ul{margin:0;padding-left:18px;font-size:.9rem}
+  .phase h3{margin:0 0 8px;font-size:var(--fs-h3)}
+  .phase ul{margin:0;padding-left:18px;font-size:var(--fs-body)}
   .phase li{margin:5px 0}
   .phase li b{color:var(--accent)}
 
@@ -228,51 +134,23 @@
   ul.check li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
   ul.check li:last-child{border-bottom:none}
   ul.check input{margin-top:3px;width:17px;height:17px;accent-color:var(--accent2);cursor:pointer;flex:none}
-  ul.check label{cursor:pointer;font-size:.92rem}
+  ul.check label{cursor:pointer;font-size:var(--fs-body)}
   ul.check input:checked + label{color:var(--muted);text-decoration:line-through}
 
-  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:32px;padding:0 16px}
-  footer .close-line{font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:.95rem;margin-bottom:8px}
+  footer{text-align:center;color:var(--muted);font-size:var(--fs-meta);margin-top:32px;padding:0 16px}
+  footer .close-line{font-family:var(--serif);font-style:italic;color:var(--accent2);font-size:var(--fs-body);margin-bottom:8px}
   a.back{color:var(--accent2);text-decoration:none;font-weight:600}
   a.back:hover{text-decoration:underline}
 </style>
-<script>/* Set theme before paint to avoid a flash */(function(){try{var t=localStorage.getItem('lifeos_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/shared.js"></script>
 </head>
 <body>
-<!-- Ported floating dock (nav back to the dashboard + page group) -->
-<nav id="dock" class="dock" aria-label="Quick navigation">
-  <div class="dock-sync">
-    <a class="dock-btn" href="index.html" title="Open the dashboard"><span class="status-dot"></span> <span class="dock-label">Dashboard</span></a>
-  </div>
-  <div class="dock-sep" role="presentation"></div>
-  <div class="dock-nav">
-    <a class="dock-btn" href="index.html#hero" title="The one thing">🎯 <span class="dock-label">One thing</span></a>
-    <a class="dock-btn" href="index.html#work" title="This week">🗓️ <span class="dock-label">This week</span></a>
-    <a class="dock-btn" href="index.html#daily" title="Daily">🔁 <span class="dock-label">Daily</span></a>
-    <a class="dock-btn" href="index.html#reflect" title="Reflect">🪞 <span class="dock-label">Reflect</span></a>
-    <a class="dock-btn" href="index.html#finance" title="Finance">💰 <span class="dock-label">Finance</span></a>
-    <a class="dock-btn" href="index.html#vision" title="Vision">🌅 <span class="dock-label">Vision</span></a>
-  </div>
-  <div class="dock-sep" role="presentation"></div>
-  <div class="dock-pages">
-    <a class="dock-btn" href="anchor.html" aria-current="page" title="Inner OS — The Anchor">⚓ <span class="dock-label">Inner OS</span></a>
-    <a class="dock-btn" href="knowledge.html" title="Knowledge Base">📚 <span class="dock-label">Knowledge</span></a>
-  </div>
-</nav>
-<button id="dockFab" class="dock-fab" aria-expanded="false" aria-controls="dock" aria-label="Open navigation">🧭</button>
-<div id="dockScrim" class="dock-scrim" hidden></div>
+
+<nav id="dock" class="dock" aria-label="Quick navigation"></nav>
 
 <nav class="topnav" aria-label="Section navigation">
   <div class="nav-inner">
     <a class="brand" href="#top">⚓ The Anchor <span>· Inner OS</span></a>
-    <div class="nav-links">
-      <a href="#ground">🧯 Ground yourself</a>
-      <a href="#anchors">⚓ Daily anchors</a>
-      <a href="#philosophy">🧭 Philosophy</a>
-      <a href="#audit">🪞 Who you are</a>
-      <a href="#plan">🗺️ The plan</a>
-      <a href="#reset">🌱 7-day reset</a>
-    </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle evening mode" title="Toggle evening mode">🌙</button>
     <a class="nav-kb" href="index.html">🧭 Command Center</a>
   </div>
@@ -366,7 +244,7 @@
 
     <div class="support">
       <h3>🤝 Support is part of the system, not the last resort</h3>
-      <p style="font-size:.9rem;margin:0 0 8px">You don't need more vision — you need more <em>containers</em>. People are containers too. Secrecy is what makes everything heavy.</p>
+      <p style="font-size:var(--fs-body);margin:0 0 8px">You don't need more vision — you need more <em>containers</em>. People are containers too. Secrecy is what makes everything heavy.</p>
       <ul>
         <li><b>Say it out loud to one person</b> — your partner, a parent, or a close friend. The true sentence, spoken once, loses half its weight.</li>
         <li><b>The appointment you've been putting off</b> — the checkup, the hard conversation, the admin task — is maintenance, not embarrassment. Book it. It quietly removes a large, humming source of background stress.</li>
@@ -425,7 +303,7 @@
         <h3>🧊 The focus reset — an experiment, not a verdict</h3>
         <p>Run a clean 60–90 day stretch of whatever quietly drains you: <b>less late-night scrolling, fewer numbing habits</b>, sleep before midnight, a daily walk, one work block. Frame it as an experiment, not a moral test.</p>
         <p>What you're proving to yourself: <span class="say" style="font-family:var(--serif);font-style:italic;color:var(--accent2)">"I can relax without a crutch. I can feel depth without a shortcut. I can do hard things clear-headed."</span></p>
-        <p style="font-size:.86rem;color:var(--muted)">The habit helped you unwind. Then it started helping you avoid. That's the line. Not forever — long enough for your system to prove it can rest on its own.</p>
+        <p style="font-size:var(--fs-sub);color:var(--muted)">The habit helped you unwind. Then it started helping you avoid. That's the line. Not forever — long enough for your system to prove it can rest on its own.</p>
       </div>
     </div>
 
@@ -501,7 +379,7 @@
               <li><span class="emo">Craving</span> says <span class="ok">"I want intensity, release, comfort."</span> Not <span class="no">"this is what I truly need."</span></li>
               <li><span class="emo">Emptiness</span> says <span class="ok">"my meaning-system is exhausted."</span> Not <span class="no">"life has no value."</span></li>
             </ul>
-            <p style="margin-top:10px;font-size:.86rem;color:var(--muted)">And on guilt: complex motives aren't wrongdoing. Ask the simpler questions — did I lie? did I avoid repair? did I use someone's trust unfairly? If yes, repair. If no, stop prosecuting yourself.</p>
+            <p style="margin-top:10px;font-size:var(--fs-sub);color:var(--muted)">And on guilt: complex motives aren't wrongdoing. Ask the simpler questions — did I lie? did I avoid repair? did I use someone's trust unfairly? If yes, repair. If no, stop prosecuting yourself.</p>
           </div>
         </div>
       </div>
@@ -594,7 +472,7 @@
       <summary>🪷 Reflection prompts — once, slowly (not nightly) <span class="zsub">on a walk, in nature, or after a quiet minute</span><span class="chev">▶</span></summary>
       <div class="zone-body">
         <div class="card"><h3>Journal these once, slowly — not as a nightly autopsy</h3>
-          <ol style="padding-left:18px;font-size:.92rem;line-height:1.7">
+          <ol style="padding-left:18px;font-size:var(--fs-body);line-height:1.7">
             <li>What am I calling "depth" that is actually avoidance?</li>
             <li>Where am I using my practice to grow, and where to dodge responsibility?</li>
             <li>What kind of partner do I want to become in ordinary daily life — not just emotionally?</li>
@@ -616,7 +494,7 @@
       <span class="eyebrow">Don't solve existence this week. Just do these. Ticks save to this device.</span>
     </div>
     <div class="card" style="max-width:760px">
-      <p class="sub" style="color:var(--muted);font-size:.85rem;margin:0 0 10px">Reset each week. This is the whole plan for a hard week — nothing more required.</p>
+      <p class="sub" style="color:var(--muted);font-size:var(--fs-sub);margin:0 0 10px">Reset each week. This is the whole plan for a hard week — nothing more required.</p>
       <ul class="check">
         <li><input type="checkbox" id="rst1"><label for="rst1">Fewer numbing habits — one clear day at a time.</label></li>
         <li><input type="checkbox" id="rst2"><label for="rst2">Sleep before midnight (as much as possible).</label></li>
@@ -638,22 +516,7 @@
 </div>
 
 <script>
-  /* ---- Theme (shared key with the rest of the OS) ---- */
-  function effectiveTheme(){
-    return document.documentElement.getAttribute('data-theme')
-      || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
-  }
-  function updateThemeIcon(){
-    const btn=document.getElementById('themeToggle'); if(!btn) return;
-    btn.textContent = effectiveTheme()==='dark' ? '☀️' : '🌙';
-  }
-  function toggleTheme(){
-    const next = effectiveTheme()==='dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    try{ localStorage.setItem('lifeos_theme', next); }catch(e){}
-    updateThemeIcon();
-  }
-  updateThemeIcon();
+  LifeOS.init({page:'anchor'});
 
   /* ---- Identity: read from lifeos.config.json (falls back to the demo persona) ---- */
   let LIFEOS = { owner:{ name:'Alex Rivera', shortName:'Alex', greeting:'Hey, Alex', locale:'en-US' } };
@@ -694,17 +557,6 @@
 
   /* Note: this page intentionally has no ../ repo-file links, so it needs no hosted-link rewrite. */
 
-  /* ---- Ported dock: mobile FAB / bottom-sheet ---- */
-  (function(){
-    var dock=document.getElementById('dock'), fab=document.getElementById('dockFab'), scrim=document.getElementById('dockScrim');
-    if(!dock||!fab) return;
-    function open(){ dock.classList.add('open'); fab.setAttribute('aria-expanded','true'); if(scrim) scrim.hidden=false; var f=dock.querySelector('.dock-btn'); if(f) f.focus(); }
-    function close(){ if(!dock.classList.contains('open')) return; dock.classList.remove('open'); fab.setAttribute('aria-expanded','false'); if(scrim) scrim.hidden=true; fab.focus(); }
-    fab.addEventListener('click', function(){ dock.classList.contains('open')?close():open(); });
-    if(scrim) scrim.addEventListener('click', close);
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-    dock.addEventListener('click', function(e){ if(e.target.closest('a')) close(); });
-  })();
 </script>
 </body>
 </html>

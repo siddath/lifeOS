@@ -1,0 +1,170 @@
+/* ============================================================
+   LifeOS — shared chrome (tokens · base · topnav · greeting · dock)
+   One copy of everything the pages used to paste and drift:
+   the "Hearth" palette, the type/radius scale, the sticky topnav,
+   the greeting band, and the floating dock. Page files keep only
+   their page-specific components. Identity/persona content stays
+   in the pages (config-driven via lifeos.config.json).
+   Canon notes: dock expands to 176px · chrome blur is 12px.
+   ============================================================ */
+
+:root{
+  /* "Hearth" palette — daytime: paper, terracotta, warm gold */
+  --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555; /* #6f6555 ≥4.5:1 on --bg at meta sizes */
+  --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
+  --saffron:#e2871b;
+  --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
+  --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
+  --header-grad-deep:linear-gradient(135deg,#8a3c1f,#5f2a15);
+  --navbg:rgba(250,246,239,.92);
+  --rule-bg:#fff4ec; --reframe-bg:#fdf6e3; --err-bg:#fff4ec;
+  --pill-hero-bg:#fbe3d8; --pill-maint-bg:#e4efe9; --pill-found-bg:#f5eccf;
+  --tint-remember:#f5eccf; --tint-strength:#e4efe9; --tint-watch:#fbe3d8; --tint-novelty:#eae4f2;
+  --tint-warm:#fbe3d8; --tint-gold:#f5eccf; --tint-gold-line:#e9d9ad;
+  --gold-ink:#8a6d1b; /* legible gold text on light chips */
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  /* Motion + ambient (Temple Courtyard at Dusk) */
+  --ease:cubic-bezier(.2,.7,.3,1); --dur-1:150ms; --dur-2:300ms; --dur-3:450ms;
+  --ambient-a:rgba(180,80,42,.07); --ambient-b:rgba(201,162,75,.06); --lattice-dot:rgba(120,90,50,.45);
+  --glass:color-mix(in srgb, var(--card) 78%, transparent);
+
+  /* Type scale — the documented 4-step scale, tokenized. Use these, not raw rems. */
+  --fs-display:1.85rem;  /* hero h1 (index, anchor) */
+  --fs-title:1.55rem;    /* page titles */
+  --fs-lead:1.2rem;      /* the one-thing statement */
+  --fs-h2:1.12rem;       /* section heads */
+  --fs-h3:1.05rem;       /* card headings, greeting hi */
+  --fs-body:.92rem;      /* body copy */
+  --fs-sub:.85rem;       /* buttons, secondary copy */
+  --fs-meta:.78rem;      /* sub/meta, eyebrows, dates */
+  --fs-micro:.72rem;     /* pills, kbd, uppercase labels — the 10px+ floor */
+
+  /* Radius scale — 3 steps */
+  --r-lg:18px;           /* hero cards */
+  --r-card:16px;         /* cards, dock, search box */
+  --r-btn:10px;          /* buttons, inputs, small blocks */
+}
+/* Evening: the same warm-lit world after dark — deep espresso + brightened terracotta, never a cold invert */
+:root[data-theme="dark"]{
+  --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+  --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
+  --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+  --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+  --header-grad-deep:linear-gradient(135deg,#5a2513,#33160b);
+  --navbg:rgba(25,20,16,.9);
+  --rule-bg:#2a201a; --reframe-bg:#26201a; --err-bg:#2a201a;
+  --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f;
+  --tint-remember:#332916; --tint-strength:#1c3a31; --tint-watch:#3a241c; --tint-novelty:#2c2440;
+  --tint-warm:#3a241c; --tint-gold:#33291f; --tint-gold-line:#4a3a26;
+  --gold-ink:#e6c06a;
+  --ambient-a:rgba(224,122,78,.08); --ambient-b:rgba(217,180,95,.06); --lattice-dot:rgba(240,230,210,.32);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]):not([data-theme="dark"]){
+    --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
+    --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
+    --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
+    --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+    --header-grad-deep:linear-gradient(135deg,#5a2513,#33160b);
+    --navbg:rgba(25,20,16,.9);
+    --rule-bg:#2a201a; --reframe-bg:#26201a; --err-bg:#2a201a;
+    --pill-hero-bg:#3a241c; --pill-maint-bg:#1c3a31; --pill-found-bg:#33291f;
+    --tint-remember:#332916; --tint-strength:#1c3a31; --tint-watch:#3a241c; --tint-novelty:#2c2440;
+    --tint-warm:#3a241c; --tint-gold:#33291f; --tint-gold-line:#4a3a26;
+    --gold-ink:#e6c06a;
+    --ambient-a:rgba(224,122,78,.08); --ambient-b:rgba(217,180,95,.06); --lattice-dot:rgba(240,230,210,.32);
+  }
+}
+
+/* ---- Base ---- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;
+     padding:0 0 64px;transition:background .4s ease,color .4s ease}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* ---- Slim sticky top nav (index + anchor) ---- */
+.topnav{position:sticky;top:0;z-index:50;background:var(--navbg);
+        -webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+        border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(60,45,20,.05)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .topnav{background:var(--card)} }
+.topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.topnav .brand{font-weight:700;font-size:var(--fs-body);color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
+.topnav .brand span{color:var(--muted);font-weight:600}
+.nav-kb{background:var(--accent2);color:#fff !important;text-decoration:none;font-size:var(--fs-meta);font-weight:700;
+        padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow);margin-left:auto}
+.nav-kb:hover,.nav-kb:focus-visible{filter:brightness(1.08)}
+@media(max-width:640px){.topnav .nav-inner{padding:8px 12px}}
+
+/* Theme toggle — chrome variant (topnav) and header variant (on the gradient) */
+.theme-toggle{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+        width:34px;height:34px;font-size:.95rem;cursor:pointer;flex:none;line-height:1;transition:background .15s,transform .2s}
+.theme-toggle:hover{background:var(--line);transform:rotate(-15deg)}
+.theme-toggle--header{position:absolute;top:18px;right:16px;border:1px solid rgba(255,255,255,.4);
+        background:rgba(255,255,255,.08);color:#fff;width:32px;height:32px;font-size:.9rem;transform:none}
+.theme-toggle--header:hover{background:rgba(255,255,255,.2);transform:none}
+
+/* ---- Personal greeting band ---- */
+.greeting{background:var(--card);border-bottom:1px solid var(--line)}
+.greeting-inner{display:flex;align-items:baseline;gap:12px;padding:9px 16px;flex-wrap:wrap}
+.greet-hi{font-family:var(--serif);font-size:var(--fs-h3);font-weight:600;color:var(--accent)}
+.greet-date{font-size:var(--fs-meta);color:var(--muted);font-variant-numeric:tabular-nums}
+.greet-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:var(--fs-sub);margin-left:auto}
+@media(max-width:640px){.greet-line{margin-left:0;width:100%}}
+
+/* ---- Floating left dock — THE nav model on every page ---- */
+.dock{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:60;
+  display:flex;flex-direction:column;gap:3px;padding:8px 8px 12px;width:52px;
+  background:var(--glass);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
+  border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow);
+  overflow:hidden;transition:width var(--dur-2) var(--ease)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .dock{background:var(--card)} }
+.dock:hover,.dock:focus-within{width:176px}
+.dock-sync,.dock-nav,.dock-pages{display:flex;flex-direction:column;gap:2px}
+.dock-sep{height:1px;background:var(--line);margin:4px 6px;flex:none}
+.dock-btn{display:flex;align-items:center;gap:10px;white-space:nowrap;border:none;background:transparent;
+  color:var(--ink);text-decoration:none;cursor:pointer;font:inherit;font-size:var(--fs-sub);font-weight:600;
+  padding:8px;border-radius:var(--r-btn);min-height:36px;line-height:1;transition:background var(--dur-1) var(--ease)}
+.dock-btn:hover,.dock-btn:focus-visible{background:var(--line)}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#9a9186;flex:none}
+.dock-label{opacity:0;width:0;overflow:hidden;white-space:nowrap;transition:opacity var(--dur-2) var(--ease)}
+.dock:hover .dock-label,.dock:focus-within .dock-label{opacity:1;width:auto}
+.dock-nav a.active,.dock-pages a[aria-current="page"]{background:color-mix(in srgb,var(--gold) 22%,transparent);position:relative}
+.dock-nav a.active::before,.dock-pages a[aria-current="page"]::before{content:"";position:absolute;left:0;top:6px;bottom:6px;
+  width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.dock-thread{position:absolute;right:5px;top:12px;bottom:12px;width:2px;opacity:.55;border-radius:2px;overflow:hidden;
+  background-image:radial-gradient(var(--lattice-dot) 1px,transparent 1.2px);background-size:2px 7px}
+#dockThreadFill{position:absolute;left:0;top:0;width:100%;height:0;border-radius:2px;
+  background:linear-gradient(180deg,var(--gold),var(--accent))}
+.dock-fab{display:none}
+.dock-scrim{display:none}
+@media(min-width:900px){
+  body .wrap{padding-left:76px}
+  .topnav .nav-links{display:none}
+}
+@media(max-width:899px){
+  .topnav .nav-links{display:none}
+  .dock{display:none}
+  .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
+    width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;
+    background:var(--header-grad);box-shadow:var(--shadow)}
+  html.motion-ok .dock-fab:active{transform:scale(.94)}
+  .dock-fab .fab-dot{position:absolute;top:8px;right:8px;border:2px solid var(--card)}
+  .dock.open{display:flex;flex-direction:column;gap:8px;width:auto;left:12px;right:12px;bottom:80px;top:auto;
+    transform:none;max-height:70vh;overflow:auto;padding:14px}
+  .dock.open .dock-label{opacity:1;width:auto}
+  .dock.open .dock-sync{flex-direction:row;gap:6px}
+  .dock.open .dock-sync .dock-btn{flex:1;justify-content:center}
+  .dock.open .dock-nav,.dock.open .dock-pages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .dock.open .dock-nav a,.dock.open .dock-pages a{flex-direction:column;gap:4px;text-align:center;
+    font-size:var(--fs-micro);min-height:56px;justify-content:center}
+  .dock.open .dock-thread{display:none}
+  .dock-scrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,15,10,.35)}
+  .dock-scrim[hidden]{display:none}
+  html.motion-ok .dock.open{animation:sheetUp var(--dur-2) var(--ease)}
+  @keyframes sheetUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+  body{padding-bottom:88px}
+}
