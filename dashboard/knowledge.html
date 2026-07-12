@@ -3,21 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
 <title>📚 About You — Knowledge Base</title>
 <style>
   :root{
-    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#8a7f6f;
+    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555;
     --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
     --saffron:#e2871b;
     --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
     --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    /* themed tints — design_system.md §1a: never hardcode a hex a theme can't reach */
+    --tint-warm:#fbe3d8; --tint-gold:#f5eccf; --gold-ink:#8a6d1b;
+    --tint-gold-line:#e9d9ad; --err-bg:#fff4ec;
   }
   :root[data-theme="dark"]{
     --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
     --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
     --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
     --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+    --tint-warm:#3a241c; --tint-gold:#33291f; --gold-ink:#e6c06a;
+    --tint-gold-line:#4a3a26; --err-bg:#2a201a;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]):not([data-theme="dark"]){
@@ -25,12 +31,15 @@
       --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
       --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
       --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
+      --tint-warm:#3a241c; --tint-gold:#33291f; --gold-ink:#e6c06a;
+      --tint-gold-line:#4a3a26; --err-bg:#2a201a;
     }
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
        background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 72px;transition:background .4s ease,color .4s ease}
+  :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
   @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
 
   /* ---- Ported floating dock (shared with the dashboard) ---- */
@@ -99,7 +108,7 @@
          padding:2px 7px;flex:none;background:var(--bg)}
   .searchbox .clr{border:none;background:transparent;color:var(--muted);font-size:1.2rem;cursor:pointer;
          line-height:1;padding:2px 6px;border-radius:6px;display:none}
-  .searchbox .clr:hover{background:#fbe3d8;color:var(--accent)}
+  .searchbox .clr:hover{background:var(--tint-warm);color:var(--accent)}
   .searchbox .clr.show{display:block}
 
   .countline{font-size:.8rem;color:var(--muted);margin:8px 2px 2px;display:flex;
@@ -121,10 +130,10 @@
   .chip.on .n{opacity:.85}
   /* facet chips get the saffron/gold treatment when active */
   .chip.facet.on{background:var(--saffron);border-color:var(--saffron);color:#fff}
-  .chip.facet{border-color:#ead9b8}
+  .chip.facet{border-color:var(--tint-gold-line)}
   .clearfilters{font-size:.74rem;color:var(--accent);background:none;border:none;cursor:pointer;
          text-decoration:underline;padding:2px 4px;margin-left:2px}
-  .clearfilters:hover{color:#8a3c1f}
+  .clearfilters:hover{filter:brightness(.85)}
 
   /* Category nav */
   .catnav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px;padding-bottom:12px;
@@ -154,20 +163,17 @@
   .card .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
   .tag{display:inline-block;font-size:.7rem;padding:2px 9px;border-radius:999px;border:1px solid var(--line);
          background:var(--bg);color:var(--ink)}
-  .tag.facet{background:#f5eccf;color:#8a6d1b;border-color:#e9d9ad;font-weight:600}
+  .tag.facet{background:var(--tint-gold);color:var(--gold-ink);border-color:var(--tint-gold-line);font-weight:600}
   .card .body{display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
          font-size:.9rem;color:var(--ink);line-height:1.6}
   .card.open .body{display:block}
-  .card .expandhint{font-size:.72rem;color:var(--accent2);margin-top:8px;font-weight:600}
-  .card.open .expandhint{color:var(--muted)}
-
-  mark{background:#fbe3d8;color:var(--accent);padding:0 2px;border-radius:3px}
+  mark{background:var(--tint-warm);color:var(--accent);padding:0 2px;border-radius:3px}
 
   .empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:.95rem}
   .empty .big{font-size:1.6rem;margin-bottom:8px}
   .empty .serif{font-family:Georgia,serif;font-style:italic}
 
-  .loaderr{background:#fff4ec;border-left:4px solid var(--accent);padding:14px 18px;border-radius:10px;
+  .loaderr{background:var(--err-bg);border-left:4px solid var(--accent);padding:14px 18px;border-radius:10px;
          font-size:.92rem;margin:22px 0}
 
   footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:34px;padding:0 16px}
@@ -387,7 +393,8 @@ fetch('kb-data.json', {cache:'no-store'})
     ENTRIES = normalize(raw);
     buildChips();
     render();
-    qInput.focus();
+    // Autofocus only where a keyboard is already at hand — on iPad/phone it pops the keyboard and scrolls the page
+    if(window.matchMedia('(pointer:fine)').matches) qInput.focus();
   })
   .catch(err => {
     results.innerHTML =
@@ -590,8 +597,7 @@ function cardHTML(e, terms){
     '<h3>'+highlight(e.title, terms)+'</h3>' +
     '<p class="summary">'+highlight(e.summary, terms)+'</p>' +
     '<div class="tags">'+facetTags+areaTags+'</div>' +
-    '<p class="expandhint">▸ click / Enter to expand</p>' +
-    '<div class="body"><p>'+highlight(e.body, terms)+'</p></div>' +
+        '<div class="body"><p>'+highlight(e.body, terms)+'</p></div>' +
     '</article>';
 }
 
@@ -613,6 +619,9 @@ document.addEventListener('keydown', e => {
     e.preventDefault(); qInput.focus(); qInput.select(); return;
   }
   if(e.key === 'Escape'){
+    // If the dock sheet is open, its own Escape handler owns this keypress
+    const dockEl = document.getElementById('dock');
+    if(dockEl && dockEl.classList.contains('open')) return;
     if(qInput.value || activeAreas.size || activeFacets.size){
       qInput.value=''; activeAreas.clear(); activeFacets.clear(); syncChipUI(); toggleClears();
       $('#clr').classList.remove('show'); render(); qInput.focus();
@@ -621,6 +630,8 @@ document.addEventListener('keydown', e => {
   }
   const cards = cardEls();
   if(!cards.length) return;
+  // ArrowUp while typing keeps caret behavior; ArrowDown from the search box intentionally jumps to results
+  if(e.key === 'ArrowUp' && document.activeElement === qInput) return;
   if(e.key === 'ArrowDown'){ e.preventDefault(); setCursor(cursor+1); }
   else if(e.key === 'ArrowUp'){ e.preventDefault(); setCursor(cursor<=0?0:cursor-1); }
   else if(e.key === 'Enter' && cursor >= 0){ e.preventDefault(); cards[cursor].classList.toggle('open'); }
