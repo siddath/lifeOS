@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
 <title>🧭 LifeOS — Command Center</title>
 <style>
   :root{
     /* "Hearth" palette — daytime: paper, terracotta, warm gold */
-    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#8a7f6f;
+    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555; /* was #8a7f6f — 3.65:1 on --bg, failed AA for the .74-.8rem text it carries */
     --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
     --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
     --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
@@ -158,7 +159,7 @@
   details.zone > summary::-webkit-details-marker{display:none}
   details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:.85rem;transition:transform .2s;flex:none}
   details.zone[open] > summary .chev{transform:rotate(90deg)}
-  details.zone > summary:hover{background:#fbf7ef}
+  details.zone > summary:hover{background:var(--rule-bg)}
   details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:.78rem}
   details.zone .zone-body{padding:0 20px 20px}
   details.zone .zone-body .grid{margin-top:2px}
@@ -187,7 +188,7 @@
   .quote-card blockquote.q-text{margin:0 0 10px;font-family:var(--serif);font-size:1.22rem;
               line-height:1.5;font-style:italic;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.28)}
   .quote-card .q-author{font-size:.8rem;opacity:.9;font-weight:600;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.28)}
-  .quote-card .q-tradition{font-size:.72rem;opacity:.72;font-style:italic;margin-top:3px;position:relative;z-index:1}
+  .quote-card .q-tradition{font-size:.78rem;opacity:.92;font-style:italic;margin-top:3px;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.28)}
   .quote-card .q-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1}
   .quote-card button{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
               color:#fff;border-radius:999px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:background var(--dur-1)}
@@ -218,14 +219,14 @@
               background:var(--bg);cursor:pointer;color:var(--ink)}
   .ed-prio{border:none;border-radius:999px;padding:3px 10px;font-size:.7rem;font-weight:700;cursor:pointer;color:#fff}
   .ed-prio.prio-P1{background:var(--accent)}
-  .ed-prio.prio-P2{background:var(--gold)}
-  .ed-prio.prio-P3{background:#9a9186}
+  .ed-prio.prio-P2{background:var(--gold);color:#3a2c10} /* white on gold was 2.4:1; dark ink matches chip.prio-P2.on */
+  .ed-prio.prio-P3{background:#6f675c} /* was #9a9186 — 3.1:1 under white text */
   .ed-due{border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:.74rem;background:var(--bg);color:var(--ink)}
   .ed-sync-dot{width:9px;height:9px;border-radius:50%;background:#ddd3c0;flex:none}
   .ed-sync-dot.synced{background:var(--accent2)}
   .ed-del,.ed-hdel{border:none;background:transparent;color:var(--muted);font-size:1.1rem;cursor:pointer;
               line-height:1;padding:2px 6px;border-radius:6px}
-  .ed-del:hover,.ed-hdel:hover{background:#fbe3d8;color:var(--accent)}
+  .ed-del:hover,.ed-hdel:hover{background:var(--pill-hero-bg);color:var(--accent)}
   .ed-row.ed-done-row .ed-title{color:var(--muted);text-decoration:line-through}
   .ed-star{border:none;background:transparent;font-size:1.05rem;color:#ddd3c0;cursor:pointer}
   .ed-star.on{color:var(--gold)}
@@ -274,6 +275,14 @@
   .rate-dots button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
         cursor:pointer;font-size:.72rem;color:var(--muted);padding:0;transition:all .12s}
   .rate-dots button.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  /* iPad/phone are the primary surfaces: the most-tapped controls get real hit areas */
+  @media(pointer:coarse){
+    .ed-day{width:38px;height:38px;font-size:.78rem}
+    .rate-dots button{width:38px;height:38px;font-size:.85rem}
+    .ed-del,.ed-hdel{padding:9px 12px}
+    .theme-toggle{width:44px;height:44px}
+    .ed-star{padding:8px 10px}
+  }
   .dr-field{margin:10px 0 0}
   .dr-field label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:3px}
   .dr-field textarea,.dr-field input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;
@@ -607,7 +616,7 @@
           <div class="chip-row" role="radiogroup" aria-label="Area" id="composerAreas"></div>
           <div class="chip-row" role="radiogroup" aria-label="Priority" id="composerPrio"></div>
           <div class="chip-row" role="radiogroup" aria-label="Due" id="composerDue"></div>
-          <p class="ed-hint composer-hint">Power path: type <code>#area</code>, <code>P1</code>–<code>P3</code>, <code>due:tomorrow</code> in the title — chips follow along. Nothing chosen? It files as 🧘 Mindset · P3 · no due.</p>
+          <p class="ed-hint composer-hint" id="composerHint">Power path: type <code>#area</code>, <code>P1</code>–<code>P3</code>, <code>due:tomorrow</code> in the title — chips follow along. Nothing chosen? It files as 🧘 Mindset · P3 · no due.</p>
         </div>
       </div>
     </div>
@@ -1031,8 +1040,8 @@
      the dashboard never hardcodes a single mission. Swap that file
      to change the hero. Static HTML is the offline fallback.
      ============================================================ */
-  let target = new Date("2026-08-22T09:00:00-07:00").getTime();  // default; overridden by mission.json
-  let missionGate = null;  // {label, passedTitle, passedMessage}
+  let target = new Date("2026-08-22T09:00:00-07:00").getTime();  // fallback = current mission.json gate; overridden on load
+  let missionGate = {label:"beta launch day", passedMessage:"Gate passed — open mission.json and set the next gate."};  // fallback so an offline page never shows a frozen 00:00 countdown
   let missionSlug = '';    // set from mission.json; namespaces week/evidence check keys (§D-8)
   // "level-up" -> "level-up:"  ·  empty slug -> "" (legacy un-prefixed ids, matches static fallback markup)
   function missionKeyPrefix(){
@@ -1055,8 +1064,11 @@
     const days = Math.floor(d/86400000); d-=days*86400000;
     const hrs = Math.floor(d/3600000); d-=hrs*3600000;
     const min = Math.floor(d/60000); d-=min*60000;
-    const sec = Math.floor(d/1000);
-    const b = [["Days",days],["Hours",hrs],["Min",min],["Sec",sec]];
+    // No seconds box for a month-away gate: a per-second tick is exam-timer chrome,
+    // the opposite of "reassure in the chrome". Under 24h the seconds return.
+    const b = target - now < 86400000
+      ? [["Hours",hrs+days*24],["Min",min],["Sec",Math.floor(d/1000)]]
+      : [["Days",days],["Hours",hrs],["Min",min]];
     cd.innerHTML = b.map(x=>
       `<div class="cd-box"><div class="num">${String(x[1]).padStart(2,'0')}</div><div class="lbl">${x[0]}</div></div>`
     ).join("");
@@ -1106,7 +1118,7 @@
   // Persistent checkboxes (wired AFTER mission render so dynamic rows get listeners + saved state)
   const boxes = () => document.querySelectorAll('ul.check input[type=checkbox]');
   function save(){ const s={}; boxes().forEach(b=>s[b.id]=b.checked); localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress(); }
-  function load(){ const s=JSON.parse(localStorage.getItem('lifeos')||'{}'); boxes().forEach(b=>{ if(s[b.id])b.checked=true; }); updateProgress(); }
+  function load(){ let s={}; try{ s=JSON.parse(localStorage.getItem('lifeos')||'{}'); }catch(e){} boxes().forEach(b=>{ if(s[b.id])b.checked=true; }); updateProgress(); }
   function updateProgress(){
     const all=[...boxes()]; const done=all.filter(b=>b.checked).length;
     const pct = all.length? Math.round(done/all.length*100):0;
@@ -1314,9 +1326,9 @@
   }
   function buildFilterPop(){
     const pop=document.getElementById('qFilterPop'); if(!pop) return; const cur=qFilter();
-    let html='<button data-f="all" class="'+(cur==='all'?'active':'')+'">All wisdom</button>';
-    html+='<button data-f="favorites" class="'+(cur==='favorites'?'active':'')+'">♥ Favorites</button>';
-    Object.keys(QTHEMES).forEach(k=>{ html+='<button data-f="'+k+'" class="'+(cur===k?'active':'')+'">'+QTHEMES[k].label+'</button>'; });
+    let html='<button role="menuitem" data-f="all" class="'+(cur==='all'?'active':'')+'">All wisdom</button>';
+    html+='<button role="menuitem" data-f="favorites" class="'+(cur==='favorites'?'active':'')+'">♥ Favorites</button>';
+    Object.keys(QTHEMES).forEach(k=>{ html+='<button role="menuitem" data-f="'+k+'" class="'+(cur===k?'active':'')+'">'+QTHEMES[k].label+'</button>'; });
     pop.innerHTML=html;
   }
   function closeFilterPop(){ const pop=document.getElementById('qFilterPop'), btn=document.getElementById('qFilterBtn');
@@ -1384,9 +1396,9 @@
     return monday.toISOString().slice(0,10);
   }
 
-  function getTasks(){ return JSON.parse(localStorage.getItem('lifeos_tasks_v1')||'[]'); }
+  function getTasks(){ try{ return JSON.parse(localStorage.getItem('lifeos_tasks_v1')||'[]'); }catch(e){ return []; } }
   function setTasks(t){ localStorage.setItem('lifeos_tasks_v1', JSON.stringify(t)); }
-  function getHabits(){ return JSON.parse(localStorage.getItem('lifeos_habits_v1')||'[]'); }
+  function getHabits(){ try{ return JSON.parse(localStorage.getItem('lifeos_habits_v1')||'[]'); }catch(e){ return []; } }
   function setHabits(h){ localStorage.setItem('lifeos_habits_v1', JSON.stringify(h)); }
 
   // DEMO DATA — first-run seeds for the "Alex Rivera" persona so a fresh clone looks alive.
@@ -1462,7 +1474,7 @@
   }
 
   // ---- Habit-week rollover: archive last week's matrix so streaks aren't lost ----
-  function getHabitHistory(){ return JSON.parse(localStorage.getItem('lifeos_habits_history_v1')||'{}'); }
+  function getHabitHistory(){ try{ return JSON.parse(localStorage.getItem('lifeos_habits_history_v1')||'{}'); }catch(e){ return {}; } }
   function setHabitHistory(h){ localStorage.setItem('lifeos_habits_history_v1', JSON.stringify(h)); }
   function rollHabitWeekIfNeeded(){
     const cur = currentWeekMonday(); const habits = getHabits();
@@ -1517,7 +1529,7 @@
       <input type="checkbox" class="ed-done" ${t.status==='done'?'checked':''} title="Mark done">
       <input type="text" class="ed-title" value="${escAttr(t.title)}" placeholder="Task title">
       <select class="ed-area" title="Area">${areaOpts}</select>
-      <button class="ed-prio prio-${t.priority}" title="Click to cycle priority">${t.priority}</button>
+      <button class="ed-prio prio-${t.priority}" title="Click to cycle priority" aria-label="Priority ${t.priority} — click to cycle">${t.priority}</button>
       <input type="date" class="ed-due" value="${t.due||''}" title="Due date">
       <span class="ed-sync-dot ${t.notionId?'synced':''}" title="${t.notionId?'Synced to Notion':'Not yet synced'}"></span>
       <button class="ed-del" title="Delete">×</button>
@@ -1532,9 +1544,9 @@
     document.getElementById('taskList').innerHTML = list.map(taskRowHTML).join('') || '<p class="ed-empty">No tasks yet — add one below.</p>';
   }
   function habitRowHTML(h){
-    const dayBtns = DAYS.map(d=>`<button class="ed-day ${h.days[d]?'on':''}" data-day="${d}" title="${DAY_LABEL[d]}">${DAY_LABEL[d][0]}</button>`).join('');
+    const dayBtns = DAYS.map(d=>`<button class="ed-day ${h.days[d]?'on':''}" data-day="${d}" title="${DAY_LABEL[d]}" aria-pressed="${h.days[d]?'true':'false'}" aria-label="${DAY_LABEL[d]}">${DAY_LABEL[d][0]}</button>`).join('');
     return `<div class="ed-hrow" data-id="${h.id}">
-      <button class="ed-star ${h.keystone?'on':''}" title="Keystone habit">★</button>
+      <button class="ed-star ${h.keystone?'on':''}" title="Keystone habit" aria-pressed="${h.keystone?'true':'false'}" aria-label="Keystone habit">★</button>
       <input type="text" class="ed-hname" value="${escAttr(h.name)}" placeholder="Habit name">
       <div class="ed-days">${dayBtns}</div>
       <span class="ed-sync-dot ${h.notionId?'synced':''}" title="${h.notionId?'Synced to Notion':'Not yet synced'}"></span>
@@ -1554,6 +1566,7 @@
   }
   function deleteTask(id){
     const tasks = getTasks(); const idx = tasks.findIndex(x=>x.id===id); if(idx<0) return;
+    if(!confirm('Delete "'+(tasks[idx].title||'this task')+'"? This also archives it in Notion.')) return;
     const [removed] = tasks.splice(idx,1); setTasks(tasks);
     queueSync('task','delete', removed); renderTasks();
   }
@@ -1564,6 +1577,9 @@
     const tasks = getTasks(); tasks.push(t); setTasks(tasks);
     queueSync('task','upsert', t);
     try{ localStorage.setItem('lifeos_composer_last_area', r.area); }catch(e){}
+    // The power-path hint has done its job after the first successful add
+    try{ localStorage.setItem('lifeos_hint_seen','1'); }catch(e){}
+    const hintEl=document.getElementById('composerHint'); if(hintEl) hintEl.hidden=true;
     // Reset for the next task: title cleared, selections back to auto, options stay open, refocus (§C).
     composer.input.value=''; composer.sel={area:null,priority:null,due:null,dueDate:''};
     const dateEl=document.getElementById('composerDate'); if(dateEl){ dateEl.hidden=true; dateEl.value=''; }
@@ -1578,6 +1594,7 @@
   }
   function deleteHabit(id){
     const habits = getHabits(); const idx = habits.findIndex(x=>x.id===id); if(idx<0) return;
+    if(!confirm('Delete "'+(habits[idx].name||'this habit')+'"? This also archives it in Notion.')) return;
     const [removed] = habits.splice(idx,1); setHabits(habits);
     queueSync('habit','delete', removed); renderHabits();
   }
@@ -1729,6 +1746,7 @@
   document.getElementById('habitQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addHabitFromQuickAdd(); }});
 
   renderTasks(); renderHabits(); renderHabitHistory();
+  try{ if(localStorage.getItem('lifeos_hint_seen')==='1'){ const h=document.getElementById('composerHint'); if(h) h.hidden=true; } }catch(e){}
   hydrateSeedsFromFiles();  // swap the inline fallback for the committed seed files when reachable
 
   /* ============================================================
@@ -1739,7 +1757,7 @@
   const SYNC_PUSH = '/api/notion-sync', SYNC_PULL = '/api/notion-pull';
   let syncTimer = null, apiConfigured = true;
 
-  function getQueue(){ return JSON.parse(localStorage.getItem('lifeos_syncqueue_v1')||'[]'); }
+  function getQueue(){ try{ return JSON.parse(localStorage.getItem('lifeos_syncqueue_v1')||'[]'); }catch(e){ return []; } }
   function setQueue(q){ localStorage.setItem('lifeos_syncqueue_v1', JSON.stringify(q)); }
 
   // Broadcast sync state to EVERY [data-sync-dot]/[data-sync-text] surface (in-page pill + dock + FAB).
@@ -1974,7 +1992,7 @@
   const DR_MOODS = [['present','🙂 Present'],['mixed','😐 Mixed'],['stressed','😮‍💨 Stressed']];
   function drKey(){ return 'lifeos_review_'+new Date().toISOString().slice(0,10); }
   function todayLabel(){ return new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); }
-  function drState(){ return JSON.parse(localStorage.getItem(drKey())||'{}'); }
+  function drState(){ try{ return JSON.parse(localStorage.getItem(drKey())||'{}'); }catch(e){ return {}; } }
   let drStepIdx=1, drFlat=false, drLastKey=drKey();
 
   // Persist without the "saved!" chrome — used by every autosave.
@@ -2120,7 +2138,7 @@
   async function loadFinance(){
     let data=null;
     try{ const r=await fetch('finance-data.json',{cache:'no-store'}); if(r.ok) data=await r.json(); }catch(e){}
-    const override=JSON.parse(localStorage.getItem(FIN_LS)||'null');
+    let override=null; try{ override=JSON.parse(localStorage.getItem(FIN_LS)||'null'); }catch(e){}
     if(override) data=Object.assign({}, data||{}, override);
     if(!data){ document.getElementById('finUpdated').textContent='Finance data unavailable (finance-data.json not found).'; return; }
     renderFinance(data);
