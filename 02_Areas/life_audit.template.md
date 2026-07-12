@@ -36,4 +36,4 @@ updated: 2026-07
 
 <!-- lifeos:fill: pick ONE. Advancing one area well beats nudging six. -->
 
-> This audit feeds your [`north_star.md`](north_star.md) and [`one_year_vision.md`](one_year_vision.md). Don't turn it into a weekly ritual — the trackers carry the week.
+> This audit feeds your `north_star.md` and `one_year_vision.md` (created from [`north_star.template.md`](north_star.template.md) and [`one_year_vision.template.md`](one_year_vision.template.md) during setup). Don't turn it into a weekly ritual — the trackers carry the week.

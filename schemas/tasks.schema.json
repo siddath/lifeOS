@@ -1,17 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "lifeos/task",
-  "title": "Task",
+  "$id": "lifeos/tasks",
+  "title": "Tasks file",
+  "description": "Shape of dashboard/tasks-data.json (the first-run seed) and of any exported task list. A wrapper object holding a `tasks` array; `_DEMO`/`_comment` convention keys are allowed. `id`, `notionId`, `status` and `updatedAt` are filled in client-side on load, so seed records may omit them.",
   "type": "object",
-  "required": ["title", "area", "priority", "status"],
+  "required": ["tasks"],
   "properties": {
-    "id": { "type": "string", "description": "Local id; generated client-side." },
-    "notionId": { "type": ["string", "null"], "description": "Notion page id once synced." },
-    "title": { "type": "string" },
-    "area": { "type": "string", "description": "One of the area codes in lifeos.config.json." },
-    "priority": { "type": "string", "enum": ["P1", "P2", "P3"] },
-    "status": { "type": "string", "enum": ["open", "in-progress", "done"] },
-    "due": { "type": "string", "description": "YYYY-MM-DD or empty." },
-    "updatedAt": { "type": "string", "description": "ISO 8601 timestamp." }
+    "_DEMO": { "type": "string", "description": "Placeholder-data sentinel; see DEMO_DATA.md." },
+    "_comment": { "type": "string" },
+    "updatedAt": { "type": ["string", "null"], "description": "ISO 8601 date or timestamp." },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/task" }
+    }
+  },
+  "definitions": {
+    "task": {
+      "type": "object",
+      "title": "Task",
+      "required": ["title", "area", "priority"],
+      "properties": {
+        "id": { "type": "string", "description": "Local id; generated client-side on load." },
+        "notionId": { "type": ["string", "null"], "description": "Notion page id once synced." },
+        "title": { "type": "string", "minLength": 1 },
+        "area": { "type": "string", "description": "One of the area codes in lifeos.config.json (cross-checked by scripts/validate-data.mjs)." },
+        "priority": { "type": "string", "enum": ["P1", "P2", "P3"] },
+        "status": { "type": "string", "enum": ["open", "in-progress", "done"], "description": "Defaults to 'open' when omitted in a seed file." },
+        "due": { "type": "string", "description": "YYYY-MM-DD or empty." },
+        "updatedAt": { "type": "string", "description": "ISO 8601 timestamp." }
+      }
+    }
   }
 }

@@ -43,7 +43,7 @@ There's also a set of Claude Code skills (`/setup`, `/daily-brief`, `/weekly-rev
 ## What's in it
 
 - **One hero mission at a time.** The dashboard centers a single focus with a live countdown, "the one thing right now," a week-by-week arc, and an evidence checklist. All of it renders from `dashboard/mission.json`; swap the file to swap the mission (about a ten-minute edit).
-- **Tasks and habits, live.** A natural-language task box (`#area P1 due:tomorrow`), a weekly habit grid with streak history, saved in your browser and optionally two-way-synced to Notion so your phone and desktop agree.
+- **Tasks and habits, live.** A natural-language task box (`#area P1 due:tomorrow`), a weekly habit grid with streak history, saved in your browser — with optional best-effort two-way Notion sync so your phone and desktop stay close.
 - **A knowledge base about you.** Searchable notes — strengths, watch-outs, preferences, one entry per life area. This is the raw material an AI reads to write your daily brief.
 - **The Anchor.** A calm break-glass page: grounding steps, a few reframes, a seven-day reset. It's the part that assumes you're a person who spirals under pressure, not a productivity robot.
 - **Finance.** Net worth, a monthly budget, and an optional broker view. Currency comes from your config.
@@ -57,8 +57,10 @@ git clone https://github.com/siddath/lifeOS.git
 cd lifeOS
 
 # Optional — make it yours. Skip it and you'll see the demo persona.
-# This file is safe to commit (identity + toggles, no secrets); committing it
-# is exactly what makes a deploy render as you instead of the demo.
+# Personalize in a PRIVATE copy (private fork/clone, or a new private repo
+# from this template). The config holds identity + toggles, never secrets —
+# but your name, areas, and life data still belong in a private repo, and
+# committing the config there is what makes a deploy render as you.
 cp dashboard/lifeos.config.example.json dashboard/lifeos.config.json
 
 # Serve the dashboard — recommended, because file:// blocks the JSON fetches it needs
@@ -126,14 +128,16 @@ LifeOS ships *a* life, not a template of one — so the point isn't to fit yours
 - **The mission is the one thing you're driving toward right now.** Swap `dashboard/mission.json` — a job hunt, a thesis, a move, a first 10k — and the entire hero re-renders around it. When it's done, drop in the next one with a fresh `slug` and the progress resets clean.
 - **Currency, locale, greeting, theme** all live in the config, so it speaks your money and your language.
 
-You don't have to touch code for any of this. Point your AI at `AGENTS.md`, tell it what your life looks like, and it edits the config and data files for you. The config is safe to commit — identity and toggles, never secrets — and committing it is what makes a deployed dashboard render as *you* instead of Alex.
+You don't have to touch code for any of this. Point your AI at `AGENTS.md`, tell it what your life looks like, and it edits the config and data files for you.
+
+**One privacy rule to keep straight:** this public repo stays the clean template. Your personal instance — config, mission, tasks, knowledge base — lives in a **private** repo (a private clone, or a new private repo created from this template). The config holds identity and toggles, never secrets, and committing it in your private instance is what makes a deployed dashboard render as *you* instead of Alex. Treat any hosted personal dashboard as public unless you've put access protection in front of it.
 
 ## Connectors
 
 | Connector | What v1 gives you | Setup |
 |---|---|---|
 | **Vercel** | Deploy button + `vercel.json` | One click |
-| **Notion** | Two-way Tasks/Habits sync; build two DBs by hand from the exact property tables in the guide | ~10 min, [guide](docs/connectors/notion.md) |
+| **Notion** | Optional two-way Tasks/Habits sync (best-effort); build two DBs by hand from the exact property tables in the guide | ~10 min, [guide](docs/connectors/notion.md) |
 | **Google** (Cal/Gmail/Drive) | Read access over MCP today; serverless sync is on the roadmap | Via MCP |
 | **GitHub** | `repo.url` in config wires the vault-is-a-repo links | One line |
 | **Broker** | Any broker's public MCP endpoint; the finance card also takes manual JSON | Via MCP |
@@ -155,7 +159,7 @@ It's meant for people who over-plan under pressure — who generate more meaning
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the pieces fit
 - [docs/deploy.md](docs/deploy.md) — put the dashboard on the web
 - [docs/connectors/README.md](docs/connectors/README.md) — the connector contract
-- [docs/connectors/notion.md](docs/connectors/notion.md) — Notion two-way sync, step by step
+- [docs/connectors/notion.md](docs/connectors/notion.md) — optional Notion two-way sync, step by step
 - [schemas/README.md](schemas/README.md) — the data contract, file by file
 - [DEMO_DATA.md](DEMO_DATA.md) — the placeholder convention
 - [docs/ROADMAP.md](docs/ROADMAP.md) — built now vs. planned
@@ -167,5 +171,3 @@ Small, focused, private-by-default. See [CONTRIBUTING.md](CONTRIBUTING.md) and [
 ## License
 
 [MIT](LICENSE). Copying is the point, not the threat — build your own life on it.
-</content>
-</invoke>

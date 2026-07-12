@@ -8,10 +8,10 @@ description: Capture a thought, task, idea, or worry into the LifeOS inbox witho
 Capture anything into the LifeOS with zero friction. The point is to get it out of the owner's head and into the system, then sort later.
 
 ## Steps
-1. Read `06_Trackers/inbox.md`.
+1. Read `06_Trackers/inbox.md` — if it doesn't exist yet (fresh instance ships only templates), create it from `06_Trackers/inbox.template.md` first.
 2. Append the captured item as a bullet with a timestamp: `- [YYYY-MM-DD] <text>`.
 3. If it's obviously a task, a routine, a reminder, or a someday-item, say so in one line and offer to file it directly:
-   - Task → `06_Trackers/tasks.md` (with priority + area code from `lifeos.config.json`)
+   - Task → `06_Trackers/tasks.md` (with priority + area code from `dashboard/lifeos.config.json`; create the file from its template if missing)
    - Recurring → `06_Trackers/habits.md`
    - Date-bound → `06_Trackers/reminders.md`
    - Someday → the relevant `02_Areas/` note (or a dedicated someday file)
@@ -20,4 +20,4 @@ Capture anything into the LifeOS with zero friction. The point is to get it out 
 
 ## Rules
 - Respect the current hero mission (`dashboard/mission.json`): if the item isn't this mission's focus, note "parked until after the gate" but still capture it.
-- When tagging an area, use only the area codes defined in `lifeos.config.json`.
+- When tagging an area, use only the area codes defined in `dashboard/lifeos.config.json` (fall back to the `.example` config if it doesn't exist).

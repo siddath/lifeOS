@@ -1,6 +1,6 @@
 # AGENTS.md — Rules of engagement for AI sessions
 
-> Read this first. It tells any AI agent — Claude, ChatGPT, Cursor, Copilot, Gemini, or anything else — how this LifeOS vault is organized and how to work inside it. This is a reusable **pattern**, not one person's story. Identity and settings live in `lifeos.config.json`; the words below use `{{owner}}` wherever your name would go. Anywhere you see `<!-- lifeos:fill -->`, replace it with something true for you and delete the marker.
+> Read this first. It tells any AI agent — Claude, ChatGPT, Cursor, Copilot, Gemini, or anything else — how this LifeOS vault is organized and how to work inside it. This is a reusable **pattern**, not one person's story. Identity and settings live in `dashboard/lifeos.config.json` (falling back to `dashboard/lifeos.config.example.json`); the words below use `{{owner}}` wherever your name would go. Anywhere you see `<!-- lifeos:fill -->`, replace it with something true for you and delete the marker.
 
 ## Onboarding — read this if a person just opened this repo
 
@@ -11,7 +11,7 @@
 1. **Recognize the placeholders.** If you see Alex Rivera / Portland / Fieldnotes / pottery, or a `"_DEMO"` key, treat it as a fill-me-in template — never as the user's real life.
 2. **Get their material.** Ask them about themselves, or take whatever they hand you: a paragraph, a brain-dump, an old journal, an exported Obsidian vault, a Notion export, a folder of loose files, a task list. Whatever form it's in is fine — the mapping is your job, not theirs. Don't make them reformat anything.
 3. **Map it onto the schemas.** The files in `schemas/` are the contract. Read the relevant schema, then write conforming data:
-   - identity, area codes, currency, enabled modules → `dashboard/lifeos.config.json` (copy `dashboard/lifeos.config.example.json`, replace the demo values). **Define the area codes from *their* life, not the demo's** — their real domains (work, a relationship, a side project, caregiving, study, faith — whatever they actually spend life on), and switch off modules they won't use. It's **safe to commit** — identity + toggles, never secrets — and committing it inside `dashboard/` is exactly what personalizes a static deploy.
+   - identity, area codes, currency, enabled modules → `dashboard/lifeos.config.json` (copy `dashboard/lifeos.config.example.json`, replace the demo values). **Define the area codes from *their* life, not the demo's** — their real domains (work, a relationship, a side project, caregiving, study, faith — whatever they actually spend life on), and switch off modules they won't use. It holds identity + toggles, never secrets — but it is still personal data: commit it only in the owner's **private** instance (a private clone or a private repo made from this template), where committing it inside `dashboard/` is exactly what personalizes a static deploy. Never write real identity into a public fork of the template.
    - the one thing they're driving toward → `dashboard/mission.json` (`mission.schema.json`)
    - their tasks → `dashboard/tasks-data.json` (`tasks.schema.json`); recurring things → `dashboard/habits-data.json` (`habits.schema.json`). These two files are what the dashboard hydrates from on first run, so writing them is how the user sees tasks/habits without touching the UI. (A vault mirror at `06_Trackers/tasks.md` / `habits.md` is an optional long-form layer.)
    - facts about them (strengths, values, watch-outs, preferences, one per life area) → `dashboard/kb-data.json` (`kb.schema.json`) — the surface the Knowledge Base page renders. Keep `02_Areas/knowledge_base/*.md` as an optional long-form layer; the page reads the JSON, not the markdown.
@@ -72,7 +72,7 @@ Live state has schemas in `schemas/`. Skills and sync code should honor them:
 - `mission.schema.json` — the hero mission (`dashboard/mission.json`).
 - `tasks.schema.json`, `habits.schema.json`, `finance.schema.json`, `kb.schema.json` — trackers and knowledge base.
 
-Area codes are defined once in `lifeos.config.json`. Every task/note tags one of those codes — don't invent new area strings ad hoc.
+Area codes are defined once in `dashboard/lifeos.config.json`. Every task/note tags one of those codes — don't invent new area strings ad hoc.
 
 ## Mission lifecycle — how to swap the hero
 
@@ -92,7 +92,7 @@ That's the whole swap — a ~10-minute edit.
 3. **Keep tone direct and calm.** Structure helps someone who spirals under pressure; walls of options don't.
 4. **Preserve `{{owner}}`'s entries.** When updating trackers, append — don't overwrite.
 5. **Log evidence, not ideas.** Every session that ships something adds a line to `06_Trackers/evidence.md`.
-6. **Privacy first.** A personal LifeOS holds sensitive detail (finances, relationships, IDs). Keep your instance private. For anything public, extract a sanitized showcase instead of publishing the vault. <!-- lifeos:fill --> add any owner-specific privacy rules.
+6. **Privacy first.** A personal LifeOS holds sensitive detail (finances, relationships, IDs). The public repo is the clean template; the owner's instance lives in a **private** repo, and personal config + data JSON are committed only there. Any hosted personal dashboard should sit behind access protection or be treated as public. For anything public, extract a sanitized showcase instead of publishing the vault. <!-- lifeos:fill --> add any owner-specific privacy rules.
 7. **Self-describing on purpose.** Any session can get oriented from `CLAUDE.md` → `AGENTS.md` → `00_START_HERE.md` → `06_Trackers/`. Keep that chain accurate.
 
 ## Sync

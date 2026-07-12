@@ -1,6 +1,6 @@
 ---
 name: setup
-description: First-run onboarding for a fresh LifeOS clone. Use when the owner says "set up LifeOS", "onboard me", "get started", "make this mine", or is running the vault for the first time. Runs an AI-guided interview, writes lifeos.config.json, invites a brain-dump about their life, maps it into the schemas and templates, and generates the first daily brief.
+description: First-run onboarding for a fresh LifeOS clone. Use when the owner says "set up LifeOS", "onboard me", "get started", "make this mine", or is running the vault for the first time. Runs an AI-guided interview, writes dashboard/lifeos.config.json, invites a brain-dump about their life, maps it into the schemas and templates, and generates the first daily brief.
 ---
 
 # Setup — Make this LifeOS yours
@@ -21,7 +21,7 @@ Ask, a few at a time (accept partial answers, infer sensible defaults, confirm r
 
 ## Phase 2 — Write `dashboard/lifeos.config.json`
 
-Copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json` and replace the demo values, validated against `schemas/lifeos.config.schema.json`. It is **safe to commit** — it holds identity + toggles, not secrets — and it lives inside `dashboard/` (the deploy root) so a hosted dashboard renders as the owner instead of the demo persona. Keep the `product` block. Leave `integrations.*.enabled` false until the owner wires them (secrets go in `.env`, never here).
+Copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json` and replace the demo values, validated against `schemas/lifeos.config.schema.json`. It holds identity + toggles, not secrets — but it *is* personal data. **Check the instance is private first:** if this clone is (or pushes to) a public repo, tell the owner to move to a private repo (private clone, or a new private repo from the template) before committing personal config or data. In a private instance, committing the config inside `dashboard/` (the deploy root) is what makes a hosted dashboard render as the owner instead of the demo persona. Keep the `product` block. Leave `integrations.*.enabled` false until the owner wires them (secrets go in `.env`, never here).
 
 ## Phase 3 — "Paste anything about your life"
 
@@ -32,6 +32,7 @@ Invite the owner: *"Paste anything — a brain-dump, an old journal, notes, goal
 - **"About me" facts** (strengths, values, watch-outs, preferences, one per area) → `dashboard/kb-data.json` following `kb.schema.json`. This is the surface the Knowledge Base page renders — it reads the JSON, not markdown. Keep `02_Areas/knowledge_base/*.md` as an optional long-form layer.
 - **Dated things** → `06_Trackers/reminders.md`.
 - **Loose ideas / worries** → `06_Trackers/inbox.md` (append, timestamped).
+- A fresh clone ships only `06_Trackers/*.template.md` — when a live tracker file you need doesn't exist yet, create it from its matching template rather than failing. The dashboard JSON in `dashboard/` is the authoritative state; the `06_Trackers/*.md` files are its human-readable mirror layer.
 - **Area notes** → one file per area under `02_Areas/`, each starting with frontmatter (`title/area/type/tags/updated`).
 - **The hero mission** → `dashboard/mission.json` following `mission.schema.json` (pick a `slug`, fill `hero`, `week`, `evidence`). Snapshot the demo mission into `archive/` first if you're replacing it.
 

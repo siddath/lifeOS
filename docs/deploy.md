@@ -12,7 +12,7 @@ The LifeOS dashboard (`dashboard/`) is a **static site** — plain HTML/JS, no b
 
 **It works with zero configuration.** Deployed with **no environment variables**, the dashboard renders fully from the committed JSON in `dashboard/` (`lifeos.config.json` or its `.example`, `mission.json`, `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json`, `quotes.json`) and stores checkbox state in the browser's `localStorage`. Connectors like Notion sync simply stay dormant until you add their keys — this is intentional **graceful degradation**, not an error state.
 
-**To personalize a deploy**, commit `dashboard/lifeos.config.json` (copied from the `.example` and edited). It's safe to commit — identity + toggles, never secrets — and because it lives in the deploy root, the hosted dashboard renders as you instead of the demo persona.
+**To personalize a deploy**, commit `dashboard/lifeos.config.json` (copied from the `.example` and edited) **in your private instance** — the public repo stays the clean template. The config holds identity + toggles, never secrets, and because it lives in the deploy root, the hosted dashboard renders as you instead of the demo persona. A personalized deploy is *your life on a URL*: gate it behind your host's access protection, or treat it as public.
 
 ---
 

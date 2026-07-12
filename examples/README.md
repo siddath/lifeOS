@@ -40,4 +40,4 @@ alex/
 
 Read `alex/` to see the tone and depth each template is aiming for, then fill your own copies. When you're comfortable, you can delete `examples/` entirely — nothing in the system depends on it.
 
-The demo persona's identity, areas, and currency all come from [`../lifeos.config.example.json`](../lifeos.config.example.json), so the dashboard and skills render "Alex Rivera" out of the box until you drop in your own `lifeos.config.json`.
+The demo persona's identity, areas, and currency all come from [`../dashboard/lifeos.config.example.json`](../dashboard/lifeos.config.example.json), so the dashboard and skills render "Alex Rivera" out of the box until you drop in your own `lifeos.config.json`.

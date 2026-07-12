@@ -62,6 +62,10 @@ An MCP-capable assistant can already **read** these live if you enable them in `
 
 ## 📋 Planned
 
+**Test coverage.**
+- Playwright smoke tests for the dashboard (desktop + mobile: load, task/habit persistence, module toggles).
+- Landing now: unit tests for the Notion sync mapping, schema validation of the shipped demo data, and a docs link check — wired into CI.
+
 **Serverless Google connectors.**
 - Google Calendar sync function: mission/P1 tasks → time blocks, recurring habits → weekly events, event-done → task-done.
 - Gmail capture function: email → inbox → schema-valid task (title, priority from prefix, auto-area).

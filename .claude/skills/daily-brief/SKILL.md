@@ -7,15 +7,15 @@ description: Generate the owner's morning brief from the LifeOS. Use when they s
 
 Give the owner a short, calm "here's today" so they don't have to think. Execution, not planning. Many people who reach for this skill spiral under pressure — a brief that dumps everything, or confidently repeats stale tasks, makes things worse. Honest and small beats complete.
 
-Read the owner's name, timezone, and locale from `lifeos.config.json` (`owner.shortName`, `owner.timezone`, `owner.locale`). Address them in second person; use their timezone for "today".
+Read the owner's name, timezone, and locale from `dashboard/lifeos.config.json` (`owner.shortName`, `owner.timezone`, `owner.locale`), falling back to `dashboard/lifeos.config.example.json` if it doesn't exist. Address them in second person; use their timezone for "today".
 
 ## Steps
 
 1. **Establish today.** Note today's weekday and date first (in the owner's timezone) — several decisions below depend on it.
 2. **Read the sources** (all paths relative to the repo root):
    - `dashboard/mission.json` — the active hero mission: title, `gate` date, `oneThing`, `rule`, and the week cadence.
-   - `06_Trackers/tasks.md` — P1/P2 items.
-   - `06_Trackers/reminders.md` — dated rows + recurring reminders.
+   - `06_Trackers/tasks.md` — P1/P2 items. On a fresh instance this may not exist yet — read `dashboard/tasks-data.json` (the authoritative task state) instead, and offer to create `06_Trackers/tasks.md` from `06_Trackers/tasks.template.md`.
+   - `06_Trackers/reminders.md` — dated rows + recurring reminders. If missing, skip this source (offer to create it from its template); don't fail.
    - `01_Focus/` — the mission's working plan, only if the mission's `oneThing` points at a daily cadence there.
 3. **Staleness check on tasks.md (important).** Compare today's date against the file's `updated:` frontmatter and any day-specific headings (e.g. "Tonight (Thu)", "~36h to the gate"). If the P1 section was written for a day or gate that has already passed, **do not present those P1s as today's list** — that erodes trust in the whole brief. Instead: derive today's focus from `mission.json`'s `oneThing` (plus today's block from `01_Focus/` if the mission has one), and add one gentle ⚠️ line noting the tracker needs a refresh at the next review. Still-valid undated P1s (e.g. relationship/family time, sleep) may carry over. Never invent tasks that appear in no file.
 4. **Filter time-bound items.** From `reminders.md` include only: rows dated today or tomorrow, and any recurring reminder that fires today (e.g. Sunday → weekly review; 1st of month → finance check). Skip everything already in the past.

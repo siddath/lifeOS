@@ -63,7 +63,7 @@ For Claude Code users, a set of skills under `.claude/` scripts the common flows
 - **`/quick-capture`** — drop a thought into the inbox without breaking flow. ✅
 - **`/weekly-review`** — summarize evidence, roll incomplete tasks, set next week's one thing. ✅
 
-Every one reads and writes **schema-valid** data — no bespoke format — so the same work is one prompt away in any other assistant.
+Every one reads and writes **schema-guided** data — no bespoke format — so the same work is one prompt away in any other assistant.
 
 ---
 
@@ -81,7 +81,7 @@ See [connectors/README.md](connectors/README.md) for the full table.
 | Connector | Status |
 |---|---|
 | Vercel deploy | ✅ |
-| Notion two-way sync (Tasks + Habits) | ✅ |
+| Notion two-way sync (Tasks + Habits, optional, best-effort) | ✅ |
 | GitHub (`repo.url` config) | ✅ |
 | Broker (generic, MCP) / manual finance JSON | 🔄 / ✅ |
 | Google Calendar / Gmail / Drive | 🔄 (MCP reads) → 📋 (serverless sync) |

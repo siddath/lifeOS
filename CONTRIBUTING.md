@@ -6,14 +6,14 @@ Thanks for wanting to help. LifeOS is a small, focused framework — a plain-tex
 
 1. **No personal data in PRs.** This project holds *your own* life data when you run it. Never commit real names, family details, finances, tokens, Notion IDs, or deployment URLs. The demo persona ("Alex Rivera") is the only allowed example content. CI runs a generic secret/PII scan on every PR.
 2. **No build step.** The dashboard is a static site — open `dashboard/index.html` over `file://` and it works. Keep it dependency-free in the browser.
-3. **Config over hardcode.** Anything user-specific belongs in `lifeos.config.json` / `schemas/`, never inline in HTML or JS.
+3. **Config over hardcode.** Anything user-specific belongs in `dashboard/lifeos.config.json` / `schemas/`, never inline in HTML or JS.
 
 ## Running locally
 
 ```bash
 git clone <this-repo>
 cd lifeos
-cp lifeos.config.example.json lifeos.config.json   # optional; example is the fallback
+cp dashboard/lifeos.config.example.json dashboard/lifeos.config.json   # optional; example is the fallback
 open dashboard/index.html                           # or: python3 -m http.server
 ```
 

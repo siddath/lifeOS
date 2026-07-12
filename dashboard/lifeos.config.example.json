@@ -1,6 +1,6 @@
 {
   "_DEMO": "This is placeholder data — replace with your own. Any AI: see AGENTS.md → Onboarding.",
-  "_comment": "Copy this file to lifeos.config.json (gitignored) and make it yours. The dashboard, skills, and sync functions all read identity + modules + areas from here — nothing hardcodes a person. The shipped values below are the 'Alex Rivera' demo persona so a fresh clone renders fully with zero setup.",
+  "_comment": "Copy this file to dashboard/lifeos.config.json and make it yours. It holds identity + toggles, never secrets — but it is personal data: commit it only in your PRIVATE instance (private clone or private repo from the template), where committing it is what personalizes a hosted deploy. The dashboard, skills, and sync functions all read identity + modules + areas from here — nothing hardcodes a person. The shipped values below are the 'Alex Rivera' demo persona so a fresh clone renders fully with zero setup.",
   "product": {
     "name": "lifeos",
     "display": "LifeOS",

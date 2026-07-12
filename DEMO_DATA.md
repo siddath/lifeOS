@@ -36,11 +36,10 @@ Files that carry it:
 
 ## Replacing it
 
-You don't have to do this by hand. Open your AI assistant in the repo, point it at [`AGENTS.md`](AGENTS.md), and let it walk the onboarding: it recognizes the markers above, asks for your real context (or reads whatever you hand it), and writes schema-valid files in place of the demo. If you use Claude Code, `/setup` does the same thing as a guided interview.
+You don't have to do this by hand. Open your AI assistant in the repo, point it at [`AGENTS.md`](AGENTS.md), and let it walk the onboarding: it recognizes the markers above, asks for your real context (or reads whatever you hand it), and writes schema-guided files in place of the demo (the shipped demo data itself is schema-validated in CI). If you use Claude Code, `/setup` does the same thing as a guided interview.
 
 If you'd rather do it yourself: copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json`, edit the demo JSON files (`mission.json`, `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json`) against their schemas in [`schemas/`](schemas/), replace the `<!-- lifeos:fill -->` markers, and clear the demo tasks/habits from the dashboard UI (or your browser's local storage). That's the whole job.
 
 ## One thing to keep
 
-Leave the demo data in the public/template copy of the repo. It's what makes a fresh clone worth looking at. Personalize your own working copy — but if you ever fork this to share, the persona is a feature, not a leftover.
-</content>
+Leave the demo data in the public/template copy of the repo. It's what makes a fresh clone worth looking at. Personalize a **private** copy (a private clone, or a new private repo from this template) — your real config and data belong there, not in a public fork. If you ever fork this to share, the persona is a feature, not a leftover.

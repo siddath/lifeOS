@@ -13,4 +13,4 @@ updated: 2026-07
 - <!-- lifeos:fill: _(empty — start capturing)_ -->
 
 ---
-*During weekly review, each item becomes a task ([`tasks.md`](tasks.md)), a reminder ([`reminders.md`](reminders.md)), a note in an area file, or gets deleted.*
+*During weekly review, each item becomes a task (`tasks.md`), a reminder (`reminders.md`) — both created from their [templates](tasks.template.md) during setup — a note in an area file, or gets deleted.*
