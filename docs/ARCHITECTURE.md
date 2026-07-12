@@ -24,7 +24,7 @@ The guiding idea: **your life data is plain text and open JSON; everything else 
 
 All three agree on one **contract**:
 
-- **`dashboard/lifeos.config.json`** — who you are (name, timezone, currency, greeting), your **area codes**, which **modules** are on, and which **integrations** are enabled. It lives inside the deploy root (`dashboard/`) so a hosted dashboard reads it; copy it from `dashboard/lifeos.config.example.json`. Safe to commit (identity + toggles, never keys).
+- **`dashboard/lifeos.config.json`** — who you are (name, timezone, currency, greeting), your **area codes**, which **modules** are on, and which **integrations** are enabled. It lives inside the deploy root (`dashboard/`) so a hosted dashboard reads it; copy it from `dashboard/lifeos.config.example.json`. It holds identity + toggles, never keys — commit it in your private instance only.
 - **`schemas/`** — JSON Schemas for `tasks`, `habits`, `mission`, `finance`, and the `kb` (knowledge base). Every surface and every importer validates against these, so nothing drifts.
 
 Below the contract sits the **optional** machinery:
@@ -76,7 +76,7 @@ Solid edges are always-on paths within the repo. **Dashed edges are MCP connecto
 **Tier 1 — Source of truth (Markdown in Git).**
 Long-form, evergreen content that changes infrequently: notes, project specs, routines, weekly reviews, guides. Git-versioned, portable, offline-first, and directly readable/editable by any assistant. This tier never depends on any external service.
 
-**Tier 2 — Structured data (JSON, schema-validated).**
+**Tier 2 — Structured data (JSON, schema-guided; the shipped demo data is schema-validated in CI).**
 The machine-readable state the dashboard renders: `dashboard/mission.json` (the hero), `dashboard/finance-data.json`, tasks, habits, and the knowledge base. Each conforms to a file in `schemas/`. This is what importers write to and what connectors sync.
 
 **Tier 3 — Client state (dashboard `localStorage`).**
@@ -100,7 +100,7 @@ For the demo persona that mission is **"Operation Launch Week"** — Alex Rivera
 LifeOS is designed so sync can grow without reworking the vault:
 
 - **Manual / local (default).** You edit files; the dashboard reads them. No services, no secrets.
-- **Two-way Notion sync (built, optional).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Notion is the mobile front-end; the repo stays source of truth. See [connectors/notion.md](connectors/notion.md).
+- **Optional two-way Notion sync (built, best-effort).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Notion is the mobile front-end; the repo stays source of truth. See [connectors/notion.md](connectors/notion.md) for setup and current limitations.
 - **Calendar / mail / broker (planned, MCP-only for now).** Today an MCP-capable assistant can read these live; dedicated serverless sync functions are on the roadmap, not shipped. See [ROADMAP.md](ROADMAP.md).
 
 ---
@@ -108,8 +108,8 @@ LifeOS is designed so sync can grow without reworking the vault:
 ## Security & configuration model
 
 - **Secrets never live in `lifeos.config.json` or the vault.** They live in `.env` (gitignored) locally and in your host's environment variables in production. Templates: `.env.example`, `.mcp.example.json`.
-- **The dashboard → serverless calls are authenticated** with a shared secret (`SYNC_SHARED_SECRET`), checked via an `X-Sync-Secret` header. If unset, auth is open — fine for local dev, not for a public deployment.
-- **The config file is safe to commit.** It carries identity and toggles, never keys.
+- **The dashboard → serverless calls are authenticated** with a shared secret (`SYNC_SHARED_SECRET`), checked via an `X-Sync-Secret` header. If Notion is configured but the secret is unset, sync requests are refused until you set it — a deployed sync is never silently open.
+- **The config file carries identity and toggles, never keys** — commit it in your **private** instance (that's what personalizes a deploy), not in a public fork of the template.
 - **Deployment can be private.** The dashboard is personal; you can gate it behind your host's deployment protection. See [deploy.md](deploy.md).
 
 ---
@@ -123,7 +123,7 @@ LifeOS is designed so sync can grow without reworking the vault:
 | Dashboard | Plain HTML5 + JS | Zero build, one file, fast, trivially archivable |
 | Hosting | Static host (e.g. Vercel) | Git-native, free tier, serverless functions, CDN |
 | Mobile mirror | Notion (optional) | Great mobile app, filtering, zero learning curve |
-| AI layer | Any assistant (schemas + `AGENTS.md`) | Reads the vault, writes schema-valid data; not tied to one tool |
+| AI layer | Any assistant (schemas + `AGENTS.md`) | Reads the vault, writes schema-guided data; not tied to one tool |
 | External systems | MCP connectors | Managed, uniform integration surface |
 
 ---

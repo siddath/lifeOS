@@ -12,7 +12,7 @@ A fresh clone already runs. Out of the box it renders as the demo persona — **
 
 Making it *yours* means replacing that persona's identity and content with your own. There are **four ways in**, and they work with **whatever AI assistant you already use** — Claude, ChatGPT, Cursor, Copilot, Gemini. They aren't mutually exclusive; most people start with path A and layer on a connector later.
 
-The principle underneath all of them: **ingestion is prompt-driven against `schemas/`, not code-driven.** There's no rigid importer to satisfy. You hand your assistant raw material — a paragraph, a Notion export, a calendar — and it writes schema-valid `tasks`, `habits`, `mission`, and `kb` data. The schemas are the contract; the AI does the shaping. The instructions it needs are in [`AGENTS.md`](../AGENTS.md) → Onboarding.
+The principle underneath all of them: **ingestion is prompt-driven against `schemas/`, not code-driven.** There's no rigid importer to satisfy. You hand your assistant raw material — a paragraph, a Notion export, a calendar — and it writes schema-guided `tasks`, `habits`, `mission`, and `kb` data. The schemas are the contract; the AI does the shaping. The instructions it needs are in [`AGENTS.md`](../AGENTS.md) → Onboarding.
 
 ---
 
@@ -20,7 +20,7 @@ The principle underneath all of them: **ingestion is prompt-driven against `sche
 
 Open your assistant in the repo folder and tell it: *"Read `AGENTS.md` and help me set up LifeOS."* It follows the Onboarding section there — recognizes the demo persona as placeholder, asks you a few things (name, timezone, currency, the life **areas** you track, your current **one main thing**), then:
 
-1. Writes `dashboard/lifeos.config.json` (copied from `dashboard/lifeos.config.example.json`): identity, area codes, enabled modules, integration toggles. It's safe to commit — no secrets live in it — and committing it inside `dashboard/` is what personalizes a deploy.
+1. Writes `dashboard/lifeos.config.json` (copied from `dashboard/lifeos.config.example.json`): identity, area codes, enabled modules, integration toggles. No secrets live in it, but it *is* personal data — commit it in your **private** instance (see "Keep your instance private" below), where committing it inside `dashboard/` is what personalizes a deploy.
 2. Drafts your first **mission** into `dashboard/mission.json` (validated against `schemas/mission.schema.json`) — hero title, gate date, week plan, evidence.
 3. Seeds starter **tasks** (`dashboard/tasks-data.json`), **habits** (`dashboard/habits-data.json`), and **knowledge-base** entries (`dashboard/kb-data.json`) against their schemas — the exact files the dashboard renders from.
 4. Tells you what's next (deploy, or wire a connector).
@@ -73,18 +73,27 @@ set up my config, infer my active projects as areas, draft this week's
 mission, and seed tasks and habits from what you find.
 ```
 
-It uses the connectors to gather raw context, then writes schema-valid config and data exactly as in the other paths. Nothing external is written until you say so — the connectors read; the vault is authored locally and stays the source of truth.
+It uses the connectors to gather raw context, then writes schema-guided config and data exactly as in the other paths. Nothing external is written until you say so — the connectors read; the vault is authored locally and stays the source of truth.
 
 This is the "start from what I already have, not from a blank page" path.
 
 ---
+
+## Keep your instance private
+
+The privacy model is one sentence long: **the public repo is the template; your life lives in a private one.** Concretely:
+
+1. Keep the public repository (or your public fork) as the clean template with the demo persona.
+2. Create a **private** repo for your personal instance — a private clone, or a new private repository generated from the template.
+3. Commit your personal config and data JSON (`lifeos.config.json`, `mission.json`, `tasks-data.json`, `kb-data.json`, `finance-data.json`, …) **only to that private repo**.
+4. If you host your personal dashboard, put access protection in front of it (e.g. your host's authentication) — or treat everything on it as public.
 
 ## After any path
 
 - **Verify it renders.** Open `dashboard/index.html` locally — your name, areas, and mission should appear. No network or keys required.
 - **Deploy** if you want it on your phone: [deploy.md](deploy.md).
 - **Layer on connectors** as you need them: [connectors/README.md](connectors/README.md).
-- **Keep it current** by asking your assistant for a daily brief, a quick capture, or a weekly review — all reading and writing the same schema-valid data. On Claude Code these are the bundled `/daily-brief`, `/quick-capture`, and `/weekly-review` skills.
+- **Keep it current** by asking your assistant for a daily brief, a quick capture, or a weekly review — all reading and writing the same schema-guided data. On Claude Code these are the bundled `/daily-brief`, `/quick-capture`, and `/weekly-review` skills.
 
 ## What you never have to do
 

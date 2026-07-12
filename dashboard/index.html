@@ -375,6 +375,9 @@
     .topnav .nav-links{display:none}
   }
   @media(max-width:899px){
+    /* The FAB->sheet dock carries all section/page links on mobile, so collapse the
+       top nav rows — the greeting and hero should appear near the top of the viewport. */
+    .topnav .nav-links{display:none}
     .dock{display:none}
     .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
       width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;
@@ -1189,10 +1192,12 @@
      ../ repo-file links 404. When not browsing locally, point them
      at GitHub instead. Local file:// browsing keeps relative links.
      ============================================================ */
+  // Public template repo — the fallback link base when the owner hasn't set repo.url yet,
+  // so a bare hosted deploy (like the demo) still resolves every ../ vault link.
+  const TEMPLATE_REPO_BASE = 'https://github.com/siddath/lifeOS/blob/main/';
   function rewriteRepoLinks(){
     if(location.protocol==='file:' || /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)) return;
-    const BASE = (LIFEOS.repo && LIFEOS.repo.url) ? LIFEOS.repo.url.replace(/\/?$/,'/') : '';
-    if(!BASE) return;  // no repo.url configured -> leave relative links (they simply 404 on a bare deploy; that's fine)
+    const BASE = (LIFEOS.repo && LIFEOS.repo.url) ? LIFEOS.repo.url.replace(/\/?$/,'/') : TEMPLATE_REPO_BASE;
     document.querySelectorAll('a[href^="../"]').forEach(a=>{
       if(a.dataset.repoRewritten) return;
       a.href = BASE + a.getAttribute('href').replace(/^\.\.\//,'');
@@ -1780,10 +1785,14 @@
       if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Sync rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }  // stop looping; wait for the user to set the key
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
-      applyResults(data.results||[]);
-      setQueue([]);
+      const results = data.results||[];
+      applyResults(results);
+      // A 200 doesn't mean every item landed: keep per-item failures queued for retry.
+      const failed = new Set(results.filter(r=>r && r.ok===false).map(r=>r.localId));
+      setQueue(failed.size ? q.filter(it=>it.payload && failed.has(it.payload.id)) : []);
       localStorage.setItem('lifeos_last_synced', nowIso());
-      setStatus('synced', lastSyncedLabel());
+      if(failed.size){ setStatus('error', failed.size+' item'+(failed.size>1?'s':'')+' failed — will retry'); scheduleFlush(15000); }
+      else setStatus('synced', lastSyncedLabel());
     }catch(err){
       setStatus('error', 'Sync error — will retry');
       scheduleFlush(15000);
@@ -2269,11 +2278,14 @@
     if(typeof rewriteRepoLinks === 'function') rewriteRepoLinks();
   }
   async function loadConfig(){
-    let cfg = null;
+    let cfg = null, src = '';
+    // On a template deploy lifeos.config.json intentionally does not exist — its absence is
+    // the demo-persona trigger, so the first fetch's network-log 404 is expected and harmless.
     for(const f of ['lifeos.config.json','../lifeos.config.json','lifeos.config.example.json','../lifeos.config.example.json']){
-      try{ const r = await fetch(f, {cache:'no-store'}); if(r.ok){ cfg = await r.json(); break; } }catch(e){}
+      try{ const r = await fetch(f, {cache:'no-store'}); if(r.ok){ cfg = await r.json(); src = f; break; } }catch(e){}
     }
     if(cfg){ LIFEOS = Object.assign({}, LIFEOS, cfg, { owner: Object.assign({}, LIFEOS.owner, cfg.owner||{}) }); }
+    if(!src || src.includes('example')) console.info('LifeOS: no lifeos.config.json — running the demo persona.');
     applyConfig();
   }
   if(typeof renderGreeting === 'function') renderGreeting();  // immediate paint with demo defaults

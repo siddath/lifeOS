@@ -5,7 +5,19 @@
   "license": "MIT",
   "description": "LifeOS — an AI-native personal operating system: plain-text vault + dashboard + Claude skills + Notion/Google/broker connectors",
   "keywords": ["life-os", "pkm", "second-brain", "claude", "mcp", "notion", "productivity", "dashboard"],
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "validate": "node scripts/validate-data.mjs",
+    "check-links": "node scripts/check-links.mjs",
+    "test:unit": "node scripts/run-unit.mjs",
+    "test": "npm run validate && npm run check-links && npm run test:unit"
+  },
   "dependencies": {
     "@notionhq/client": "^2.2.15"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1"
   }
 }

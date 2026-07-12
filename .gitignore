@@ -9,9 +9,9 @@ node_modules/
 !.env.example
 .mcp.json
 
-# Your instance config is SAFE TO COMMIT: dashboard/lifeos.config.json holds
-# identity + toggles, never secrets — and committing it is how a static deploy
-# (Vercel/GitHub Pages) actually renders as YOU instead of the demo persona.
+# Instance config: dashboard/lifeos.config.json holds identity + toggles, never
+# secrets. Commit it in your PRIVATE instance (that's what makes a static deploy
+# render as YOU) — in the public template / a public fork, leave it uncreated.
 # We only ignore the legacy repo-root copy (superseded by the dashboard/ one).
 /lifeos.config.json
 
@@ -29,4 +29,3 @@ reviews/*.md
 .obsidian/plugins/
 .obsidian/themes/
 .trash/
-.env*

@@ -7,14 +7,14 @@ description: Run the owner's weekly review of the LifeOS. Use when they say "wee
 
 Drive the most important 20 minutes of the week. End with evidence and a clear next-week focus — not a longer to-do list.
 
-Read the owner's identity and enabled modules from `lifeos.config.json`; use the area codes there for the areas check.
+Read the owner's identity and enabled modules from `dashboard/lifeos.config.json` (falling back to `dashboard/lifeos.config.example.json`); use the area codes there for the areas check.
 
 ## Steps
-1. Read `06_Trackers/tasks.md`, `inbox.md`, `habits.md`, `evidence.md`, and `00_START_HERE.md`.
+1. Read `06_Trackers/tasks.md`, `inbox.md`, `habits.md`, `evidence.md`, and `00_START_HERE.md`. The dashboard JSON (`dashboard/tasks-data.json`, `habits-data.json`) is the authoritative state — cross-check it. Any tracker file that doesn't exist yet: create it from its `06_Trackers/*.template.md` rather than failing.
 2. Fill a copy of `templates/weekly_review.md` (or summarize inline if the owner prefers), filed under `reviews/YYYY-Www.md`:
    - **Evidence:** what actually shipped (artifacts, not intentions) — cross-check `06_Trackers/evidence.md`.
    - **Hero mission:** did it move toward its gate?
-   - **Areas check:** quick 1–5 across the area codes in `lifeos.config.json`.
+   - **Areas check:** quick 1–5 across the area codes in `dashboard/lifeos.config.json`.
 3. **Roll forward:** move incomplete `tasks.md` items into next week; move done items to the Done section with a date.
 4. **Clear the inbox:** classify each item (task / routine / reminder / someday / delete).
 5. **Set next week:** the ONE main thing, the next hero mission if it's changing (run the `mission-swap` skill), and the top 3 supporting tasks. Update `00_START_HERE.md`.

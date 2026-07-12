@@ -1,14 +1,16 @@
 ---
-title: "Notion Connector — Two-Way Sync"
+title: "Notion Connector — Optional Task/Habit Sync"
 area: docs
 type: doc
 tags: [connectors, notion, sync, setup]
 updated: 2026-07
 ---
 
-# Notion connector — two-way sync
+# Notion connector — optional two-way task/habit sync
 
 The Notion connector makes Notion the **mobile front-end** for your Tasks and Habits: check a habit off on your phone, see it on the dashboard; add a task on the dashboard, find it in Notion. The repo stays the source of truth; Notion mirrors it. Setup is a one-time, roughly **10-minute** job.
+
+The sync is **best-effort by design** — good enough to keep two personal surfaces in agreement, not a conflict-free replication protocol. Read [Limitations](#limitations) before relying on it.
 
 It's powered by two serverless functions — `api/notion-sync.js` (push) and `api/notion-pull.js` (pull) — plus a shared helper `api/_notion.js` that maps LifeOS fields to Notion properties. The property names below are exactly what that code reads and writes, so your databases must match.
 
@@ -89,14 +91,14 @@ Put these in a gitignored `.env` for local dev **and** in your host's environmen
 NOTION_API_KEY=<your-notion-integration-token>       # starts with "ntn_" (or legacy "secret_")
 NOTION_DATABASE_ID_TASKS=<tasks-database-id>          # 32 hex chars from the DB URL
 NOTION_DATABASE_ID_HABITS=<habits-database-id>
-SYNC_SHARED_SECRET=<any-long-random-string>
+SYNC_SHARED_SECRET=<any-long-random-string>           # REQUIRED whenever the Notion vars are set
 ```
 
-### About `SYNC_SHARED_SECRET`
+### About `SYNC_SHARED_SECRET` (required)
 
 This authenticates the **dashboard → serverless** calls. The dashboard sends it as an `X-Sync-Secret` header; the function compares it to `SYNC_SHARED_SECRET`. The dashboard doesn't read the value from an env var (it's static — it can't), so you set the matching key **in the dashboard itself**: click **🔑 Sync key** in the sync bar and paste the same string. It's stored in that browser's local storage and never committed, so do it once per device.
 
-- **If unset on the server**, the sync endpoints are **open** — acceptable for local development only. For any deployment reachable on the internet, set it, or anyone who finds your function URL can write to your Notion.
+- **The functions fail closed.** If `NOTION_API_KEY` is set but `SYNC_SHARED_SECRET` isn't, the endpoints refuse to serve (`503`) rather than expose an open write path into your Notion. Set the secret everywhere the Notion vars are set — including local dev.
 - **If set on the server but not in the dashboard**, sync returns `401`. Set the key with the 🔑 button.
 
 ---
@@ -110,13 +112,23 @@ If nothing happens, the usual causes are: the integration wasn't shared with the
 
 ---
 
+## Limitations
+
+Honest edges of the current implementation — fine for a personal two-surface setup, listed so you're never surprised:
+
+- **Pull is capped at 1,000 tasks and 1,000 habits** per pull (paginated in pages of 100). Past the cap the response sets `truncated: true` and older pages are left behind.
+- **Deletions made in Notion don't propagate back.** Pull upserts what exists in Notion; a page you archived in Notion simply stops updating locally rather than disappearing. Delete on the dashboard side to remove both.
+- **A lost response can duplicate a create.** If the network drops after Notion created a page but before the dashboard recorded its `notionId`, a retry creates a second page. The databases are built by hand from the Step 4 tables (no spare identity property to dedupe on), so if this happens, delete the duplicate in Notion. Rare in practice.
+- **Last write wins.** There is no field-level merge; whichever side pushed or pulled most recently sets the state.
+
 ## Troubleshooting
 
 | Symptom | Likely cause |
 |---|---|
 | "Notion sync not configured" | One of `NOTION_API_KEY` / `NOTION_DATABASE_ID_TASKS` / `NOTION_DATABASE_ID_HABITS` is missing. |
+| "Sync is configured but unprotected" (`503`) | `NOTION_API_KEY` is set without `SYNC_SHARED_SECRET`. Set the secret in the environment, then paste it via 🔑 Sync key. |
 | `401 Unauthorized` on sync | The dashboard's 🔑 Sync key doesn't match `SYNC_SHARED_SECRET` on the server (or isn't set — click 🔑 Sync key). |
 | Sync runs but Notion doesn't change | Integration not added to the database's **Connections**, or a property name/type doesn't match Step 4. |
 | API rejects the database id | You used a `collection://` data-source id. Use the URL slug **before `?v=`**. |
 | Areas come back as the wrong label | An `areas[]` entry's `notion` label in `dashboard/lifeos.config.json` doesn't match a Select option in the Tasks DB. |
-| Every task files under **Mindset** | The function fell back to the example config — you haven't committed a personalized `dashboard/lifeos.config.json`. Add it (it's safe to commit) and redeploy. |
+| Every task files under **Mindset** | The function fell back to the example config — you haven't committed a personalized `dashboard/lifeos.config.json`. Add it in your **private** instance (identity + toggles, no secrets) and redeploy. |

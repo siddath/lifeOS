@@ -1,4 +1,4 @@
-const { getClient, requireAuth, TASKS_DB, HABITS_DB, taskFromPage, habitFromPage } = require('./_notion');
+const { getClient, requireAuth, TASKS_DB, HABITS_DB, taskFromPage, habitFromPage, queryAllPages, PULL_MAX_ITEMS } = require('./_notion');
 
 // Pull latest Tasks + Habits from Notion so edits made elsewhere flow back into the dashboard.
 module.exports = async (req, res) => {
@@ -17,13 +17,14 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const [tasksRes, habitsRes] = await Promise.all([
-      notion.databases.query({ database_id: TASKS_DB, page_size: 100 }),
-      notion.databases.query({ database_id: HABITS_DB, page_size: 100 }),
+    const [taskPages, habitPages] = await Promise.all([
+      queryAllPages(notion, TASKS_DB),
+      queryAllPages(notion, HABITS_DB),
     ]);
     res.status(200).json({
-      tasks: tasksRes.results.map(taskFromPage),
-      habits: habitsRes.results.map(habitFromPage),
+      tasks: taskPages.map(taskFromPage),
+      habits: habitPages.map(habitFromPage),
+      truncated: taskPages.length >= PULL_MAX_ITEMS || habitPages.length >= PULL_MAX_ITEMS,
       pulledAt: new Date().toISOString(),
     });
   } catch (err) {

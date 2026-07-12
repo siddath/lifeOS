@@ -11,7 +11,7 @@ There is always exactly **one** active hero mission. Swapping means closing the 
 
 ## Steps
 
-1. **Confirm the close.** Briefly confirm the current mission is actually done (or being intentionally set down). Capture what shipped — log any outstanding wins to `06_Trackers/evidence.md` before archiving.
+1. **Confirm the close.** Briefly confirm the current mission is actually done (or being intentionally set down). Capture what shipped — log any outstanding wins to `06_Trackers/evidence.md` (create it from `06_Trackers/evidence.template.md` if it doesn't exist yet) before archiving.
 
 2. **Snapshot the old mission.** Read the current `dashboard/mission.json`, note its `slug`, and copy it to `archive/mission_<old-slug>.json`. If the mission had working files under `01_Focus/`, move them under `archive/<old-slug>/` so `01_Focus/` is clear for the new hero.
 

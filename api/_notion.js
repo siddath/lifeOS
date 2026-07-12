@@ -1,4 +1,3 @@
-const { Client } = require('@notionhq/client');
 const fs = require('fs');
 const path = require('path');
 
@@ -7,18 +6,48 @@ const HABITS_DB = process.env.NOTION_DATABASE_ID_HABITS;
 
 function getClient() {
   if (!process.env.NOTION_API_KEY) return null;
+  // Lazy require: the module stays loadable (tests, unconfigured deploys) without the SDK.
+  const { Client } = require('@notionhq/client');
   return new Client({ auth: process.env.NOTION_API_KEY });
 }
 
 // Authenticate dashboard -> serverless calls with a shared secret (set SYNC_SHARED_SECRET
-// in the environment AND in the dashboard config). If unset, auth is disabled (local/dev).
+// in the environment AND via the dashboard's 🔑 Sync key button).
+// Fail closed: if Notion credentials exist but no shared secret is set, refuse to serve —
+// otherwise a deployed function URL would be an open write path into the owner's Notion.
 function requireAuth(req, res) {
   const expected = process.env.SYNC_SHARED_SECRET;
-  if (!expected) return true; // not configured -> open (development / no-secret deployments)
+  if (!expected) {
+    if (process.env.NOTION_API_KEY) {
+      res.status(503).json({
+        error: 'Sync is configured but unprotected: set SYNC_SHARED_SECRET in the environment, then paste the same value via the dashboard\'s 🔑 Sync key button.',
+      });
+      return false;
+    }
+    return true; // Notion not configured either -> handlers answer with their own 503
+  }
   const got = req.headers['x-sync-secret'] || (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
   if (got && got === expected) return true;
   res.status(401).json({ error: 'Unauthorized: missing or invalid X-Sync-Secret.' });
   return false;
+}
+
+// Query a Notion database to exhaustion (cursor pagination), capped so a runaway
+// database can't blow up the function. Notion pages are 100 items max per request.
+const PULL_MAX_ITEMS = 1000;
+async function queryAllPages(notion, databaseId, { pageSize = 100, maxItems = PULL_MAX_ITEMS } = {}) {
+  const results = [];
+  let cursor;
+  do {
+    const res = await notion.databases.query({
+      database_id: databaseId,
+      page_size: pageSize,
+      ...(cursor ? { start_cursor: cursor } : {}),
+    });
+    results.push(...res.results);
+    cursor = res.has_more ? res.next_cursor : undefined;
+  } while (cursor && results.length < maxItems);
+  return results.slice(0, maxItems);
 }
 
 // Area code -> Notion select-option label, driven by the committed config in the static
@@ -119,4 +148,5 @@ module.exports = {
   getClient, requireAuth, TASKS_DB, HABITS_DB,
   taskToProperties, taskFromPage,
   habitToProperties, habitFromPage,
+  queryAllPages, PULL_MAX_ITEMS,
 };
