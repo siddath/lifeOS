@@ -5,218 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <title>📚 About You — Knowledge Base</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/shared.css">
 <style>
-  :root{
-    --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555;
-    --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
-    --saffron:#e2871b;
-    --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
-    --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    /* themed tints — design_system.md §1a: never hardcode a hex a theme can't reach */
-    --tint-warm:#fbe3d8; --tint-gold:#f5eccf; --gold-ink:#8a6d1b;
-    --tint-gold-line:#e9d9ad; --err-bg:#fff4ec;
-  }
-  :root[data-theme="dark"]{
-    --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
-    --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
-    --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
-    --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
-    --tint-warm:#3a241c; --tint-gold:#33291f; --gold-ink:#e6c06a;
-    --tint-gold-line:#4a3a26; --err-bg:#2a201a;
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]):not([data-theme="dark"]){
-      --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
-      --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
-      --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
-      --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
-      --tint-warm:#3a241c; --tint-gold:#33291f; --gold-ink:#e6c06a;
-      --tint-gold-line:#4a3a26; --err-bg:#2a201a;
-    }
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-       background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 72px;transition:background .4s ease,color .4s ease}
-  :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
-  @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
 
-  /* ---- Ported floating dock (shared with the dashboard) ---- */
-  .dock{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:3px;
-    padding:8px 8px 12px;width:52px;background:color-mix(in srgb,var(--card) 82%,transparent);
-    -webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);
-    border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;transition:width .3s cubic-bezier(.2,.7,.3,1)}
-  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.dock{background:var(--card)}}
-  .dock:hover,.dock:focus-within{width:176px}
-  .dock-sync,.dock-nav,.dock-pages{display:flex;flex-direction:column;gap:2px}
-  .dock-sep{height:1px;background:var(--line);margin:4px 6px;flex:none}
-  .dock-btn{display:flex;align-items:center;gap:10px;white-space:nowrap;border:none;background:transparent;color:var(--ink);
-    text-decoration:none;cursor:pointer;font:inherit;font-size:.82rem;font-weight:600;padding:8px;border-radius:10px;min-height:36px;line-height:1;transition:background .15s}
-  .dock-btn:hover,.dock-btn:focus-visible{background:var(--line)}
-  .dock-btn .status-dot{width:9px;height:9px;border-radius:50%;background:#9a9186;flex:none}
-  .dock-label{opacity:0;width:0;overflow:hidden;white-space:nowrap;transition:opacity .3s}
-  .dock:hover .dock-label,.dock:focus-within .dock-label{opacity:1;width:auto}
-  .dock-pages a[aria-current="page"]{background:color-mix(in srgb,var(--gold) 22%,transparent);position:relative}
-  .dock-pages a[aria-current="page"]::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
-  .dock-fab{display:none}
-  .dock-scrim{display:none}
-  @media(min-width:900px){body .wrap{padding-left:76px}}
-  @media(max-width:899px){
-    .dock{display:none}
-    .dock-fab{display:flex;align-items:center;justify-content:center;position:fixed;right:16px;bottom:16px;z-index:70;
-      width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.4rem;color:#fff;background:var(--header-grad);box-shadow:var(--shadow)}
-    .dock.open{display:flex;flex-direction:column;gap:8px;width:auto;left:12px;right:12px;bottom:80px;top:auto;transform:none;max-height:70vh;overflow:auto;padding:14px}
-    .dock.open .dock-label{opacity:1;width:auto}
-    .dock.open .dock-nav,.dock.open .dock-pages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .dock.open .dock-nav a,.dock.open .dock-pages a{flex-direction:column;gap:4px;text-align:center;font-size:.68rem;min-height:56px;justify-content:center}
-    .dock-scrim{display:block;position:fixed;inset:0;z-index:65;background:rgba(20,15,10,.35)}
-    .dock-scrim[hidden]{display:none}
-    body{padding-bottom:88px}
-  }
 
   header{background:var(--header-grad);color:#fff;padding:24px 20px 20px;
          text-align:center;box-shadow:var(--shadow)}
-  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:1.7rem;letter-spacing:.2px}
-  header .greet{margin:8px 0 0;opacity:.96;font-size:.98rem;font-weight:600}
-  .theme-toggle{position:absolute;top:20px;right:18px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);
-         color:#fff;border-radius:999px;width:32px;height:32px;font-size:.9rem;cursor:pointer;line-height:1}
-  .theme-toggle:hover{background:rgba(255,255,255,.2)}
-  header p{margin:6px 0 0;opacity:.92;font-size:.95rem}
+  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:var(--fs-title);letter-spacing:.2px}
+  header .greet{margin:8px 0 0;opacity:.96;font-size:var(--fs-body);font-weight:600}
+  header p{margin:6px 0 0;opacity:.92;font-size:var(--fs-body)}
   header .back{position:absolute;top:20px;left:18px;color:#fff;opacity:.9;text-decoration:none;
-         font-size:.85rem;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:5px 12px}
+         font-size:var(--fs-sub);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:5px 12px}
   header .back:hover{background:rgba(255,255,255,.16)}
   .headwrap{position:relative;max-width:1080px;margin:0 auto}
 
-  .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 
   /* Serif epigraph */
   .epigraph{font-family:Georgia,'Times New Roman',serif;font-style:italic;color:var(--muted);
-         text-align:center;font-size:1.02rem;line-height:1.55;margin:22px auto 6px;max-width:760px}
-  .epigraph .whom{display:block;font-style:normal;font-size:.78rem;letter-spacing:.4px;margin-top:8px;
+         text-align:center;font-size:var(--fs-h3);line-height:1.55;margin:22px auto 6px;max-width:760px}
+  .epigraph .whom{display:block;font-style:normal;font-size:var(--fs-meta);letter-spacing:.4px;margin-top:8px;
          text-transform:uppercase;color:var(--gold);font-weight:700}
 
   /* Search box */
   .searchbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 0 10px;margin-top:8px}
   .searchbox{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
-         border-radius:16px;padding:12px 16px;box-shadow:var(--shadow);transition:box-shadow .15s}
+         border-radius:var(--r-card);padding:12px 16px;box-shadow:var(--shadow);transition:box-shadow .15s}
   .searchbox:focus-within{box-shadow:0 0 0 2px var(--gold),var(--shadow)}
-  .searchbox .ic{font-size:1.15rem;opacity:.6;flex:none}
-  #q{flex:1;border:none;background:transparent;font-size:1.02rem;color:var(--ink);outline:none}
+  .searchbox .ic{font-size:var(--fs-h2);opacity:.6;flex:none}
+  #q{flex:1;border:none;background:transparent;font-size:var(--fs-h3);color:var(--ink);outline:none}
   #q::placeholder{color:var(--muted)}
-  .searchbox .slash{font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;
+  .searchbox .slash{font-size:var(--fs-micro);color:var(--muted);border:1px solid var(--line);border-radius:6px;
          padding:2px 7px;flex:none;background:var(--bg)}
-  .searchbox .clr{border:none;background:transparent;color:var(--muted);font-size:1.2rem;cursor:pointer;
+  .searchbox .clr{border:none;background:transparent;color:var(--muted);font-size:var(--fs-lead);cursor:pointer;
          line-height:1;padding:2px 6px;border-radius:6px;display:none}
   .searchbox .clr:hover{background:var(--tint-warm);color:var(--accent)}
   .searchbox .clr.show{display:block}
 
-  .countline{font-size:.8rem;color:var(--muted);margin:8px 2px 2px;display:flex;
+  .countline{font-size:var(--fs-meta);color:var(--muted);margin:8px 2px 2px;display:flex;
          justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
   .countline .rc{font-weight:600;color:var(--accent2)}
 
   /* Filter chips */
   .filters{margin:12px 0 4px}
   .filt-group{margin-bottom:10px}
-  .filt-group .lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);
+  .filt-group .lbl{font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.8px;color:var(--muted);
          font-weight:700;margin:0 0 6px}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{font-size:.74rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);
+  .chip{font-size:var(--fs-meta);border:1px solid var(--line);background:var(--bg);color:var(--ink);
          border-radius:999px;padding:4px 11px;cursor:pointer;user-select:none;transition:all .12s;
          display:inline-flex;align-items:center;gap:5px}
   .chip:hover{border-color:var(--gold)}
   .chip.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
-  .chip .n{opacity:.6;font-size:.68rem}
+  .chip .n{opacity:.6;font-size:var(--fs-micro)}
   .chip.on .n{opacity:.85}
   /* facet chips get the saffron/gold treatment when active */
   .chip.facet.on{background:var(--saffron);border-color:var(--saffron);color:#fff}
   .chip.facet{border-color:var(--tint-gold-line)}
-  .clearfilters{font-size:.74rem;color:var(--accent);background:none;border:none;cursor:pointer;
+  .clearfilters{font-size:var(--fs-meta);color:var(--accent);background:none;border:none;cursor:pointer;
          text-decoration:underline;padding:2px 4px;margin-left:2px}
   .clearfilters:hover{filter:brightness(.85)}
 
   /* Category nav */
   .catnav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px;padding-bottom:12px;
          border-bottom:1px dashed var(--line)}
-  .catnav a{font-size:.73rem;color:var(--accent2);text-decoration:none;border:1px solid var(--line);
+  .catnav a{font-size:var(--fs-meta);color:var(--accent2);text-decoration:none;border:1px solid var(--line);
          background:var(--card);border-radius:999px;padding:4px 10px}
   .catnav a:hover{background:var(--line)}
 
   /* Category groups + result cards */
   .catgroup{margin:20px 0 4px}
-  .cathead{font-size:1.02rem;color:var(--accent);margin:0 0 12px;padding-top:6px;
+  .cathead{font-size:var(--fs-h3);color:var(--accent);margin:0 0 12px;padding-top:6px;
          display:flex;align-items:baseline;gap:9px}
-  .cathead .cn{font-size:.74rem;color:var(--muted);font-weight:600}
+  .cathead .cn{font-size:var(--fs-meta);color:var(--muted);font-weight:600}
 
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);padding:16px 18px;
          box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .15s,border-color .15s;outline:none}
   .card:hover{border-color:var(--gold)}
   .card:focus-visible,.card.active{box-shadow:0 0 0 2px var(--gold),var(--shadow);border-color:var(--gold)}
   /* cards carrying a behavioral facet get the gentle saffron left-border highlight */
   .card.hasfacet{border-left:4px solid var(--saffron)}
-  .card h3{margin:0 0 5px;font-size:1rem;line-height:1.35}
-  .card .cat{font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
+  .card h3{margin:0 0 5px;font-size:var(--fs-h3);line-height:1.35}
+  .card .cat{font-size:var(--fs-micro);text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
          font-weight:700;margin:0 0 8px}
-  .card .summary{font-size:.9rem;color:var(--ink);margin:0 0 10px}
+  .card .summary{font-size:var(--fs-body);color:var(--ink);margin:0 0 10px}
   .card .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
-  .tag{display:inline-block;font-size:.7rem;padding:2px 9px;border-radius:999px;border:1px solid var(--line);
+  .tag{display:inline-block;font-size:var(--fs-micro);padding:2px 9px;border-radius:999px;border:1px solid var(--line);
          background:var(--bg);color:var(--ink)}
   .tag.facet{background:var(--tint-gold);color:var(--gold-ink);border-color:var(--tint-gold-line);font-weight:600}
   .card .body{display:none;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
-         font-size:.9rem;color:var(--ink);line-height:1.6}
+         font-size:var(--fs-body);color:var(--ink);line-height:1.6}
   .card.open .body{display:block}
   mark{background:var(--tint-warm);color:var(--accent);padding:0 2px;border-radius:3px}
 
-  .empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:.95rem}
-  .empty .big{font-size:1.6rem;margin-bottom:8px}
+  .empty{text-align:center;color:var(--muted);padding:40px 16px;font-size:var(--fs-body)}
+  .empty .big{font-size:var(--fs-title);margin-bottom:8px}
   .empty .serif{font-family:Georgia,serif;font-style:italic}
 
-  .loaderr{background:var(--err-bg);border-left:4px solid var(--accent);padding:14px 18px;border-radius:10px;
-         font-size:.92rem;margin:22px 0}
+  .loaderr{background:var(--err-bg);border-left:4px solid var(--accent);padding:14px 18px;border-radius:var(--r-btn);
+         font-size:var(--fs-body);margin:22px 0}
 
-  footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:34px;padding:0 16px}
+  footer{text-align:center;color:var(--muted);font-size:var(--fs-meta);margin-top:34px;padding:0 16px}
   footer a{color:var(--accent2);text-decoration:none}
   footer a:hover{text-decoration:underline}
 
-  .kbd{font-size:.7rem;border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--card);color:var(--muted)}
+  .kbd{font-size:var(--fs-micro);border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--card);color:var(--muted)}
 
   @media(max-width:520px){
     .cards{grid-template-columns:1fr}
     header .back{position:static;display:inline-block;margin-bottom:10px}
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('lifeos_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/shared.js"></script>
 </head>
 <body>
-<!-- Ported floating dock (nav back to the dashboard + page group) -->
-<nav id="dock" class="dock" aria-label="Quick navigation">
-  <div class="dock-sync">
-    <a class="dock-btn" href="index.html" title="Open the dashboard"><span class="status-dot"></span> <span class="dock-label">Dashboard</span></a>
-  </div>
-  <div class="dock-sep" role="presentation"></div>
-  <div class="dock-nav">
-    <a class="dock-btn" href="index.html#hero" title="The one thing">🎯 <span class="dock-label">One thing</span></a>
-    <a class="dock-btn" href="index.html#work" title="This week">🗓️ <span class="dock-label">This week</span></a>
-    <a class="dock-btn" href="index.html#daily" title="Daily">🔁 <span class="dock-label">Daily</span></a>
-    <a class="dock-btn" href="index.html#reflect" title="Reflect">🪞 <span class="dock-label">Reflect</span></a>
-    <a class="dock-btn" href="index.html#finance" title="Finance">💰 <span class="dock-label">Finance</span></a>
-    <a class="dock-btn" href="index.html#vision" title="Vision">🌅 <span class="dock-label">Vision</span></a>
-  </div>
-  <div class="dock-sep" role="presentation"></div>
-  <div class="dock-pages">
-    <a class="dock-btn" href="anchor.html" title="Inner OS — The Anchor">⚓ <span class="dock-label">Inner OS</span></a>
-    <a class="dock-btn" href="knowledge.html" aria-current="page" title="Knowledge Base">📚 <span class="dock-label">Knowledge</span></a>
-  </div>
-</nav>
-<button id="dockFab" class="dock-fab" aria-expanded="false" aria-controls="dock" aria-label="Open navigation">🧭</button>
-<div id="dockScrim" class="dock-scrim" hidden></div>
+
+<nav id="dock" class="dock" aria-label="Quick navigation"></nav>
 
 <header>
   <div class="headwrap">
     <a class="back" href="index.html">← Command Center</a>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle evening mode" title="Toggle evening mode">🌙</button>
+    <button class="theme-toggle theme-toggle--header" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle evening mode" title="Toggle evening mode">🌙</button>
     <h1>📚 About You — Knowledge Base</h1>
     <p class="greet" id="greetLine">Hey, Alex</p>
     <p>Surface one thing. Keep the rest searchable.</p>
@@ -271,11 +182,7 @@
 </div>
 
 <script>
-/* Day / evening theme — shared choice with the Command Center */
-function effectiveTheme(){ return document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'); }
-function updateThemeIcon(){ var b=document.getElementById('themeToggle'); if(!b) return; var d=effectiveTheme()==='dark'; b.textContent=d?'☀️':'🌙'; b.title=d?'Switch to day':'Switch to evening'; }
-function toggleTheme(){ var n=effectiveTheme()==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); try{localStorage.setItem('lifeos_theme',n);}catch(e){} updateThemeIcon(); }
-updateThemeIcon();
+LifeOS.init({page:'knowledge'});
 /* =======================================================================
    About You — Knowledge Base search UI. Self-contained; loads kb-data.json
    from the same directory (Vercel serves only dashboard/).
@@ -645,17 +552,6 @@ qInput.addEventListener('input', () => {
 });
 $('#clr').addEventListener('click', () => { qInput.value=''; $('#clr').classList.remove('show'); render(); qInput.focus(); });
 
-/* ---- Ported dock: mobile FAB / bottom-sheet ---- */
-(function(){
-  var dock=document.getElementById('dock'), fab=document.getElementById('dockFab'), scrim=document.getElementById('dockScrim');
-  if(!dock||!fab) return;
-  function open(){ dock.classList.add('open'); fab.setAttribute('aria-expanded','true'); if(scrim) scrim.hidden=false; var f=dock.querySelector('.dock-btn'); if(f) f.focus(); }
-  function close(){ if(!dock.classList.contains('open')) return; dock.classList.remove('open'); fab.setAttribute('aria-expanded','false'); if(scrim) scrim.hidden=true; fab.focus(); }
-  fab.addEventListener('click', function(){ dock.classList.contains('open')?close():open(); });
-  if(scrim) scrim.addEventListener('click', close);
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  dock.addEventListener('click', function(e){ if(e.target.closest('a')) close(); });
-})();
 </script>
 </body>
 </html>
