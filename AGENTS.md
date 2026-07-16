@@ -95,6 +95,30 @@ That's the whole swap — a ~10-minute edit.
 6. **Privacy first.** A personal LifeOS holds sensitive detail (finances, relationships, IDs). The public repo is the clean template; the owner's instance lives in a **private** repo, and personal config + data JSON are committed only there. Any hosted personal dashboard should sit behind access protection or be treated as public. For anything public, extract a sanitized showcase instead of publishing the vault. <!-- lifeos:fill --> add any owner-specific privacy rules.
 7. **Self-describing on purpose.** Any session can get oriented from `CLAUDE.md` → `AGENTS.md` → `00_START_HERE.md` → `06_Trackers/`. Keep that chain accurate.
 
+## Verification — prove a change works before you call it done
+
+Give yourself a check you can run; without one, the human becomes your test loop.
+
+**The command: `npm test`.** It chains three checks and CI runs exactly this on every push and
+PR (`.github/workflows/ci.yml`):
+
+| Command | Proves |
+|---|---|
+| `npm run validate` | Every `dashboard/*.json` matches its schema in `schemas/`, and every task/KB `area` is a real code from the config. |
+| `npm run check-links` | Every relative Markdown link resolves. Run after touching any doc. |
+| `npm run test:unit` | The Notion sync mapping and auth gate. |
+
+`bash scripts/pii-scan.sh .` runs as its own CI job (`.github/workflows/pii-scan.yml`) — **run
+it before pushing; this is a public template and secrets must never land in it.**
+
+The dashboard has **no build step**: for a UI change, open `dashboard/index.html` (or
+`python3 -m http.server`) and *look at it*. Nothing compiles; there is no dev server to wait on.
+
+Build-level work for this template is queued in [`TODOS.md`](TODOS.md); when a session dies
+mid-task, its trace and the friction log live in [`worksheets/`](worksheets/) so the next one
+can finish it. This is a lightweight, harness-agnostic version of the agentic working pattern —
+adopt as much of it as your own workflow wants.
+
 ## Sync
 
 - Source of truth is this Git repo. Optionally mirror to Notion and/or host `dashboard/` (see `04_AI_Workflow/` and `api/`).
