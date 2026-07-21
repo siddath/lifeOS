@@ -151,6 +151,27 @@ The palette (§1) is untouched; **Courtyard** is the motion and ambience layer t
 ### localStorage keys (all additive)
 `lifeos_theme` · `lifeos_composer_last_area` · `lifeos_quote_favs` · `lifeos_quote_filter` · `lifeos_quote_id`. **Mission checkbox keys are namespaced by the full mission `slug`** (e.g. `launch-week:w1`), so ticks never carry across mission swaps.
 
+### 2026-07 (later): Temple Courtyard, Lamps Lit
+
+The palette (§1) is untouched — this pass is restraint, not redecoration. Dusk has deepened since the revamp above; the diyas are lit. In lamplight only the essential is visible, so this pass's rule was **premium is what you remove**: one hero statement instead of a stack of hero copy, one home for the quote instead of a hero-zone tenant, maintenance surfaces collapsed behind `<details>` until asked for, emoji halved so the ones that remain still mean something, a spacing scale (`--sp-1`…`--sp-5`, `--section-gap`) replacing ad-hoc inline margins, and a shorter reveal-on-scroll lift (14px → 8px) so motion arrives rather than announces itself.
+
+**Widget names** — the vocabulary for talking about dashboard surfaces without re-describing them each time. Forks are welcome to rename the vocabulary; nothing downstream depends on these names.
+
+| Name | Widget |
+|---|---|
+| The Rail | The floating left dock (primary nav + sync surface) |
+| The Vaasal | The greeting band — his own language, before the mission |
+| The Sanctum | The hero one-thing card |
+| The Gopuram | The countdown to the mission gate |
+| The Inscription | The daily-wisdom quote card |
+| The Slate | The task composer (type a title, chips are optional) |
+| The Kolam | The habit grid / weekly matrix |
+| The Prakaram Arc | The 4-week planner, now collapsed behind `<details>` |
+| The Sandhi | The backup & sync zone (Notion, export/import) |
+| The Lintels | The `.section-head` pattern — one emoji, a title, an eyebrow |
+| The Aarti | The daily-review stepper — four small steps, then rest |
+| The Kannadi | The Personality Mirror |
+
 ---
 
 ## 9. Reviewer checklist — "does it feel like Hearth?"

@@ -44,6 +44,10 @@
   --r-lg:18px;           /* hero cards */
   --r-card:16px;         /* cards, dock, search box */
   --r-btn:10px;          /* buttons, inputs, small blocks */
+
+  /* Spacing scale — Temple Courtyard, Lamps Lit. Use these, not raw px margins. */
+  --sp-1:6px; --sp-2:10px; --sp-3:16px; --sp-4:24px; --sp-5:36px;
+  --section-gap:var(--sp-5);
 }
 /* Evening: the same warm-lit world after dark — deep espresso + brightened terracotta, never a cold invert */
 :root[data-theme="dark"]{

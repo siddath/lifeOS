@@ -162,6 +162,7 @@ It's meant for people who over-plan under pressure — who generate more meaning
 - [docs/connectors/notion.md](docs/connectors/notion.md) — optional Notion two-way sync, step by step
 - [schemas/README.md](schemas/README.md) — the data contract, file by file
 - [DEMO_DATA.md](DEMO_DATA.md) — the placeholder convention
+- [docs/INHERITANCE.md](docs/INHERITANCE.md) — how this template inherits functionality (never content) from its private upstream
 - [docs/ROADMAP.md](docs/ROADMAP.md) — built now vs. planned
 
 ## Contributing
