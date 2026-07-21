@@ -28,7 +28,7 @@
          opacity:.82;font-weight:700;margin-bottom:6px;position:relative}
 
   /* Section rhythm + headers */
-  .section{scroll-margin-top:72px;margin:30px 0 0}
+  .section{scroll-margin-top:72px;margin:var(--section-gap) 0 0}
   .section-head{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;padding-bottom:6px;
          border-bottom:1px dashed var(--line);flex-wrap:wrap}
   .section-head h2{margin:0;font-size:var(--fs-h2);letter-spacing:.2px;display:flex;align-items:center;gap:8px}
@@ -42,7 +42,7 @@
   .mission{text-align:center;color:var(--muted);font-size:var(--fs-body);margin:4px 0 22px}
 
   /* Hero: the one thing */
-  .hero-one{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);
+  .hero-one{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
          border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow);max-width:900px;margin:0 auto 16px}
   .hero-one .one-tag{font-size:var(--fs-micro);font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
   .hero-one .one-do{font-size:var(--fs-lead);font-weight:700;margin:6px 0 4px;line-height:1.35}
@@ -75,17 +75,14 @@
   .links a{color:var(--accent2);text-decoration:none;font-size:var(--fs-body)}
   .links a:hover{text-decoration:underline}
 
-  /* Calming reframe strip (saffron/gold, gentle — never an alarm) */
-  .reframe{background:var(--reframe-bg);border-left:4px solid var(--gold);padding:12px 16px;border-radius:var(--r-btn);
-        font-family:var(--serif);font-style:italic;color:var(--ink);opacity:.92;font-size:var(--fs-body);margin:0 auto 18px;max-width:900px}
-
   /* Collapsible maintenance / after-Saturday zone */
   details.zone{background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow);
         margin:0 0 16px;overflow:hidden}
   details.zone > summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;
         font-size:var(--fs-h3);font-weight:700;user-select:none}
   details.zone > summary::-webkit-details-marker{display:none}
-  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:var(--fs-sub);transition:transform .2s;flex:none}
+  details.zone > summary .chev{margin-left:auto;color:var(--muted);font-size:var(--fs-sub);flex:none}
+  html.motion-ok details.zone > summary .chev{transition:transform .2s}
   details.zone[open] > summary .chev{transform:rotate(90deg)}
   details.zone > summary:hover{background:var(--rule-bg)}
   details.zone > summary .zsub{font-weight:500;color:var(--muted);font-size:var(--fs-meta)}
@@ -258,17 +255,11 @@
   :root[data-daypart="night"]{--ambient-a:rgba(31,111,92,.08);--ambient-b:rgba(74,55,40,.09)}
 
   /* Reveal-on-scroll — hidden state applied ONLY when JS adds .js-reveal-ready, and only under motion-ok,
-     so content is always visible with JS off or Reduce Motion on. One-way (observer unobserves after reveal). */
-  html.motion-ok [data-reveal].js-reveal-ready{opacity:0;transform:translateY(14px);
+     so content is always visible with JS off or Reduce Motion on. One-way (observer unobserves after reveal).
+     Lamps-lit pass: a restrained 8px lift, not a 14px swoop — the light arrives, it doesn't announce itself. */
+  html.motion-ok [data-reveal].js-reveal-ready{opacity:0;transform:translateY(8px);
     transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
   html.motion-ok [data-reveal].js-reveal-ready.in{opacity:1;transform:none}
-
-  /* Section-active gold underline (driven by the existing IntersectionObserver) */
-  .section-head{position:relative}
-  .section-head::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;
-    background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;
-    transition:transform var(--dur-2) var(--ease)}
-  .section-active .section-head::after{transform:scaleX(1)}
 
   /* Diya micro-interactions — one-shot gold glow on completion; press feedback on controls */
   @keyframes diyaGlow{0%{box-shadow:0 0 0 0 rgba(201,162,75,.55)}100%{box-shadow:0 0 0 12px rgba(201,162,75,0)}}
@@ -352,7 +343,7 @@
 <body>
 <div id="ambient" aria-hidden="true"></div>
 
-
+<!-- The Rail: always-available navigation + live sync surface (rail on desktop, FAB->sheet on mobile) -->
 <nav id="dock" class="dock" aria-label="Quick navigation and sync"></nav>
 
 <nav class="topnav" aria-label="Section navigation">
@@ -363,6 +354,7 @@
   </div>
 </nav>
 
+<!-- The Vaasal: the threshold — his own language, before the mission -->
 <div class="greeting">
   <div class="wrap greeting-inner">
     <span class="greet-hi" id="greetHi">Hey, Alex</span>
@@ -381,9 +373,10 @@
 
   <!-- ============ HERO ZONE: the one thing ============ -->
   <section id="hero" class="section" style="margin-top:0" aria-label="The one thing">
+    <!-- The Gopuram: the gate you're walking toward, counted down -->
     <div class="countdown" id="countdown"></div>
-    <p class="mission" id="heroMission">Finished, not perfect. One block a day beats a weekend binge.</p>
 
+    <!-- The Sanctum: the one thing, and nothing else, lit -->
     <div class="hero-one">
       <div class="one-tag" id="heroOneTag">🎯 The one thing right now</div>
       <p class="one-do" id="heroOneDo">Do today's single build block — one feature or one fix — and ship it.</p>
@@ -393,42 +386,13 @@
 
     <div class="rule" id="heroRule">⏱️ <strong>This month's rule:</strong> every build day, one honest block beats a perfect plan. <em>Did I ship one real thing today?</em> If yes, that day counts. Always-OK: Sam · sleep · food · health · the day job.</div>
 
-    <div class="reframe" id="heroReframe">Think once → Build → Measure → Improve. Shipped things are evidence. Log them, don't just plan them.</div>
-
     <div class="progress"><div id="progbar"></div></div>
     <p class="mission" id="progtext">0% of tracked items done</p>
-
-    <!-- Daily Wisdom -->
-    <div class="quote-card" id="quoteCard">
-      <blockquote class="q-text"></blockquote>
-      <div class="q-author"></div>
-      <div class="q-tradition" id="qTradition"></div>
-      <div class="q-controls">
-        <button class="q-icon" id="qFav" onclick="toggleFav()" aria-pressed="false" title="Save to favorites" aria-label="Save to favorites">♡</button>
-        <button class="q-icon" id="qShare" onclick="shareQuote()" title="Share this quote" aria-label="Share this quote">↗ Share</button>
-        <div class="q-filter-wrap">
-          <button class="q-icon" id="qFilterBtn" onclick="toggleFilterPop()" aria-expanded="false" aria-haspopup="true" title="Filter by theme" aria-label="Filter quotes by theme">Filter ▾</button>
-          <div class="q-filter-pop" id="qFilterPop" hidden role="menu" aria-label="Quote themes"></div>
-        </div>
-        <button class="q-next" onclick="nextQuote()">Next wisdom →</button>
-      </div>
-      <span class="q-toast" id="qToast" hidden></span>
-    </div>
-
-    <!-- Sync bar: dashboard <-> Notion -->
-    <div class="syncbar">
-      <span class="st">🔄 Sync</span>
-      <span class="status-pill" aria-live="polite"><span class="status-dot" id="statusDot" data-sync-dot></span><span id="statusText" data-sync-text>Local only</span></span>
-      <a class="sync-btn primary" id="openNotionBtn" href="#" target="_blank" rel="noopener" hidden>Open Notion</a>
-      <button class="sync-btn" onclick="setSyncSecret()" title="Set the sync key that matches SYNC_SHARED_SECRET on your deployment">🔑 Sync key</button>
-      <button class="sync-btn" onclick="exportState()">💾 Export backup</button>
-      <button class="sync-btn" onclick="importState()">📥 Import backup</button>
-      <span class="sync-msg" id="syncMsg">Edits to Tasks/Habits below queue an automatic sync to Notion · see <a href="../docs/connectors/notion.md">setup guide</a>.</span>
-    </div>
   </section>
 
   <!-- ============ ACTIVE WORK: this week ============ -->
   <section id="work" class="section" aria-label="This week's work">
+    <!-- The Lintels: one section-head pattern, repeated per section — one emoji, a title, an eyebrow line -->
     <div class="section-head">
       <h2>🗓️ This week — the work that moves the mission</h2>
       <span class="eyebrow">Tasks, habits and the day-by-day plan. Start at the top; one block at a time.</span>
@@ -437,9 +401,10 @@
 
     <!-- Live Task Manager -->
     <div class="card" style="grid-column:1/-1">
-      <h2>✏️ Tasks <span class="pill found">live · syncs to Notion</span></h2>
+      <h2>Tasks <span class="pill found">live · syncs to Notion</span></h2>
       <p class="sub">Add, edit, re-prioritize below. Every change queues an automatic sync to your Notion Tasks DB.</p>
       <div id="taskList"></div>
+      <!-- The Slate: type a title, walk away — the chips are for when you want more -->
       <div class="composer" id="taskComposer">
         <div class="composer-main">
           <input type="text" id="taskQuickAdd" placeholder="Add a task — just type the title…" aria-label="New task title" autocomplete="off">
@@ -454,21 +419,28 @@
       </div>
     </div>
 
-    <!-- Live Habit Tracker -->
+    <!-- The Kolam: the week's matrix, filled in one dot (day) at a time -->
     <div class="card" style="grid-column:1/-1">
-      <h2>🔁 Habits <span class="pill found">live · syncs to Notion</span></h2>
+      <h2>Habits <span class="pill found">live · syncs to Notion</span></h2>
       <p class="sub">This week's matrix. ★ = keystone habit. Click a day letter to toggle it.</p>
       <div id="habitList"></div>
       <div class="ed-addrow">
         <input type="text" id="habitQuickAdd" placeholder="Add a new habit… Enter to add">
         <button onclick="addHabitFromQuickAdd()">+ Add</button>
       </div>
-      <div id="habitHistory" class="ed-hint" style="margin-top:10px"></div>
+      <div id="habitHistory" class="ed-hint" style="margin-top:var(--sp-2)"></div>
     </div>
 
-    <!-- Week planner (rendered from mission.json; static markup below is the offline fallback) -->
-    <div class="card" style="grid-column:1/-1">
-      <h2 id="heroWeekTitle">🗓️ The Week — Mon → Sat</h2>
+    <!-- The Prakaram Arc: the week planner, rendered from mission.json (static markup below is the offline fallback) -->
+    <details class="zone" style="grid-column:1/-1">
+      <summary>
+        🗓️ The 4-week arc — one theme per week
+        <span class="zsub">Tick as you go (saves on this device)</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+    <div class="card">
+      <h2 id="heroWeekTitle">The Week — Mon → Sat</h2>
       <p class="sub" id="heroWeekSub">One theme per day. Tick as you go (saves on this device).</p>
       <div class="grid" id="weekGrid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
         <div class="day">
@@ -513,6 +485,8 @@
         </div>
       </div>
     </div>
+      </div><!-- /zone-body -->
+    </details>
 
   </div><!-- /work grid -->
   </section>
@@ -527,7 +501,7 @@
 
     <!-- Daily non-negotiables -->
     <div class="card">
-      <h2>🔁 Daily Non-Negotiables <span class="pill hero">protect these</span></h2>
+      <h2>Daily Non-Negotiables <span class="pill hero">protect these</span></h2>
       <p class="sub">Reset these each morning</p>
       <ul class="check" data-group="daily">
         <li><input type="checkbox" id="d1"><label for="d1">20–30 min walk</label></li>
@@ -544,7 +518,7 @@
 
     <!-- Health Protocol -->
     <div class="card">
-      <h2>💪 Health Protocol <span class="pill found">ongoing</span></h2>
+      <h2>Health Protocol <span class="pill found">ongoing</span></h2>
       <p class="sub">Build muscle, move daily, sleep right — layer in one at a time</p>
       <ul class="check" data-group="health">
         <li><input type="checkbox" id="h1"><label for="h1">Workout (dumbbells / pull-up bar / calisthenics)</label></li>
@@ -570,9 +544,26 @@
     </div>
     <div class="grid">
 
-      <!-- Personality Mirror -->
+      <!-- The Inscription: the daily-wisdom quote card -->
+      <div class="quote-card" id="quoteCard">
+        <blockquote class="q-text"></blockquote>
+        <div class="q-author"></div>
+        <div class="q-tradition" id="qTradition"></div>
+        <div class="q-controls">
+          <button class="q-icon" id="qFav" onclick="toggleFav()" aria-pressed="false" title="Save to favorites" aria-label="Save to favorites">♡</button>
+          <button class="q-icon" id="qShare" onclick="shareQuote()" title="Share this quote" aria-label="Share this quote">↗ Share</button>
+          <div class="q-filter-wrap">
+            <button class="q-icon" id="qFilterBtn" onclick="toggleFilterPop()" aria-expanded="false" aria-haspopup="true" title="Filter by theme" aria-label="Filter quotes by theme">Filter ▾</button>
+            <div class="q-filter-pop" id="qFilterPop" hidden role="menu" aria-label="Quote themes"></div>
+          </div>
+          <button class="q-next" onclick="nextQuote()">Next wisdom →</button>
+        </div>
+        <span class="q-toast" id="qToast" hidden></span>
+      </div>
+
+      <!-- The Kannadi: the personality mirror -->
       <div class="card">
-        <h2>🪞 Personality Mirror</h2>
+        <h2>Personality Mirror</h2>
         <p class="sub">A calm nudge — a strength to lean on, a pattern to watch, an anchor to remember.</p>
         <div class="mirror-meta"><span class="mirror-kind" id="mirrorKind">remember</span></div>
         <blockquote class="mirror-quote" id="mirrorText">…</blockquote>
@@ -584,8 +575,9 @@
       </div>
 
       <!-- Daily Review -->
+      <!-- The Aarti: the daily-review stepper — four small steps, then rest -->
       <div class="card" style="grid-column:auto">
-        <h2>🌙 Daily Review <span class="pill found" id="drDate">today</span></h2>
+        <h2>Daily Review <span class="pill found" id="drDate">today</span></h2>
 
         <!-- Resting state (default) — short and calm; the form lives behind "Begin" -->
         <div id="drRest">
@@ -645,7 +637,7 @@
           </div>
         </div>
 
-        <span class="sync-msg" id="drMsg" style="display:block;margin-top:10px"></span>
+        <span class="sync-msg" id="drMsg" style="display:block;margin-top:var(--sp-2)"></span>
       </div>
 
     </div>
@@ -661,7 +653,7 @@
 
       <!-- Portfolio (broker) -->
       <div class="card" style="grid-column:1/-1">
-        <h2>📈 Portfolio <span class="pill maint" id="finSource">Broker</span></h2>
+        <h2>Portfolio <span class="pill maint" id="finSource">Broker</span></h2>
         <p class="sub" id="finUpdated">Loading…</p>
         <div id="finConnect"></div>
         <div class="fin-summary" id="finSummary"></div>
@@ -670,20 +662,20 @@
 
       <!-- Net worth -->
       <div class="card">
-        <h2>🏦 Net Worth</h2>
+        <h2>Net Worth</h2>
         <p class="sub">Assets − liabilities. Update at the monthly review.</p>
         <div id="netWorth"></div>
       </div>
 
       <!-- Budget -->
       <div class="card">
-        <h2>🧾 Monthly Budget <span class="pill found" id="budgetMonth"></span></h2>
+        <h2>Monthly Budget <span class="pill found" id="budgetMonth"></span></h2>
         <p class="sub">Give every dollar a job.</p>
         <div id="budgetList"></div>
       </div>
 
     </div>
-    <p class="mission" style="margin-top:10px">Connect live data: see the <a href="../docs/connectors/README.md">broker connector guide</a>. Capital-protection first — this view is for awareness, not trading impulses.</p>
+    <p class="mission" style="margin-top:var(--sp-2)">Connect live data: see the <a href="../docs/connectors/README.md">broker connector guide</a>. Capital-protection first — this view is for awareness, not trading impulses.</p>
   </section>
 
   <!-- ============ AFTER SATURDAY: collapsed by default ============ -->
@@ -704,39 +696,39 @@
 
     <!-- Side project cards -->
     <div class="card">
-      <h2>🌱 Side projects <span class="pill maint">maintenance</span></h2>
+      <h2>Side projects <span class="pill maint">maintenance</span></h2>
       <p class="sub">Alive, not abandoned — one tiny artifact each</p>
       <ul class="check" data-group="life">
-        <li><input type="checkbox" id="l1"><label for="l1">📓 Fieldnotes: write one changelog entry</label></li>
-        <li><input type="checkbox" id="l2"><label for="l2">🏺 Pottery: photograph this week's pieces</label></li>
-        <li><input type="checkbox" id="l3"><label for="l3">❤️ Tell family about the launch plan</label></li>
-        <li><input type="checkbox" id="l4"><label for="l4">📷 5–10 casual photos (no pressure)</label></li>
+        <li><input type="checkbox" id="l1"><label for="l1">Fieldnotes: write one changelog entry</label></li>
+        <li><input type="checkbox" id="l2"><label for="l2">Pottery: photograph this week's pieces</label></li>
+        <li><input type="checkbox" id="l3"><label for="l3">Tell family about the launch plan</label></li>
+        <li><input type="checkbox" id="l4"><label for="l4">5–10 casual photos (no pressure)</label></li>
       </ul>
     </div>
 
     <!-- Ventures: Pottery + Learning -->
     <div class="card">
-      <h2>🚀 Ventures <span class="pill maint">after launch</span></h2>
+      <h2>Ventures <span class="pill maint">after launch</span></h2>
       <p class="sub">Weekend Pottery build-out + a learning goal</p>
       <ul class="check" data-group="ventures">
-        <li><input type="checkbox" id="v1"><label for="v1">🏺 Pottery: price + list 5 pieces online</label></li>
-        <li><input type="checkbox" id="v2"><label for="v2">🏺 Restock studio supplies</label></li>
-        <li><input type="checkbox" id="v3"><label for="v3">🤝 Reach out to one local market/fair</label></li>
-        <li><input type="checkbox" id="v4"><label for="v4">📚 Learning: finish the current course module</label></li>
-        <li><input type="checkbox" id="v5"><label for="v5">📚 Build one small demo from what you learned</label></li>
+        <li><input type="checkbox" id="v1"><label for="v1">Pottery: price + list 5 pieces online</label></li>
+        <li><input type="checkbox" id="v2"><label for="v2">Restock studio supplies</label></li>
+        <li><input type="checkbox" id="v3"><label for="v3">Reach out to one local market/fair</label></li>
+        <li><input type="checkbox" id="v4"><label for="v4">Learning: finish the current course module</label></li>
+        <li><input type="checkbox" id="v5"><label for="v5">Build one small demo from what you learned</label></li>
       </ul>
     </div>
 
     <!-- Family & Sam -->
     <div class="card">
-      <h2>❤️ Family & Sam <span class="pill found">after launch</span></h2>
+      <h2>Family &amp; Sam <span class="pill found">after launch</span></h2>
       <p class="sub">Concrete plans, not vague "spend time"</p>
       <ul class="check" data-group="family">
-        <li><input type="checkbox" id="f1"><label for="f1">🍽️ Special dinner with Sam (plan it)</label></li>
-        <li><input type="checkbox" id="f2"><label for="f2">🚗 Weekend visit to family</label></li>
-        <li><input type="checkbox" id="f3"><label for="f3">📞 Weekly call with parents</label></li>
-        <li><input type="checkbox" id="f4"><label for="f4">📄 Renew the apartment lease</label></li>
-        <li><input type="checkbox" id="f5" checked><label for="f5">✅ Booked the anniversary trip (done)</label></li>
+        <li><input type="checkbox" id="f1"><label for="f1">Special dinner with Sam (plan it)</label></li>
+        <li><input type="checkbox" id="f2"><label for="f2">Weekend visit to family</label></li>
+        <li><input type="checkbox" id="f3"><label for="f3">Weekly call with parents</label></li>
+        <li><input type="checkbox" id="f4"><label for="f4">Renew the apartment lease</label></li>
+        <li><input type="checkbox" id="f5" checked><label for="f5">Booked the anniversary trip (done)</label></li>
       </ul>
     </div>
 
@@ -780,7 +772,7 @@
     <div class="grid">
 
       <div class="card">
-        <h2>🌅 One-Year Vision <span class="pill found">Jul '26 → Jul '27</span></h2>
+        <h2>One-Year Vision <span class="pill found">Jul '26 → Jul '27</span></h2>
         <p class="sub">60–75% execution of this = a massive portion of the life goals already alive.</p>
         <ul class="check" style="list-style:none;margin:0;padding:0">
           <li style="border-bottom:1px dashed var(--line);padding:6px 0">💼 A role with better balance and room to build</li>
@@ -789,22 +781,22 @@
           <li style="border-bottom:1px dashed var(--line);padding:6px 0">🤖 A serious builder portfolio</li>
           <li style="padding:6px 0">🧘 Fewer panic/regret loops · calmer daily rhythm</li>
         </ul>
-        <p class="links" style="margin:10px 0 0">📖 <a href="../02_Areas/one_year_vision.template.md">Full one-year vision + month-by-month themes</a></p>
+        <p class="links" style="margin:var(--sp-2) 0 0">📖 <a href="../02_Areas/one_year_vision.template.md">Full one-year vision + month-by-month themes</a></p>
       </div>
 
       <div class="card">
-        <h2>🏡 Home Vision <span class="pill maint">5-year</span></h2>
+        <h2>Home Vision <span class="pill maint">5-year</span></h2>
         <p class="sub">The calm version: a home that fits the life, not the other way around.</p>
         <p style="font-size:var(--fs-body);margin:0 0 8px">A place with light and space to work · a small studio for pottery · room for family to stay · low-maintenance and sustainable.</p>
         <p style="font-size:var(--fs-sub);color:var(--muted);margin:0">Big purchases in strict order, one at a time. Don't let nice-to-haves eat the home fund.</p>
-        <p class="links" style="margin:10px 0 0">📖 <a href="../02_Areas/house_vision.template.md">Full home &amp; big-purchase plan</a></p>
+        <p class="links" style="margin:var(--sp-2) 0 0">📖 <a href="../02_Areas/house_vision.template.md">Full home &amp; big-purchase plan</a></p>
       </div>
 
       <div class="card">
-        <h2>🧯 Panic Parking Lot <span class="pill hero">use when spiraling</span></h2>
+        <h2>Panic Parking Lot <span class="pill hero">use when spiraling</span></h2>
         <p class="sub">Write the thought → label it (regret / fear / fantasy / comparison / real task) → convert to one action.</p>
         <blockquote class="mirror-quote" style="min-height:auto">"This is not my final chance. This is one serious attempt. My life is bigger than this event."</blockquote>
-        <p class="links" style="margin:6px 0 0">📖 <a href="../02_Areas/panic_parking_lot.template.md">Open the parking lot + calm evidence folder</a></p>
+        <p class="links" style="margin:var(--sp-1) 0 0">📖 <a href="../02_Areas/panic_parking_lot.template.md">Open the parking lot + calm evidence folder</a></p>
       </div>
 
     </div>
@@ -817,47 +809,109 @@
       <span class="eyebrow">Open a file only when you need it. Everything is written down so you don't have to hold it in your head.</span>
     </div>
 
-    <!-- Quick reference -->
-    <div class="card">
-      <h2>🧠 Quick Reference</h2>
-      <p class="sub">Tap the repo files for detail</p>
-      <div class="links" style="columns:2;column-gap:18px">
+    <details class="zone">
+      <summary>
+        🎯 Focus
+        <span class="zsub">the current mission workspace</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="links" style="columns:2;column-gap:18px">
+          <p>🧭 <a href="../01_Focus/README.md">Focus — the current mission workspace</a></p>
+          <p>📅 <a href="../01_Focus/plan.template.md">Mission plan (template)</a></p>
+        </div>
+      </div>
+    </details>
 
-        <p style="color:var(--accent);font-size:var(--fs-meta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🎯 Focus (current mission)</p>
-        <p>🧭 <a href="../01_Focus/README.md">Focus — the current mission workspace</a></p>
-        <p>📅 <a href="../01_Focus/plan.template.md">Mission plan (template)</a></p>
+    <details class="zone">
+      <summary>
+        🌱 Areas
+        <span class="zsub">north star, vision, wellbeing, parking lot</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="links" style="columns:2;column-gap:18px">
+          <p>🌟 <a href="../02_Areas/north_star.template.md">North Star</a></p>
+          <p>🌅 <a href="../02_Areas/one_year_vision.template.md">One-Year Vision</a></p>
+          <p>🏡 <a href="../02_Areas/house_vision.template.md">Home Vision</a></p>
+          <p>🧯 <a href="../02_Areas/panic_parking_lot.template.md">Panic Parking Lot</a></p>
+          <p>📊 <a href="../02_Areas/life_audit.template.md">Life Audit</a></p>
+          <p>🧘 <a href="../02_Areas/wellbeing_routine.template.md">Wellbeing</a></p>
+          <p>❤️ <a href="../02_Areas/relationships.template.md">Relationships & Family</a></p>
+          <p>🔄 <a href="../02_Areas/routines.template.md">Routines</a></p>
+        </div>
+      </div>
+    </details>
 
-        <p style="color:var(--accent);font-size:var(--fs-meta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🌱 Areas</p>
-        <p>🌟 <a href="../02_Areas/north_star.template.md">North Star</a></p>
-        <p>🌅 <a href="../02_Areas/one_year_vision.template.md">One-Year Vision</a></p>
-        <p>🏡 <a href="../02_Areas/house_vision.template.md">Home Vision</a></p>
-        <p>🧯 <a href="../02_Areas/panic_parking_lot.template.md">Panic Parking Lot</a></p>
-        <p>📊 <a href="../02_Areas/life_audit.template.md">Life Audit</a></p>
-        <p>🧘 <a href="../02_Areas/wellbeing_routine.template.md">Wellbeing</a></p>
-        <p>❤️ <a href="../02_Areas/relationships.template.md">Relationships & Family</a></p>
-        <p>🔄 <a href="../02_Areas/routines.template.md">Routines</a></p>
+    <details class="zone">
+      <summary>
+        📊 Trackers
+        <span class="zsub">tasks, habits, reminders, finance, evidence</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="links" style="columns:2;column-gap:18px">
+          <p>✅ <a href="../06_Trackers/tasks.template.md">Tasks (P1/P2/P3)</a></p>
+          <p>📥 <a href="../06_Trackers/inbox.template.md">Inbox</a></p>
+          <p>🔁 <a href="../06_Trackers/habits.template.md">Habits</a></p>
+          <p>⏰ <a href="../06_Trackers/reminders.template.md">Reminders</a></p>
+          <p>💰 <a href="../06_Trackers/finance.template.md">Finance</a></p>
+          <p>📦 <a href="../06_Trackers/evidence.template.md">Evidence log</a></p>
+        </div>
+      </div>
+    </details>
 
-        <p style="color:var(--accent);font-size:var(--fs-meta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">📊 Trackers</p>
-        <p>✅ <a href="../06_Trackers/tasks.template.md">Tasks (P1/P2/P3)</a></p>
-        <p>📥 <a href="../06_Trackers/inbox.template.md">Inbox</a></p>
-        <p>🔁 <a href="../06_Trackers/habits.template.md">Habits</a></p>
-        <p>⏰ <a href="../06_Trackers/reminders.template.md">Reminders</a></p>
-        <p>💰 <a href="../06_Trackers/finance.template.md">Finance</a></p>
-        <p>📦 <a href="../06_Trackers/evidence.template.md">Evidence log</a></p>
+    <details class="zone">
+      <summary>
+        🚀 Projects
+        <span class="zsub">what you're building alongside the mission</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="links" style="columns:2;column-gap:18px">
+          <p>📓 <a href="../03_Projects/README.md">Your projects</a></p>
+        </div>
+      </div>
+    </details>
 
-        <p style="color:var(--accent);font-size:var(--fs-meta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🚀 Projects</p>
-        <p>📓 <a href="../03_Projects/README.md">Your projects</a></p>
+    <details class="zone">
+      <summary>
+        🤖 AI &amp; Knowledge
+        <span class="zsub">the Anchor, knowledge base, sub-agents, roadmap</span>
+        <span class="chev">▶</span>
+      </summary>
+      <div class="zone-body">
+        <div class="links" style="columns:2;column-gap:18px">
+          <p>⚓ <a href="anchor.html">The Anchor — Inner OS (grounding guide)</a></p>
+          <p>📚 <a href="knowledge.html">About Me / Knowledge Base</a></p>
+          <p>🔧 <a href="../04_AI_Workflow/subagents.md">Sub-agents</a></p>
+          <p>📜 <a href="../04_AI_Workflow/master_prompt.md">Master Prompt</a></p>
+          <p>🔄 <a href="../docs/connectors/notion.md">Notion Sync Setup</a></p>
+          <p>🗺️ <a href="../docs/ROADMAP.md">Roadmap</a></p>
+        </div>
+      </div>
+    </details>
+  </section>
 
-        <p style="color:var(--accent);font-size:var(--fs-meta);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px">🤖 AI &amp; Knowledge</p>
-        <p>⚓ <a href="anchor.html">The Anchor — Inner OS (grounding guide)</a></p>
-        <p>📚 <a href="knowledge.html">About Me / Knowledge Base</a></p>
-        <p>🔧 <a href="../04_AI_Workflow/subagents.md">Sub-agents</a></p>
-        <p>📜 <a href="../04_AI_Workflow/master_prompt.md">Master Prompt</a></p>
-        <p>🔄 <a href="../docs/connectors/notion.md">Notion Sync Setup</a></p>
-        <p>🗺️ <a href="../docs/ROADMAP.md">Roadmap</a></p>
+  <!-- The Sandhi: the meeting-point where local state reaches out to Notion -->
+  <details class="zone" style="margin:var(--section-gap) 0 0">
+    <summary>
+      🪔 Backup &amp; sync
+      <span class="zsub">Local-first — your edits live in this browser until you push them</span>
+      <span class="chev">▶</span>
+    </summary>
+    <div class="zone-body">
+      <div class="syncbar">
+        <span class="st">🔄 Sync</span>
+        <span class="status-pill" aria-live="polite"><span class="status-dot" id="statusDot" data-sync-dot></span><span id="statusText" data-sync-text>Local only</span></span>
+        <a class="sync-btn primary" id="openNotionBtn" href="#" target="_blank" rel="noopener" hidden>Open Notion</a>
+        <button class="sync-btn" onclick="setSyncSecret()" title="Set the sync key that matches SYNC_SHARED_SECRET on your deployment">🔑 Sync key</button>
+        <button class="sync-btn" onclick="exportState()">💾 Export backup</button>
+        <button class="sync-btn" onclick="importState()">📥 Import backup</button>
+        <span class="sync-msg" id="syncMsg">Edits to Tasks/Habits below queue an automatic sync to Notion · see <a href="../docs/connectors/notion.md">setup guide</a>.</span>
       </div>
     </div>
-  </section>
+  </details>
 
   <footer>
     <p class="one-reframe" style="font-family:var(--serif);font-style:italic;color:var(--muted);max-width:640px;margin:0 auto 12px">One hero mission at a time. Do the one thing, stay close to the people you love, sleep well. That is the win.</p>
