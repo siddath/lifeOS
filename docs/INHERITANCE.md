@@ -26,7 +26,8 @@ applications, finances, places, missions, tasks, habits, journals, audits. Ports
      pushed (its patterns are themselves sensitive, so the list lives upstream — by design this
      repo cannot see it, only require that it ran);
    - this repo's **generic scan** (`scripts/pii-scan.sh`) runs locally and in CI on every push —
-     tokens, emails, UUIDs, binaries.
+     tokens, emails, UUIDs/raw 32-hex identifiers, concrete Notion page URLs, binaries. Missing
+     targets and content/binary scan errors fail closed instead of returning a clean result.
 4. PR → CI green → merge. **A merge here is a deployment** — the Vercel demo redeploys from
    `main` — so merges get production discipline.
 

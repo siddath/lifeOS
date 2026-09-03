@@ -4,14 +4,20 @@
 # (a personal deny-list would itself be sensitive and lives only in the private repo).
 set -u
 ROOT="${1:-.}"
+[ -d "$ROOT" ] || { echo "pii-scan: target directory not found: $ROOT"; exit 2; }
 fail=0
 hit() { echo "PII/secret red flag ($1):"; echo "$2"; fail=1; }
 
 scan() { # pattern, label
-  local out
+  local out scan_status
   out=$(grep -rInE "$1" "$ROOT" \
     --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.vercel \
     --exclude=pii-scan.sh 2>/dev/null)
+  scan_status=$?
+  if [ "$scan_status" -gt 1 ]; then
+    hit "scan error: $2" "recursive content scan failed; refusing to report clean"
+    return 0
+  fi
   [ -n "$out" ] && hit "$2" "$out"
 }
 
@@ -20,13 +26,18 @@ scan 'secret_[A-Za-z0-9]{16,}'                                     'Notion secre
 scan 'ntn_[A-Za-z0-9]{16,}'                                        'Notion token'
 scan 'sk-ant-[A-Za-z0-9-]{8,}'                                     'Anthropic API key'
 scan 'sk-[A-Za-z0-9]{20,}'                                         'generic API key'
-scan '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' 'UUID (possible Notion id)'
-scan 'app\.notion\.com|notion\.so/[0-9a-f]{16,}'                   'Notion workspace URL/id'
+scan '[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}' 'UUID (possible Notion id)'
+scan 'app\.notion\.com|([[:alnum:]-]+\.)?notion\.(so|site)/[^[:space:])>]*[[:xdigit:]]{32}([^[:xdigit:]]|$)' 'Notion workspace URL/id'
+scan '(^|[^[:xdigit:]])[[:xdigit:]]{32}([^[:xdigit:]]|$)'           'raw 32-hex identifier (possible Notion id)'
 scan 'Bearer [A-Za-z0-9._-]{16,}'                                  'bearer token'
 
 # Binaries that should never ship
-if find "$ROOT" -path "$ROOT/.git" -prune -o \( -name '*.pdf' -o -name '*.docx' -o -name '*.tex' \) -print 2>/dev/null | grep -q .; then
-  hit 'binary docs' "$(find "$ROOT" -path "$ROOT/.git" -prune -o \( -name '*.pdf' -o -name '*.docx' -o -name '*.tex' \) -print)"
+binary_out=$(find "$ROOT" -path "$ROOT/.git" -prune -o \( -name '*.pdf' -o -name '*.docx' -o -name '*.tex' \) -print 2>/dev/null)
+binary_status=$?
+if [ "$binary_status" -ne 0 ]; then
+  hit 'scan error: binary enumeration' 'binary scan failed; refusing to report clean'
+elif [ -n "$binary_out" ]; then
+  hit 'binary docs' "$binary_out"
 fi
 
 if [ "$fail" -eq 0 ]; then echo "pii-scan: clean ✅"; fi
