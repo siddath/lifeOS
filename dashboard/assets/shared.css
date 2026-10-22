@@ -89,6 +89,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;
      padding:0 0 64px;transition:background .4s ease,color .4s ease}
+a{color:var(--accent2);text-underline-offset:.16em}
 :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}

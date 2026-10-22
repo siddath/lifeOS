@@ -31,7 +31,7 @@ The agent should treat this section as the standing context for every session. W
 
 ## The operating principle
 
-The whole system exists to move `{{owner}}` from *Think → Plan → Improve the plan → Think again* to **Think once → Build → Measure → Improve.**
+LifeOS offers **Think once → Build → Measure → Improve** as one possible working method. The owner decides whether it helps.
 
 The default method encourages a small, reviewable artifact when that serves the owner's goal. Rest, exploration, maintenance and a well-considered decision can also be valid outcomes. The owner chooses the pace and can change this method.
 
@@ -42,7 +42,7 @@ The default method encourages a small, reviewable artifact when that serves the 
 The dashboard has **one** hero mission slot. It is a focus aid, not a rule about how the owner must live; they decide what else needs attention.
 
 - The hero renders entirely from `dashboard/mission.json` (see the lifecycle below). Nothing else hardcodes it.
-- If a task doesn't serve the active mission, it goes to the parking lot — **except** the always-OK basics: relationship/family time, sleep, food, health, and unavoidable admin. Those are never parked.
+- Offer a parking lot for unrelated work when the owner wants help narrowing focus. Never postpone a requested commitment or basic need solely because it falls outside the mission.
 - When the owner asks for help keeping a narrow focus, offer to park unrelated work. They decide what to pursue.
 
 ## File map
@@ -80,15 +80,15 @@ The dashboard hero (header, countdown, one-thing, week planner, evidence) render
 
 1. **Snapshot the old mission.** Copy the current `dashboard/mission.json` to `archive/mission_<old-slug>.json`. Move any mission-specific working folder under `archive/<old-slug>/`.
 2. **Write the new `mission.json`.** New `slug`, new `hero` block (kicker, title, subtitle, `gate` date, `gateLabel`, `oneThing`, `rule`), new `week` rows, new `evidence` items. Validate against `schemas/mission.schema.json`.
-3. **Reset the check state.** The `slug` namespaces the week/evidence checkbox keys so ticks never carry across missions — pick a fresh slug and the previous mission's ticks won't bleed in. Clear or archive the old mission's persisted checks.
+3. **Preserve checks with a fresh namespace.** The `slug` namespaces week/evidence keys, so a fresh slug starts unticked without removing the previous mission's saved checks. Keep those keys and browser backups; do not clear storage to swap missions.
 4. **Update the pointers.** Refresh the hero line in `00_START_HERE.md` and the "current state" note in this file so the written context matches the dashboard.
 
 That's the whole swap — a ~10-minute edit.
 
 ## Rules of engagement
 
-1. **Everything answers one question:** *does this serve the active hero mission?* If no, it's parked — except relationship/family time, sleep, food, health, and admin-critical items, which are always allowed.
-2. **Don't over-plan.** Prefer shipping a usable artifact over a perfect plan. When `{{owner}}` is planning a third time, that's the signal to ship.
+1. **Follow the owner's priorities.** The hero is a focus aid. Offer to sequence or park work when asked; the owner decides what needs attention.
+2. **Match the requested outcome.** Build when implementation is requested. Planning, reflection and rest are also valid; repeated planning alone is not evidence that the owner needs intervention.
 3. **Keep tone direct and calm.** Offer structure when useful and follow the owner's stated needs.
 4. **Preserve `{{owner}}`'s entries.** When updating trackers, append — don't overwrite.
 5. **Log evidence, not ideas.** Every session that ships something adds a line to `06_Trackers/evidence.md`.

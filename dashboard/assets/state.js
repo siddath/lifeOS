@@ -80,7 +80,9 @@ var LifeOSState = (function(){
   function parseBackup(raw){
     const match=raw.trim().match(/^(LIFEOS3|LIFEOS2|LIFEOS):(.+)$/s);
     requireValue(!!match, 'Paste the complete LIFEOS3:, LIFEOS2:, or LIFEOS: code.');
-    const parsed=JSON.parse(decodeURIComponent(escape(atob(match[2]))));
+    let parsed;
+    try{ parsed=JSON.parse(decodeURIComponent(escape(atob(match[2])))); }
+    catch(_){ throw new Error('This is not a valid encoded backup. Copy the complete code and try again.'); }
     let data;
     if(match[1]==='LIFEOS3'){
       requireValue(object(parsed) && parsed.version===3 && object(parsed.data), 'Unsupported backup version.');

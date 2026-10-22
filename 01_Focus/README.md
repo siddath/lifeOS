@@ -8,7 +8,7 @@ updated: 2026-07
 
 # 01_Focus — the current mission
 
-This folder holds **one thing at a time**: the mission you are actively pushing right now. LifeOS calls it the *hero mission*. Everything in the rest of the vault is reference or background; this is the part that changes weekly and answers the only question that matters this week — **does this move the mission forward?**
+This folder holds the working plan for the dashboard's current *hero mission*. It is a place to keep a chosen focus visible. Other commitments can remain active; the owner decides what needs attention.
 
 ## What lives here
 
@@ -18,12 +18,12 @@ This folder holds **one thing at a time**: the mission you are actively pushing 
 
 ## The idea
 
-Most planning systems let you run ten priorities at once, which is the same as running none. LifeOS forces a single active mission with:
+The dashboard offers one focus slot with:
 
 - a clear **objective** (what "done" looks like),
 - a **gate date** (a real deadline that creates a countdown),
-- a **weekly arc** (what each week must produce), and
-- **evidence** (artifacts shipped, not intentions collected).
+- a **weekly arc** (a proposed sequence the owner can change), and
+- **evidence** (what happened, including artifacts, decisions or maintenance).
 
 When one mission closes, you snapshot it, archive it, and write the next `plan.md`. That swap is a ten-minute edit, not a rewrite.
 

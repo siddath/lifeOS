@@ -5,7 +5,7 @@ description: Generate the owner's morning brief from the LifeOS. Use when they s
 
 # Daily Brief
 
-Give the owner a short, calm "here's today" so they don't have to think. Execution, not planning. Many people who reach for this skill spiral under pressure — a brief that dumps everything, or confidently repeats stale tasks, makes things worse. Honest and small beats complete.
+Give the owner a short, calm summary of confirmed current priorities. Do not infer their emotional state or assume that execution is what they need. Mark uncertainty rather than repeating stale tasks as current.
 
 Read the owner's name, timezone, and locale from `dashboard/lifeos.config.json` (`owner.shortName`, `owner.timezone`, `owner.locale`), falling back to `dashboard/lifeos.config.example.json` if it doesn't exist. Address them in second person; use their timezone for "today".
 
@@ -17,7 +17,7 @@ Read the owner's name, timezone, and locale from `dashboard/lifeos.config.json` 
    - `06_Trackers/tasks.md` — P1/P2 items. On a fresh instance this may not exist yet — read `dashboard/tasks-data.json` (the first-run seed) instead. Browser edits may be newer: ask for a private dashboard export before claiming a complete current task list or rewriting seeds; see `docs/browser-data.md`, and offer to create `06_Trackers/tasks.md` from `06_Trackers/tasks.template.md`.
    - `06_Trackers/reminders.md` — dated rows + recurring reminders. If missing, skip this source (offer to create it from its template); don't fail.
    - `01_Focus/` — the mission's working plan, only if the mission's `oneThing` points at a daily cadence there.
-3. **Staleness check on tasks.md (important).** Compare today's date against the file's `updated:` frontmatter and any day-specific headings (e.g. "Tonight (Thu)", "~36h to the gate"). If the P1 section was written for a day or gate that has already passed, **do not present those P1s as today's list** — that erodes trust in the whole brief. Instead: derive today's focus from `mission.json`'s `oneThing` (plus today's block from `01_Focus/` if the mission has one), and add one gentle ⚠️ line noting the tracker needs a refresh at the next review. Still-valid undated P1s (e.g. relationship/family time, sleep) may carry over. Never invent tasks that appear in no file.
+3. **Check both tasks and mission for staleness.** Compare today with `updated:` dates, day-specific headings, the mission gate and demo markers. Do not present past-day tasks or a passed/demo mission as today's direction. Use the mission's `oneThing` only when its currentness is supported. If both sources are stale, say that today's priority is unconfirmed and ask the owner what needs attention; do not manufacture a fallback task. Undated items may carry over when there is evidence they still apply.
 4. **Filter time-bound items.** From `reminders.md` include only: rows dated today or tomorrow, and any recurring reminder that fires today (e.g. Sunday → weekly review; 1st of month → finance check). Skip everything already in the past.
 5. **Compute the countdown.** Days from today until the mission `gate`. If the gate has passed, use the mission's `gatePassedMessage` framing instead of a countdown.
 
@@ -34,11 +34,11 @@ Use exactly this shape, ≤12 lines total, no essays:
 🧘 [one calm grounding line tied to the mission's reframe — e.g. "One honest rep today is the win."]
 ```
 
-Optional single ⚠️ line (only when step 3 found staleness): `⚠️ tasks.md still shows [old context] — refresh it at the next review; today's focus comes from the mission.`
+Optional single ⚠️ line when step 3 found staleness: `⚠️ [source] still shows [old context]. Today's priority [comes from verified source / is not yet confirmed].`
 
 ## Rules
 
-- Honor the current hero's rule (in `mission.json`): if an item doesn't serve the active gate, it's not in today's brief — except relationship/family time, sleep, food, health, and admin-critical items, which are always allowed.
+- Use the mission as one input, alongside the owner's current priorities and commitments. Do not exclude a requested item merely because it falls outside the mission.
 - If a mission has a per-day cadence, the one main thing is **today's single block**, never "catch up on the whole plan."
 - Tone: direct, warm, calm. Second person. No scolding about what's undone; no motivational padding.
 - The brief must be self-contained — the owner should be able to act on it without opening any file.
@@ -58,4 +58,4 @@ Output:
 
 ## Automating it (optional)
 
-This skill can run on a schedule (e.g., a morning trigger / `loop`) to push the brief automatically. See `docs/` if present, or set up a Routine via the Claude Code remote tools.
+Only create or change a schedule when the owner explicitly requests it. A brief request does not authorize recurring runs or external messages. Use the current assistant's supported scheduling tools when authorized.

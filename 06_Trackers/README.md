@@ -8,7 +8,7 @@ updated: 2026-07
 
 # 06_Trackers — the working memory
 
-This is the part of the vault that **changes every day**. Everything else is reference; the trackers are live state. AI sessions and skills read and append here.
+These are the vault's file-based working records. AI sessions and skills can read and append here. Dashboard tasks/habits live separately in browser storage after first-run seeding; file edits do not update that store. Reconcile a private export when you need a current combined view (see [browser data](../docs/browser-data.md)).
 
 Every file ships as a `*.template.md` with the format preserved but no real data (one demo row for shape). Copy each to its plain name and make it yours.
 

@@ -151,11 +151,11 @@ You don't have to touch code for any of this. Point your AI at `AGENTS.md`, tell
 
 LifeOS is opinionated in exactly one direction: it wants to move you from *think → plan → improve the plan → think again* to **think once, then build, measure, improve.** Two ideas carry most of the weight.
 
-One hero mission at a time. Everything else is parked, not abandoned. Running every front at once is how you end up frozen; sequencing is the way out.
+The dashboard has one hero slot to keep a chosen focus visible. Sequencing and maintenance modes can help when you want them; you decide which other commitments stay active.
 
-Evidence, not ideas. A week should end with something you can point at. The dashboard is built to make the artifact the win, not the to-do list.
+Keep evidence of what happened when that helps you learn. Artifacts, decisions, maintenance and rest can all matter; a review is not a productivity score.
 
-It's meant for people who over-plan under pressure — who generate more meaning than they have containers for. The Anchor is where that has a calm home instead of a 1 a.m. spiral.
+Adapt the method to your needs and skip the parts that do not help. The Anchor offers optional example prompts; it does not describe or assess the person using it.
 
 ## Docs
 

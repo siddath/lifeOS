@@ -170,6 +170,20 @@
   .ed-row :focus-visible,.ed-hrow :focus-visible,.syncbar :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
   #demoNotice{flex-basis:100%;color:var(--ink);font-size:var(--fs-meta)}
   #demoNotice a{color:var(--accent2);text-underline-offset:3px}
+  .backup-dialog{width:min(680px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;
+    border:1px solid var(--line);border-radius:var(--r-card);padding:var(--sp-4);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .backup-dialog::backdrop{background:rgba(25,20,16,.65)}
+  .backup-dialog h2{font:600 var(--fs-title)/1.25 var(--serif);margin:0 0 var(--sp-2)}
+  .backup-dialog p{margin:0 0 var(--sp-3)}
+  .backup-dialog label{display:block;font-weight:600;margin-bottom:var(--sp-1)}
+  .backup-dialog textarea{display:block;width:100%;min-height:150px;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);
+    background:var(--bg);color:var(--ink);font:16px/1.5 monospace;resize:vertical;overflow-wrap:anywhere}
+  .backup-actions{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3)}
+  .backup-actions[hidden]{display:none}
+  .backup-actions .sync-btn{min-height:44px}
+  .backup-actions button:disabled{opacity:.6;cursor:default}
+  #backupPreview{padding-top:var(--sp-3)}
+  #backupMessage{margin-top:var(--sp-3);overflow-wrap:anywhere}
   .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-meta);font-weight:600;color:var(--ink)}
   .status-dot.pending{background:var(--gold)}
   .status-dot.syncing{background:var(--gold)}
@@ -922,8 +936,29 @@
   <footer class="wrap">
     <p class="one-reframe" style="font-family:var(--serif);font-style:italic;color:var(--muted);max-width:640px;margin:0 auto 12px">One hero mission at a time. Do the one thing, stay close to the people you love, sleep well. That is the win.</p>
     <span id="footerCredit">Built with LifeOS · data saved locally in your browser</span> ·
-    <button class="reset" onclick="resetAll()">↺ Reset everything</button>
+    <button class="reset" onclick="resetAll()">↺ Reset visible checkboxes</button>
   </footer>
+
+<dialog id="backupDialog" class="backup-dialog" aria-labelledby="backupTitle" aria-describedby="backupHelp">
+  <h2 id="backupTitle">Browser backup</h2>
+  <p id="backupHelp">Keep this code private. It contains your entries and is not encrypted. Sync keys are excluded.</p>
+  <label for="backupCode" id="backupCodeLabel">Backup code</label>
+  <textarea id="backupCode" rows="6" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="backupHelp backupMessage"></textarea>
+  <div class="backup-actions" id="backupExportActions">
+    <button type="button" class="sync-btn" onclick="selectBackupCode()">Select code</button>
+    <button type="button" class="sync-btn" onclick="copyBackupCode()">Copy code</button>
+  </div>
+  <div class="backup-actions" id="backupImportActions" hidden>
+    <button type="button" class="sync-btn" onclick="previewBackup()">Review backup</button>
+  </div>
+  <div id="backupPreview" hidden>
+    <p id="backupSummary"></p>
+    <p>Restoring replaces the saved entries included in this backup and clears pending sync work. It sends nothing to Notion. Export your current state first if you need to keep it.</p>
+    <button type="button" class="sync-btn primary" id="backupRestore" onclick="restoreBackup()" disabled>Restore these saved entries</button>
+  </div>
+  <p id="backupMessage" role="status" aria-live="polite"></p>
+  <div class="backup-actions"><button type="button" class="sync-btn" id="backupClose" onclick="closeBackupDialog()">Cancel</button></div>
+</dialog>
 
 <script>
   /* Shared chrome first: dock (with sync group) + theme icon. */
@@ -1012,7 +1047,13 @@
 
   // Persistent checkboxes (wired AFTER mission render so dynamic rows get listeners + saved state)
   const boxes = () => document.querySelectorAll('ul.check input[type=checkbox]');
-  function save(){ const s={}; boxes().forEach(b=>s[b.id]=b.checked); localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress(); }
+  function save(){
+    let s;
+    try{ s=LifeOSState.checks(JSON.parse(localStorage.getItem('lifeos')||'{}')); }
+    catch(_){ syncNote('Saved checkboxes could not be read. Export your current browser data before resetting them.'); return; }
+    boxes().forEach(b=>s[b.id]=b.checked);
+    localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress();
+  }
   function load(){ let s={}; try{ s=LifeOSState.checks(JSON.parse(localStorage.getItem('lifeos')||'{}')); }catch(e){} boxes().forEach(b=>{ b.checked=s[b.id]===true; }); updateProgress(); }
   function updateProgress(){
     const all=[...boxes()]; const done=all.filter(b=>b.checked).length;
@@ -1481,8 +1522,9 @@
   }
 
   // ---- Event delegation ----
-  document.getElementById('taskList').addEventListener('input',()=>{ _seededInlineThisLoad.tasks=null; });
-  document.getElementById('habitList').addEventListener('input',()=>{ _seededInlineThisLoad.habits=null; });
+  let editorRevision=0;
+  document.getElementById('taskList').addEventListener('input',()=>{ _seededInlineThisLoad.tasks=null; editorRevision++; });
+  document.getElementById('habitList').addEventListener('input',()=>{ _seededInlineThisLoad.habits=null; editorRevision++; });
   document.getElementById('taskList').addEventListener('change', (e)=>{
     const row = e.target.closest('.ed-row'); if(!row) return; const id = row.dataset.id;
     if(e.target.classList.contains('ed-done')){
@@ -1741,6 +1783,7 @@
     if(syncInFlight) return;
     if(getQueue().length){ syncNote('Push pending changes before pulling, so remote data cannot replace your unsent edits.'); return; }
     syncInFlight=true;
+    const revisionAtPull=editorRevision;
     setStatus('syncing', 'Pulling…');
     try{
       const res = await fetch(SYNC_PULL, { headers:syncHeaders() });
@@ -1748,6 +1791,11 @@
       if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Pull rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
+      if(editorRevision!==revisionAtPull || document.activeElement?.matches('.ed-title,.ed-hname')){
+        setStatus('idle','Pull paused — finish editing');
+        syncNote('You edited while pulling. Your text is preserved. Finish the edit, push pending changes, then pull again.');
+        return;
+      }
       mergeRemoteTasks(data.tasks||[]); mergeRemoteHabits(data.habits||[]);
       renderTasks(); renderHabits();
       localStorage.setItem('lifeos_last_synced', nowIso());
@@ -1786,33 +1834,89 @@
   function buildBackupPayload(){
     return JSON.stringify(LifeOSState.snapshot(localStorage));
   }
+  let backupMode='', backupCandidate=null, backupReturnFocus=null;
+  const backupDialog=document.getElementById('backupDialog');
+  function backupMessage(message){ document.getElementById('backupMessage').textContent=message; }
+  function resetBackupPreview(){
+    backupCandidate=null;
+    document.getElementById('backupPreview').hidden=true;
+    document.getElementById('backupRestore').disabled=true;
+  }
+  function openBackupDialog(mode){
+    backupReturnFocus=document.activeElement;
+    backupMode=mode;
+    resetBackupPreview();
+    const exporting=mode==='export', code=document.getElementById('backupCode');
+    document.getElementById('backupTitle').textContent=exporting?'Export browser backup':'Import browser backup';
+    document.getElementById('backupCodeLabel').textContent=exporting?'Your private backup code':'Paste your private backup code';
+    document.getElementById('backupExportActions').hidden=!exporting;
+    document.getElementById('backupImportActions').hidden=exporting;
+    document.getElementById('backupClose').textContent=exporting?'Done':'Cancel';
+    code.readOnly=exporting;
+    code.value=exporting?'LIFEOS3:'+btoa(unescape(encodeURIComponent(buildBackupPayload()))):'';
+    backupMessage(exporting?'Save the complete code somewhere private. You can select and copy it even if clipboard access is unavailable.':'Accepts LIFEOS3:, LIFEOS2:, or legacy LIFEOS: codes. Review the contents before restoring.');
+    backupDialog.showModal();
+    code.focus();
+  }
+  function closeBackupDialog(){ backupDialog.close(); }
+  backupDialog.addEventListener('cancel',event=>{ event.preventDefault(); closeBackupDialog(); });
+  backupDialog.addEventListener('close',()=>{
+    resetBackupPreview();
+    if(backupReturnFocus?.isConnected) backupReturnFocus.focus();
+  });
+  document.getElementById('backupCode').addEventListener('input',()=>{ resetBackupPreview(); backupMessage('Code changed. Review it again before restoring.'); });
   function exportState(){
-    const payload = 'LIFEOS3:' + btoa(unescape(encodeURIComponent(buildBackupPayload())));
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(payload).then(
-        ()=>syncNote('Backup copied: tasks, habits, checks, reviews, history and favorites. Keep it private; it contains your entries. Sync keys are excluded.'),
-        ()=>window.prompt('Copy your backup code:', payload)
-      );
-    } else { window.prompt('Copy your backup code:', payload); }
+    try{ openBackupDialog('export'); }
+    catch(error){ syncNote('Backup could not be opened. '+error.message); }
   }
   function importState(){
     if(syncInFlight){ syncNote('Wait for the current sync to finish before restoring a backup.'); return; }
-    const raw = window.prompt('Paste your private backup code (LIFEOS3:, LIFEOS2:, or LIFEOS:). You can review the replacement before confirming.');
-    if(!raw) return;
+    openBackupDialog('import');
+  }
+  function selectBackupCode(){ const code=document.getElementById('backupCode'); code.focus(); code.select(); }
+  async function copyBackupCode(){
+    selectBackupCode();
     try{
-      const data=LifeOSState.parseBackup(raw);
+      if(!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(document.getElementById('backupCode').value);
+      backupMessage('Backup code copied. Keep it private.');
+    }catch(_){ backupMessage('Clipboard access is unavailable here. The code is selected: use your browser’s Copy command, then save it privately.'); }
+  }
+  function previewBackup(){
+    resetBackupPreview();
+    try{
+      const data=LifeOSState.parseBackup(document.getElementById('backupCode').value);
       const tasks=data.lifeos_tasks_v1 ? LifeOSState.records(JSON.parse(data.lifeos_tasks_v1),'tasks') : null;
       const habits=data.lifeos_habits_v1 ? LifeOSState.records(JSON.parse(data.lifeos_habits_v1),'habits') : null;
       if(tasks) data.lifeos_tasks_v1=JSON.stringify(tasks.map(t=>({...t,id:t.id||uid(),status:t.status||'open',due:t.due||''})));
       if(habits) data.lifeos_habits_v1=JSON.stringify(habits.map(h=>({...h,id:h.id||uid(),weekOf:h.weekOf||currentWeekMonday(),days:Object.fromEntries(DAYS.map(d=>[d,h.days?.[d]===true]))})));
-      const summary=tasks ? `${tasks.length} tasks and ${habits.length} habits, plus the checks and other saved entries included in this backup` : 'the checkboxes in this legacy backup';
-      if(!confirm('Replace '+summary+' on this device? Export your current state first if you need it. This clears pending sync work and does not push to Notion.')){ syncNote('Restore cancelled. Your current entries are unchanged.'); return; }
-      LifeOSState.restore(localStorage,data,true);
+      backupCandidate=data;
+      const reviews=Object.keys(data).filter(key=>key.startsWith('lifeos_review_')).length;
+      document.getElementById('backupSummary').textContent=tasks
+        ? `${tasks.length} tasks, ${habits.length} habits and ${reviews} daily reviews. Other included checks, history and preferences will also be restored.`
+        : 'Legacy backup: restores included checkboxes. Tasks, habits and reviews stay as they are.';
+      document.getElementById('backupPreview').hidden=false;
+      document.getElementById('backupRestore').disabled=false;
+      backupMessage('Backup validated. Review the replacement above, then choose Restore or Cancel.');
+    }catch(error){ backupMessage('Backup was not restored. '+error.message); }
+  }
+  function restoreBackup(){
+    if(backupMode!=='import' || !backupCandidate) return;
+    if(syncInFlight){ backupMessage('A sync is running. Wait for it to finish, then review the backup again.'); resetBackupPreview(); return; }
+    try{
+      LifeOSState.restore(localStorage,backupCandidate,true);
       clearTimeout(syncTimer);
+      // Any first-run seed response still in flight must not replace this restore.
+      _seededInlineThisLoad.tasks=null; _seededInlineThisLoad.habits=null;
+      resetBackupPreview();
+      document.getElementById('backupCode').readOnly=true;
+      document.getElementById('backupImportActions').hidden=true;
+      document.getElementById('backupClose').textContent='Done';
       load(); rollHabitWeekIfNeeded(); renderTasks(); renderHabits(); renderHabitHistory(); renderReview();
       localOnly();
-      syncNote('Backup restored on this device. Reload to apply restored theme and quote preferences. No data was sent to Notion.');
-    }catch(e){ syncNote('Backup was not restored. '+e.message); }
+      const message='Backup restored on this device. Reload to apply restored theme and quote preferences. No data was sent to Notion.';
+      backupMessage(message); syncNote(message);
+    }catch(error){ backupMessage('Restore could not finish. '+error.message); }
   }
 
   /* ============================================================

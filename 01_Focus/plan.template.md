@@ -8,7 +8,7 @@ updated: 2026-07
 
 # Mission Plan — <!-- lifeos:fill: mission name, e.g. "Operation Launch Week" -->
 
-> One mission at a time. This is the single thing you're pushing right now. Every week, everything answers one question: **does this move the mission forward?** If no, it goes to the parking lot — except the non-negotiables (sleep, health, the people who matter).
+> A working plan for the dashboard's current mission. Choose which commitments remain active alongside it. Sequencing and a parking lot are optional tools, not restrictions on your priorities.
 
 ## The objective
 
@@ -27,22 +27,22 @@ updated: 2026-07
 
 ## The weekly arc
 
-> Each week must end with **evidence**, not intentions. Fill one row per week from now to the gate.
+> If a weekly arc helps, sketch intended outcomes and record what actually happened. Adapt the sequence when your needs change.
 
-| Week | Dates | The one thing this week must produce | Shipped? |
+| Week | Dates | Proposed outcome or focus this week | Shipped? |
 |------|-------|--------------------------------------|:--------:|
 | 1 | <!-- lifeos:fill --> | <!-- lifeos:fill --> | ☐ |
 | 2 | <!-- lifeos:fill --> | <!-- lifeos:fill --> | ☐ |
 | 3 | <!-- lifeos:fill --> | <!-- lifeos:fill --> | ☐ |
 | 4 | <!-- lifeos:fill --> | <!-- lifeos:fill --> | ☐ |
 
-## This week's ONE main thing
+## This week's chosen focus
 
-<!-- lifeos:fill: the single most important outcome for the current week. Update it every weekly review. -->
+<!-- lifeos:fill: an outcome, priority or maintenance need you want visible. Change it when useful. -->
 
 ## Evidence log for this mission
 
-> Newest on top. One line per artifact shipped. This is the counter-evidence for the days your brain says "I've done nothing." Mirror the big ones into `../06_Trackers/evidence.md` (created on first setup from its [template](../06_Trackers/evidence.template.md)).
+> Newest on top. One line per artifact shipped. Decisions, maintenance and changes in direction can be useful evidence too. Mirror the big ones into `../06_Trackers/evidence.md` (created on first setup from its [template](../06_Trackers/evidence.template.md)).
 
 | Date | What shipped |
 |------|--------------|

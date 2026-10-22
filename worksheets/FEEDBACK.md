@@ -36,3 +36,18 @@
 - The docs described JSON seeds as authoritative current tasks and said missing sync auth
   left endpoints open. Both disagreed with the code; browser ownership and fail-closed auth
   are now explicit. Remaining storage/module-toggle work is in `TODOS.md`.
+
+## 2026-10-22 — review corrections: backup access and unfinished edits
+
+- Live review found native `prompt()` unsupported in the intended browser. Export/import now
+  use an in-page dialog with a full selectable code, clipboard-denial recovery, validation
+  preview, an explicit Restore button, safe Cancel/Escape and focus return.
+- A second network path still re-rendered inputs: Pull could erase text typed before blur.
+  Its response now pauses if editor input occurred during the request. A regression runs the
+  shipped handler with a deferred fetch and dispatches the actual input listeners.
+- Mission-swap instructions did not need to clear old namespaced checks, but the old save
+  function still replaced their whole store. Saving now retains earlier mission keys.
+- Active setup/capture/review generators still called seed JSON authoritative or imposed
+  parking, automatic roll-forward and productivity repayment. These instructions now explain
+  the separate browser/file stores and leave priorities, cadence and record changes to the
+  owner. Historical demo records were preserved.

@@ -27,12 +27,12 @@ Copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json` an
 
 Invite the owner: *"Paste anything — a brain-dump, an old journal, notes, goals, whatever. Messy is fine. I'll sort it."* Then map what they give you into the vault, honoring the schemas:
 
-- **Tasks** → `dashboard/tasks-data.json` (shape: `tasks.schema.json` — title, area code, priority, status). This is the file the dashboard hydrates on first run, so the owner sees the tasks immediately. Mirror to `06_Trackers/tasks.md` only if you also want a long-form vault copy.
-- **Habits / routines** → `dashboard/habits-data.json` (`habits.schema.json`) — the weekly matrix renders from this file.
+- **Tasks** → `dashboard/tasks-data.json` (shape: `tasks.schema.json` — title, area code, priority, status). This seeds an empty browser once. If the dashboard has already been used, reconcile its private backup before changing the seed; file edits do not replace browser entries. Mirror to `06_Trackers/tasks.md` only if the owner wants a long-form vault copy.
+- **Habits / routines** → `dashboard/habits-data.json` (`habits.schema.json`) — the weekly matrix seeds an empty browser from this file, then saves edits in browser storage.
 - **"About me" facts** (strengths, values, watch-outs, preferences, one per area) → `dashboard/kb-data.json` following `kb.schema.json`. This is the surface the Knowledge Base page renders — it reads the JSON, not markdown. Keep `02_Areas/knowledge_base/*.md` as an optional long-form layer.
 - **Dated things** → `06_Trackers/reminders.md`.
 - **Loose ideas / worries** → `06_Trackers/inbox.md` (append, timestamped).
-- A fresh clone ships only `06_Trackers/*.template.md` — when a live tracker file you need doesn't exist yet, create it from its matching template rather than failing. The dashboard JSON in `dashboard/` is the authoritative state; the `06_Trackers/*.md` files are its human-readable mirror layer.
+- A fresh clone ships tracker templates — create a needed live tracker from its template in the private instance. Markdown trackers, JSON seeds and current browser state are separate write surfaces; none automatically updates the others. Use `docs/browser-data.md` to reconcile them. Never clear browser storage to force a seed refresh.
 - **Area notes** → one file per area under `02_Areas/`, each starting with frontmatter (`title/area/type/tags/updated`).
 - **The hero mission** → `dashboard/mission.json` following `mission.schema.json` (pick a `slug`, fill `hero`, `week`, `evidence`). Snapshot the demo mission into `archive/` first if you're replacing it.
 

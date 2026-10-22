@@ -17,7 +17,7 @@ _(Demo persona. Swap this line whenever the hero changes — see the `mission-sw
 
 - **One main thing right now:** <!-- lifeos:fill --> the single most important action today.
 - **Gate:** <!-- lifeos:fill --> the date this mission is racing toward.
-- **Rule this week:** if it doesn't serve the mission, it's parked — except relationship/family time, sleep, food, health, admin-critical.
+- **Focus method (optional):** choose what supports the mission, what stays active alongside it and what can wait. Your priorities decide.
 
 ## ⚡ Quick actions
 

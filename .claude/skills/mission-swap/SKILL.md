@@ -1,13 +1,13 @@
 ---
 name: mission-swap
-description: Swap the active hero mission. Use when the owner says "swap the mission", "new hero mission", "change my focus", "this mission is done", or a weekly review decides the hero is changing. Snapshots the old dashboard/mission.json into archive/, writes the new one, resets the check state, and updates the pointers.
+description: Swap the dashboard hero when the owner requests it. Archive the previous mission, write the chosen replacement with a fresh slug, preserve prior checks and update the pointers.
 ---
 
 # Mission Swap
 
 The dashboard hero — header, countdown, one-thing, week planner, evidence — renders entirely from `dashboard/mission.json`. Nothing else hardcodes the mission, so swapping it is a small, mechanical edit. This skill is the procedure; the pattern is documented in `AGENTS.md`.
 
-There is always exactly **one** active hero mission. Swapping means closing the old one cleanly and opening the next.
+The dashboard displays **one** hero mission. Swapping that slot does not decide what else the owner may pursue.
 
 ## Steps
 
@@ -20,7 +20,7 @@ There is always exactly **one** active hero mission. Swapping means closing the 
    - Fill `hero`: `kicker`, `title`, `subtitle`, `gate` (ISO 8601), `gateLabel`, `gatePassedTitle`, `gatePassedMessage`, `mission`, `oneThing` (`tag`/`do`/`why`/`reframe`), `rule`, `reframeStrip`.
    - Fill `week` (theme per week, with day/week rows and their `items`) and `evidence` (the artifacts that will mark success).
 
-4. **Reset the check state.** Because the new `slug` differs, the dashboard's persisted week/evidence ticks for the old mission no longer apply. Clear or archive the previous mission's stored check keys so nothing shows pre-ticked.
+4. **Preserve check history.** A fresh `slug` isolates the new mission's week/evidence ticks. Keep previous namespaced keys and browser backups; clearing them is unnecessary. Do not clear `localStorage` or remove other checks as part of a mission swap.
 
 5. **Update the pointers.** So the written context matches the dashboard:
    - `00_START_HERE.md` — the "Today's hero" line (title + one main thing + gate).
@@ -29,6 +29,6 @@ There is always exactly **one** active hero mission. Swapping means closing the 
 6. **Confirm.** Show the owner the new hero line and gate, and offer to run the `daily-brief` skill against the fresh mission.
 
 ## Rules
-- One hero at a time — finish the swap; don't leave two missions half-active.
+- Keep the dashboard's single mission file and home pointers consistent with the owner's chosen focus.
 - Validate the new `mission.json` against `schemas/mission.schema.json` before saving.
 - Archive, don't delete — closed missions are the memory for the "Measure" step.

@@ -21,7 +21,7 @@ Every file ships as a `*.template.md` with `<!-- lifeos:fill -->` markers. Copy 
 | [`north_star.template.md`](north_star.template.md) | Your direction — what a good life looks like, what's non-negotiable, what's noise. |
 | [`one_year_vision.template.md`](one_year_vision.template.md) | Where you want to be in twelve months, per area. |
 | [`house_vision.template.md`](house_vision.template.md) | A concrete picture of the home / environment you're building toward. |
-| [`panic_parking_lot.template.md`](panic_parking_lot.template.md) | A protocol for anxious spirals: write the thought, label it, convert it to one action. |
+| [`panic_parking_lot.template.md`](panic_parking_lot.template.md) | Optional worry capture and reframes; choose rest, support, an action or no action. |
 | [`life_audit.template.md`](life_audit.template.md) | An honest snapshot of where each area stands today. |
 | [`wellbeing_routine.template.md`](wellbeing_routine.template.md) | Your physical / mental baseline — sleep, movement, calm. |
 | [`relationships.template.md`](relationships.template.md) | The people who matter and how you show up for them. |

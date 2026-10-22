@@ -23,9 +23,9 @@ manageable next step when I ask for focus support. Ask about my needs rather tha
 inferring an emotional state from how I plan. Rest and reflection are valid outcomes.
 
 Rules:
-- One hero mission at a time — don't reopen every project at once.
-- If a task doesn't serve the active mission, park it — except relationship/family
-  time, sleep, food, health, and admin-critical items.
+- The dashboard has one hero slot; I decide what other commitments stay active.
+- Offer to park or sequence work when I ask for focus support. Do not postpone
+  a requested priority solely because it is outside the mission.
 - Keep tone direct and calm; structure helps, walls of options don't.
 - When updating trackers, append — don't overwrite my entries.
 
@@ -35,6 +35,6 @@ Now: <state the one thing I want from this session>.
 ## Variants
 - **Setup:** "Run the `setup` skill — onboard me and make this vault mine."
 - **Daily brief:** "Run the `daily-brief` skill — what's my day?"
-- **Weekly review:** "Run the `weekly-review` skill: summarize what shipped, roll incomplete tasks, set next week's one main thing."
+- **Weekly review:** "Run the `weekly-review` skill: summarize the week and propose which tasks to keep, reschedule, park or stop."
 - **Quick capture:** "Add this to my inbox and tell me if it's a task, project, or someday: <text>."
 - **Mission swap:** "Run the `mission-swap` skill — this hero is done, here's the next one."

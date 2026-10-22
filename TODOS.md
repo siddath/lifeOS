@@ -2,7 +2,8 @@
 
 > **Summary (greppable):** The build-level queue for the LifeOS **template** — what a maintainer
 > of this repo builds next. It is *not* a personal task list: your own tasks live in
-> `06_Trackers/tasks.md` and `dashboard/tasks-data.json`, never here. Agents may append items;
+> vault trackers and dashboard browser storage, never here. JSON seeds initialize an empty
+> browser; see [`docs/browser-data.md`](docs/browser-data.md). Agents may append items;
 > only the maintainer reorders priorities.
 >
 > **Before you start anything below:** `npm test` is the check that proves a change works
@@ -14,7 +15,7 @@
 
 ## Now (top = next)
 
-The three documentation fixes below are implemented locally on 2026-10-22 and await
+The checked items below are implemented locally on 2026-10-22 and await
 review/release; no PR or production deployment is claimed.
 
 - [x] **Fix the stale `.gitignore` claim in `SECURITY.md`.** It now distinguishes ignored
@@ -23,12 +24,19 @@ review/release; no PR or production deployment is claimed.
 - [x] **Qualify config paths** in `CLAUDE.md`, `README.md`, `00_START_HERE.md` and the master prompt.
 - [x] **Move shipped verification to Built now** in `docs/ROADMAP.md`; browser smoke automation
       remains planned.
+- [x] **Make backups usable without native prompts or clipboard access.** In-page export,
+      validation/preview/explicit restore, Cancel/Escape and focus return have regressions.
+- [x] **Protect unfinished text during a pending pull** and preserve prior mission check keys.
+- [x] **Align active setup/review templates with optional focus and separate data stores.**
+      The owner chooses parking, rescheduling, deletion and review cadence. Historical demo
+      examples remain intact.
 
 ## Next
 
 - [ ] **Playwright smoke tests for the dashboard** (ROADMAP.md:66 — the only remaining item of
       the "Test coverage" phase). Desktop + mobile: page load, task/habit persistence through
-      `localStorage`, module toggles. State regressions now run in `tests/state.test.js`;
+      `localStorage`, module toggles. Regressions now run in `tests/state.test.js` and
+      `tests/dashboard-flow.test.js`;
       a browser runner and CI coverage are still needed for complete interaction flows.
 
 - [ ] **Serverless Google connectors** (ROADMAP.md:69–71). Calendar sync function
@@ -52,6 +60,12 @@ review/release; no PR or production deployment is claimed.
       direct `localStorage` reads/writes can still fail in restricted browsing or at quota.
       Backup restore now validates and attempts rollback, but the rest of the app needs a
       visible recovery mode that preserves the original bytes before allowing replacement.
+
+- [ ] **Replace remaining native copy/key prompts in the intended browser.** Backup flows
+      now use the supported in-page dialog. Quote/review copy fallbacks and sync-key entry
+      still call `window.prompt`, which live review found unsupported there. Check these
+      paths before claiming they work in that browser; other confirmation controls have not
+      been established as unsupported by this evidence.
 
 - [ ] **Honor every advertised module toggle.** `applyConfig` handles finance/Anchor/knowledge
       links, but `modules.missions` and `modules.trackers` do not yet hide their surfaces.

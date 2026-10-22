@@ -8,7 +8,7 @@ updated: 2026-07
 
 # Daily Review — {{DATE}}
 
-> 3–5 minutes at night. Honest, not harsh. Then rest — no spiral.
+> Optional evening prompts. Use the parts that help and stop when you want; this is not a productivity score.
 
 ## The one thing
 - Today's one main thing was: …
@@ -39,4 +39,4 @@ updated: 2026-07
 
 ## Close
 - One line for today: …
-- Reminder: *Think once → Build → Measure → Improve. One mission at a time.*
+- A reminder I would like to keep, if any: …

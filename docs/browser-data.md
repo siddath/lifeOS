@@ -27,8 +27,10 @@ the inline demo instead of your config. No build or package installation is need
 
 ## Keep a separate copy
 
-Open **Backup & sync → Export backup**. Save the copied `LIFEOS3:` code in a private file.
-When clipboard access is unavailable, the browser shows a copy prompt.
+Open **Backup & sync → Export backup**. The full `LIFEOS3:` code appears in an in-page
+dialog. Use **Copy code**, or **Select code** and your browser's Copy command, then save it
+in a private file. The code stays visible even when clipboard access is denied. **Done**
+or Escape closes the dialog and returns focus to the control that opened it.
 
 The backup includes tasks, habits, checks, daily reviews, habit history, Anchor checks,
 quote favorites and display preferences. It excludes the sync key, pending sync requests,
@@ -38,8 +40,10 @@ the entries. Never put a personal backup in this public template or a public iss
 ## Restore deliberately
 
 Export the current browser state first. Choose **Import backup**, paste the complete code
-and review the replacement confirmation. Cancelling or invalid data leaves current entries
-unchanged. A valid restore replaces only the entries included in that backup and clears
+and choose **Review backup**. Validation shows counts and replacement information without
+changing stored entries. Choose **Restore these saved entries** only after reviewing it.
+**Cancel** or Escape leaves current entries unchanged and returns focus. Invalid or edited
+codes must be reviewed again before the Restore button becomes available. A valid restore replaces only the entries included in that backup and clears
 pending sync work, so old requests cannot overwrite the restored state. It sends nothing to
 Notion. Existing entries absent from an older backup remain in place.
 
@@ -64,5 +68,7 @@ server environment variables and enter the matching sync key in this browser.
 
 Only subsequent task/habit mutations queue automatically. **Push** submits pending work;
 an empty queue says **No pending changes**, which does not certify that the remote database
-matches this browser. **Pull** reads remote data; push pending work first. Reviews, checks,
+matches this browser. **Pull** reads remote data; push pending work first. If you type into a task or habit while
+a pull is pending, its response is paused without replacing your text. Finish the edit,
+push pending changes and pull again. Reviews, checks,
 favorites and history remain local. See the guide's limitations before relying on sync.

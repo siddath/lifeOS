@@ -8,7 +8,7 @@ updated: 2026-07
 
 # Life Audit
 
-> An honest snapshot of where each area stands **today**. Do this once, then don't repeat it every week — a 10-page life audit every Sunday is a spiral, not a system. Revisit quarterly.
+> An optional snapshot of where each area stands **today**. Use as much or as little as helps; choose a review cadence that fits your needs. A quarterly check is one possible starting point.
 
 **Date of this audit:** <!-- lifeos:fill: YYYY-MM -->
 
@@ -32,8 +32,8 @@ updated: 2026-07
 - **What I keep avoiding:** <!-- lifeos:fill -->
 - **What I'm pretending is a problem but isn't:** <!-- lifeos:fill -->
 
-## The one area to advance this quarter
+## Areas I want to give attention
 
-<!-- lifeos:fill: pick ONE. Advancing one area well beats nudging six. -->
+<!-- lifeos:fill: choose a focus, several priorities, maintenance or rest. No score or improvement target is required. -->
 
-> This audit feeds your `north_star.md` and `one_year_vision.md` (created from [`north_star.template.md`](north_star.template.md) and [`one_year_vision.template.md`](one_year_vision.template.md) during setup). Don't turn it into a weekly ritual — the trackers carry the week.
+> If useful, carry observations into `north_star.md` and `one_year_vision.md` (created from [`north_star.template.md`](north_star.template.md) and [`one_year_vision.template.md`](one_year_vision.template.md)). Revisit when you choose; the audit is not a required ritual.

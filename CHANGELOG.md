@@ -7,15 +7,18 @@ All notable changes to LifeOS are documented here. Format loosely follows
 
 - Preserve first-run edits when seed files arrive late, including intentionally empty seeds.
 - Add validated `LIFEOS3:` browser backups for tasks, habits, checks, reviews, history and
-  favorites, with confirmation before restore and rollback on storage failure. Keep legacy
-  imports; exclude sync keys and queued requests.
+  favorites. An in-page dialog keeps the export selectable when clipboard access is denied;
+  import requires validation, preview and a separate Restore action. Keep legacy imports,
+  attempt rollback on storage failure and exclude sync keys and queued requests.
 - Respect the Notion opt-in toggle, keep edits made during an in-flight push, and retain
   missing/failed acknowledgements for retry. Empty queues no longer claim remote parity.
+- Pause applying a pull response when task/habit typing began during the request, and retain
+  earlier mission check keys when saving the current mission.
 - Use local calendar dates for due shortcuts, review days and habit weeks. Label the
   fictional demo and improve task/habit control names and pressed states.
 - Explain browser/file ownership, correct config paths and fail-closed authentication docs,
   and make focus coaching optional in the assistant instructions.
-- Add focused state regression tests without changing the dashboard's no-build contract.
+- Add focused state and shipped-handler regressions without changing the dashboard's no-build contract.
 
 ## [1.0.0] — 2026-07
 

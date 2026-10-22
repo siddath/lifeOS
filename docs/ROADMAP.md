@@ -46,7 +46,9 @@ The rule of thumb: anything that touches your data has a **local-first, no-servi
 **Verification (built).**
 - `npm test` validates demo schemas, Markdown links, Notion mapping/auth, and browser-state
   regressions for backups, first-run hydration, queue acknowledgement and local dates. CI runs it.
-- Browser smoke automation remains planned; these unit tests do not prove live Notion sync.
+- Shipped-handler regressions cover clipboard denial, import preview/cancel/restore and a
+  deferred pull with editor input. Browser smoke automation remains planned; these tests
+  do not prove live Notion sync or full browser accessibility.
 
 **Deployment (built).**
 - One-click **Deploy to Vercel**; static `vercel.json`; graceful degradation with no env vars. See [deploy.md](deploy.md).

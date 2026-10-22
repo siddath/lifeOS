@@ -8,11 +8,11 @@ updated: 2026-07
 
 # 🧩 The Subagent Pattern
 
-> Think of a life as having agents — one role per area or project. **Only ONE is primary at a time (the active hero mission).** The rest run in maintenance mode. Each agent is a role you can run as a dedicated AI session, or just wear as a hat.
+> An optional way to divide a task into roles with clear inputs and outputs. These can be separate authorized AI sessions or perspectives used in one session. The owner chooses the scope and priorities.
 
 ## Agent status (the shape)
 
-Maintain a small table of who's active this cycle. Exactly one is primary; the others are foundation or maintenance:
+If useful, keep a small table of active roles. The following is a fictional example, not a required priority order:
 
 | Agent | Mission | Status this cycle |
 |-------|---------|-------------------|
@@ -38,7 +38,7 @@ Define an agent by what it consumes and what it must produce, not by vibes:
 
 1. **Orchestrator** decomposes the cycle's hero goal into tasks.
 2. **Each subagent** owns one task with clear inputs → outputs → deliverable.
-3. **Review loop** integrates outputs; recurring agents (daily brief, weekly review) run on schedule via skills/`loop`, not willpower.
+3. **Review loop** integrates outputs. Create recurring runs only at the owner's explicit request.
 
 ## Writing a worker spec (not vibes)
 
@@ -50,4 +50,4 @@ Each subagent prompt should contain:
 
 ## Anti-pattern
 
-Spinning up **all** agents at once. That's the overload trap. **One hero at a time** — everything else is maintenance until the gate clears.
+Creating workers without independent tasks, clear ownership or authorization adds coordination cost. Use delegation only when the owner or applicable instructions authorize it; the owner decides which real-life commitments remain active.
