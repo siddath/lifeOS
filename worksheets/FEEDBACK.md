@@ -22,3 +22,45 @@
 - `scripts/pii-scan.sh` is CI-wired via `pii-scan.yml` but is not part of `npm test`, and
   `CONTRIBUTING.md:30` hedges it as "if present" — it is present and it exits 0. The hedge made
   it unclear whether running it was expected.
+
+
+## 2026-10-22 — browser state and local-only behavior
+
+- The dashboard called an empty queue “Synced” while the example config disabled Notion.
+  Local-only copy now follows the toggle; no remote-parity claim comes from queue length.
+- First-run seed hydration had no comparison with subsequent user edits. The replacement
+  now checks the exact original fallback before writing, and empty seed arrays are honored.
+- The backup path accepted arbitrary decoded JSON and omitted daily reviews/history. It now
+  validates supported entries, confirms replacement and excludes sync credentials. The
+  state tests cover malformed imports, rollback and edits during a sync acknowledgement.
+- The docs described JSON seeds as authoritative current tasks and said missing sync auth
+  left endpoints open. Both disagreed with the code; browser ownership and fail-closed auth
+  are now explicit. Remaining storage/module-toggle work is in `TODOS.md`.
+
+## 2026-10-22 — review corrections: backup access and unfinished edits
+
+- Live review found native `prompt()` unsupported in the intended browser. Export/import now
+  use an in-page dialog with a full selectable code, clipboard-denial recovery, validation
+  preview, an explicit Restore button, safe Cancel/Escape and focus return.
+- A second network path still re-rendered inputs: Pull could erase text typed before blur.
+  Its response now pauses if editor input occurred during the request. A regression runs the
+  shipped handler with a deferred fetch and dispatches the actual input listeners.
+- Mission-swap instructions did not need to clear old namespaced checks, but the old save
+  function still replaced their whole store. Saving now retains earlier mission keys.
+- Active setup/capture/review generators still called seed JSON authoritative or imposed
+  parking, automatic roll-forward and productivity repayment. These instructions now explain
+  the separate browser/file stores and leave priorities, cadence and record changes to the
+  owner. Historical demo records were preserved.
+
+## 2026-10-22 — Immediate row state
+
+- A priority button’s text changed while its accessible name kept the old priority. Rename commits similarly left contextual control labels stale. Labels now refresh on existing controls without replacing editors or moving focus.
+- Day/keystone buttons explicitly derive class and aria-pressed from the persisted next boolean, keeping the immediate visual and announced state aligned.
+- The regression runs actual production handler source with synthetic data. An empty-state audit alone does not exercise these transitions; include populated rows and both toggle directions in the final interface pass.
+
+## 2026-10-22 — copy/key and date release follow-up
+
+- Repairing backup prompts did not repair neighboring quote/review/key paths. The shared in-page dialog now covers denied clipboard and empty password entry, with explicit save/clear, no implicit push and focus restoration.
+- An asynchronous response can outlive its opt-in. Tests defer shipped Push/Pull handlers, disable the integration, then verify acknowledgements survive while remote pulls and new retries do not.
+- Date validation must agree across entry and recovery. The parser/add/snapshot/backup regression uses impossible dates and a valid leap date; invalid tokens retain the original input for correction.
+- Actual browser and independent final-delta review remain separate integration evidence. No new workflow, dependency or integration was introduced.

@@ -13,10 +13,17 @@ Security therefore means: **your secrets stay yours.**
   environment variables — `.env` locally, Vercel Environment Variables in
   production. They are **never** placed in `lifeos.config.json` or any committed
   file.
-- The dashboard is a static site; it makes no network calls except to the sync
-  functions *you* deploy.
-- `.gitignore` excludes `.env*`, `lifeos.config.json`, `.mcp.json`, and your
-  private vault content by default.
+- The dashboard reads same-origin JSON files. Task/habit sync calls run only when
+  `integrations.notion.enabled` is `true` in your private instance config.
+- `.gitignore` excludes real `.env*` files and `.mcp.json` (the example files ship).
+  It ignores the legacy repo-root config, but deliberately allows
+  `dashboard/lifeos.config.json`: identity and toggles are committed only in a
+  **private** instance so a private static deployment can read them. Config never
+  contains secrets. Ignore rules are not a privacy boundary for the rest of the vault.
+- Browser backups contain personal entries in an encoded, **unencrypted** form.
+  Keep them private. Sync keys and queued network work are excluded; the dashboard
+  stores its sync key only in that browser. See [browser data](docs/browser-data.md).
+- An unlisted URL is still public. Use access protection for a personal deployment.
 
 ## Reporting a vulnerability
 

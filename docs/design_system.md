@@ -55,6 +55,10 @@ Surfaces support a **warm dark** theme, toggled from the 🌙/☀️ button and 
 
 Semantic tint tokens (`--pill-*-bg`, `--tint-*`, `--rule-bg`, `--reframe-bg`, `--header-grad`, `--navbg`) carry both themes so pills, chips, and callouts stay legible in each.
 
+Solid action backgrounds use `--on-accent` / `--on-accent2` for text: white in light mode,
+deep espresso in dark mode. Plain inline links use `--accent2`; their underline remains
+visible. Do not reuse white text over the brighter dark-mode teal or terracotta.
+
 **Semantic color coding (consistent everywhere):**
 - Priority: **P1 = terracotta**, **P2 = gold**, **P3 = warm grey**.
 - Status pills: **hero = terracotta-on-peach** (`#fbe3d8`/`--accent`), **maintenance = teal-on-mint** (`#e4efe9`/`--accent2`), **foundation/ongoing = gold-on-cream** (`#f5eccf`/`#8a6d1b`).
@@ -150,6 +154,14 @@ The palette (§1) is untouched; **Courtyard** is the motion and ambience layer t
 
 ### localStorage keys (all additive)
 `lifeos_theme` · `lifeos_composer_last_area` · `lifeos_quote_favs` · `lifeos_quote_filter` · `lifeos_quote_id`. **Mission checkbox keys are namespaced by the full mission `slug`** (e.g. `launch-week:w1`), so ticks never carry across mission swaps.
+
+### Backup and restore
+
+Use an in-page dialog with a labeled, selectable code field. Clipboard access is an
+enhancement; a denied clipboard must still leave the full code available. Import validates
+into a preview without writes, then requires a separate Restore action. Cancel/Escape returns
+focus and preserves data. Keep pending network work and credentials out of portable backups.
+See [browser-data.md](browser-data.md) for the supported formats and ownership boundaries.
 
 ### 2026-07 (later): Temple Courtyard, Lamps Lit
 

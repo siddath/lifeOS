@@ -43,6 +43,13 @@ The rule of thumb: anything that touches your data has a **local-first, no-servi
 - Authenticated with `SYNC_SHARED_SECRET`; area/priority/status mapping driven by config so names never drift.
 - Guided ~10-minute setup — see [connectors/notion.md](connectors/notion.md).
 
+**Verification (built).**
+- `npm test` validates demo schemas, Markdown links, Notion mapping/auth, and browser-state
+  regressions for backups, first-run hydration, queue acknowledgement and local dates. CI runs it.
+- Shipped-handler regressions cover clipboard denial, import preview/cancel/restore and a
+  deferred pull with editor input. Browser smoke automation remains planned; these tests
+  do not prove live Notion sync or full browser accessibility.
+
 **Deployment (built).**
 - One-click **Deploy to Vercel**; static `vercel.json`; graceful degradation with no env vars. See [deploy.md](deploy.md).
 
@@ -64,7 +71,6 @@ An MCP-capable assistant can already **read** these live if you enable them in `
 
 **Test coverage.**
 - Playwright smoke tests for the dashboard (desktop + mobile: load, task/habit persistence, module toggles).
-- Landing now: unit tests for the Notion sync mapping, schema validation of the shipped demo data, and a docs link check — wired into CI.
 
 **Serverless Google connectors.**
 - Google Calendar sync function: mission/P1 tasks → time blocks, recurring habits → weekly events, event-done → task-done.

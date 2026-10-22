@@ -25,9 +25,9 @@ updated: 2026-07
 - **Current state:** <!-- lifeos:fill -->
 - **Status:** <!-- lifeos:fill -->
 
-## The one rule
+## My chosen focus method
 
-> One project runs hot at a time. The rest stay warm, not abandoned. Running all of them at full intensity is the spiral.
+<!-- lifeos:fill: how many projects you want active, what capacity you have, and whether a primary focus or maintenance mode helps. This is your choice, not a system rule. -->
 
 ## Someday / parked ideas
 

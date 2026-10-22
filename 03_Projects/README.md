@@ -27,9 +27,9 @@ Give each project its own file or subfolder:
     README.md
 ```
 
-## The one rule
+## Optional focus method
 
-**One project runs hot at a time.** The rest sit in *maintenance mode* — kept warm, next-action noted, but not competing for the mission slot. Running every project at full intensity at once is the spiral LifeOS is designed to prevent.
+If useful, choose one project as the main focus and keep next actions for the others in maintenance mode. Multiple projects can remain active when that fits the owner's commitments. The dashboard's one mission slot does not prescribe how many projects someone may pursue.
 
 For a project you want to be able to talk about (interviews, pitches, retros), instantiate [`../templates/project_story.md`](../templates/project_story.md).
 

@@ -8,7 +8,7 @@ updated: 2026-07
 
 # Weekly Review — Week of {{DATE}}
 
-> The most important 20 minutes of the week. End with evidence, not ideas. File to `../reviews/YYYY-Www.md`.
+> An optional review of what happened and what you need next. Keep the parts that help. File to `../reviews/YYYY-Www.md` if you want a record.
 
 ## 1. Evidence — what shipped this week?
 - (artifacts, not intentions — pull from `../06_Trackers/evidence.md`)
@@ -22,13 +22,13 @@ updated: 2026-07
 |:--:|:--:|:--:|:--:|:--:|:--:|
 | | | | | | |
 
-## 4. Roll-forward
-- Incomplete tasks moved to next week:
-- Inbox cleared? ☐
-- Anything to delete / stop doing?
+## 4. Choose what carries forward
+- Tasks to keep, reschedule, park or stop (preserve originals until chosen):
+- Inbox items reviewed, if wanted (retain captures or archive pointers):
+- Changes I have chosen, if any:
 
 ## 5. Next week
-- **The ONE main thing:**
+- **Focus or priorities I choose (optional):**
 - Next mission (if the mission is changing):
 - Top 3 supporting tasks:
   1.

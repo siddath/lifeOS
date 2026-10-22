@@ -8,9 +8,9 @@ updated: 2026-07
 
 # {{date:dddd, D MMM YYYY}}
 
-> One block a day beats a perfect plan. Pick the one thing, do it, log it.
+> Optional daily prompts. Choose a focus if useful, note what happened, and adapt the list to your needs.
 
-## Today's one thing
+## Today's chosen focus or priorities
 -
 
 ## Mission rep

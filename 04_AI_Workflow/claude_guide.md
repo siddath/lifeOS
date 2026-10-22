@@ -21,17 +21,17 @@ Paste or reference [`master_prompt.md`](master_prompt.md), or just say *"read `A
 
 ## Good jobs to hand it
 - "Update my trackers from this brain-dump."
-- "Run my weekly review and roll incomplete tasks."
+- "Review my week and propose what to keep or reschedule."
 - "Swap my hero mission — this one's done."
 - "Mirror these changes to Notion."
 - "Refactor the dashboard."
 
 ## Orchestrator pattern
 - Use one **lead session** as orchestrator.
-- Spawn subagents (the Agent tool) for parallel research or implementation when a task genuinely fans out.
+- Use subagents for independent work only when the owner or applicable instructions authorize delegation.
 - Keep `06_Trackers/` as the shared state subagents read and write.
 
 ## Hygiene
 - Commit often; let PRs be the review surface.
 - Keep `AGENTS.md` and `lifeos.config.json` accurate — they are the context contract.
-- Don't let a session end with only a to-do list — ship an artifact and log it to `06_Trackers/evidence.md`.
+- Match the requested outcome. Log shipped work when useful; do not turn rest or reflection into an obligation to produce an artifact.

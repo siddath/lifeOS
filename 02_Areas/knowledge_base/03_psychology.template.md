@@ -8,19 +8,19 @@ updated: 2026-07
 
 # 03 — Psychology & Operating Principles
 
-> How your mind actually works — what winds you up, what settles you, and the principle that keeps you moving. The most useful page for an AI session to read before it advises you.
+> Optional self-reported preferences and observations. Record what fits your experience; an assistant should not infer a diagnosis, emotional state or fixed personality from this page.
 
 ## How I tend to operate
 
 <!-- lifeos:fill: your default mode. Fast or deliberate? Do you over-plan, procrastinate, sprint-and-crash? Be honest. -->
 
-## My named anti-pattern
+## A pattern I want to notice (optional)
 
 <!-- lifeos:fill: the failure loop you fall into — e.g. "Think → Plan → Overthink → Re-decide." Naming it is how you catch it. -->
 
-## Spiral / stress triggers
+## Situations I find stressful (optional)
 
-<!-- lifeos:fill: what reliably sends you into a spiral -->
+<!-- lifeos:fill: what you have noticed, in your own words -->
 
 ## What actually calms me down
 
@@ -32,4 +32,4 @@ updated: 2026-07
 
 ## How I want to be talked to
 
-<!-- lifeos:fill: the tone that helps — direct? warm? structured? When you're spiraling, what should someone do? -->
+<!-- lifeos:fill: the tone that helps — direct? warm? structured? When you ask for support, what would you like someone to do? -->

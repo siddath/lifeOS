@@ -11,7 +11,8 @@
 :root{
   /* "Hearth" palette — daytime: paper, terracotta, warm gold */
   --bg:#faf6ef; --card:#fffdf8; --ink:#2b2620; --muted:#6f6555; /* #6f6555 ≥4.5:1 on --bg at meta sizes */
-  --line:#e7ddcc; --accent:#b4502a; --accent2:#1f6f5c; --gold:#c9a24b;
+  --line:#e7ddcc; --accent:#a94724; --accent2:#1f6f5c; --gold:#c9a24b;
+  --on-accent:#fff; --on-accent2:#fff;
   --saffron:#e2871b;
   --shadow:0 1px 3px rgba(60,45,20,.08),0 8px 24px rgba(60,45,20,.06);
   --header-grad:linear-gradient(135deg,#b4502a,#8a3c1f);
@@ -21,7 +22,7 @@
   --pill-hero-bg:#fbe3d8; --pill-maint-bg:#e4efe9; --pill-found-bg:#f5eccf;
   --tint-remember:#f5eccf; --tint-strength:#e4efe9; --tint-watch:#fbe3d8; --tint-novelty:#eae4f2;
   --tint-warm:#fbe3d8; --tint-gold:#f5eccf; --tint-gold-line:#e9d9ad;
-  --gold-ink:#8a6d1b; /* legible gold text on light chips */
+  --gold-ink:#7c6015; /* ≥4.5:1 on light gold chips */
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   /* Motion + ambient (Temple Courtyard at Dusk) */
@@ -53,6 +54,7 @@
 :root[data-theme="dark"]{
   --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
   --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
+  --on-accent:#191410; --on-accent2:#191410;
   --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
   --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
   --header-grad-deep:linear-gradient(135deg,#5a2513,#33160b);
@@ -68,6 +70,7 @@
   :root:not([data-theme="light"]):not([data-theme="dark"]){
     --bg:#191410; --card:#241d16; --ink:#f1e7d6; --muted:#ab9c86;
     --line:#3a3025; --accent:#e07a4e; --accent2:#57b89b; --gold:#d9b45f; --saffron:#e8a04a;
+    --on-accent:#191410; --on-accent2:#191410;
     --shadow:0 1px 3px rgba(0,0,0,.45),0 12px 30px rgba(0,0,0,.4);
     --header-grad:linear-gradient(135deg,#7a331b,#4d2213);
     --header-grad-deep:linear-gradient(135deg,#5a2513,#33160b);
@@ -86,6 +89,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;
      padding:0 0 64px;transition:background .4s ease,color .4s ease}
+a{color:var(--accent2);text-underline-offset:.16em}
 :focus-visible{outline:none;box-shadow:0 0 0 2px var(--gold);border-radius:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto}}
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
@@ -97,8 +101,9 @@ body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .topnav{background:var(--card)} }
 .topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .topnav .brand{font-weight:700;font-size:var(--fs-body);color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
+.topnav .brand{max-width:100%;white-space:normal;flex-wrap:wrap}
 .topnav .brand span{color:var(--muted);font-weight:600}
-.nav-kb{background:var(--accent2);color:#fff !important;text-decoration:none;font-size:var(--fs-meta);font-weight:700;
+.nav-kb{background:var(--accent2);color:var(--on-accent2) !important;text-decoration:none;font-size:var(--fs-meta);font-weight:700;
         padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow);margin-left:auto}
 .nav-kb:hover,.nav-kb:focus-visible{filter:brightness(1.08)}
 @media(max-width:640px){.topnav .nav-inner{padding:8px 12px}}
@@ -172,3 +177,18 @@ body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line
   @keyframes sheetUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
   body{padding-bottom:88px}
 }
+
+/* Selectable copy text and private key entry use the same local dialog on every page. */
+.text-dialog{box-sizing:border-box;width:min(680px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;
+  border:1px solid var(--line);border-radius:var(--r-card);padding:var(--sp-4);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.text-dialog::backdrop{background:rgba(25,20,16,.65)}
+.text-dialog h2{font:600 var(--fs-title)/1.25 var(--serif);margin:0 0 var(--sp-2)}
+.text-dialog p{margin:0 0 var(--sp-3);overflow-wrap:anywhere}
+.text-dialog label{display:block;font-weight:600;margin-bottom:var(--sp-1)}
+.text-dialog textarea,.text-dialog input{box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--bg);color:var(--ink);font:16px/1.5 monospace}
+.text-dialog textarea{min-height:150px;resize:vertical;overflow-wrap:anywhere}
+.text-dialog [hidden]{display:none}
+.text-dialog-actions{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin:var(--sp-3) 0}
+.text-dialog button{min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}

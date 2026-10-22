@@ -5,7 +5,7 @@ Thanks for wanting to help. LifeOS is a small, focused framework — a plain-tex
 ## Ground rules
 
 1. **No personal data in PRs.** This project holds *your own* life data when you run it. Never commit real names, family details, finances, tokens, Notion IDs, or deployment URLs. The demo persona ("Alex Rivera") is the only allowed example content. CI runs a generic secret/PII scan on every PR.
-2. **No build step.** The dashboard is a static site — open `dashboard/index.html` over `file://` and it works. Keep it dependency-free in the browser.
+2. **No build step.** The dashboard is a static site. Use a local HTTP server for reliable JSON loading; `file://` may block fetch and show inline fallback data. Keep it dependency-free in the browser.
 3. **Config over hardcode.** Anything user-specific belongs in `dashboard/lifeos.config.json` / `schemas/`, never inline in HTML or JS.
 
 ## Running locally
@@ -14,7 +14,8 @@ Thanks for wanting to help. LifeOS is a small, focused framework — a plain-tex
 git clone <this-repo>
 cd lifeos
 cp dashboard/lifeos.config.example.json dashboard/lifeos.config.json   # optional; example is the fallback
-open dashboard/index.html                           # or: python3 -m http.server
+python3 -m http.server 8080
+# Open http://localhost:8080/dashboard/index.html
 ```
 
 The serverless functions in `api/` only run when deployed to Vercel (or `vercel dev`) with Notion env vars set. Without them, the dashboard degrades gracefully to local-only.
@@ -27,5 +28,6 @@ See `docs/connectors/README.md` for the contract. In short: add env vars to `.en
 
 - One focused change per PR; describe the user-visible effect.
 - Update `docs/` and `schemas/` when you change a data shape.
+- Run `npm test` for schema, local-link and regression checks.
 - Run the local PII scan (`scripts/pii-scan.sh` if present) before pushing.
 - Be kind in review — see `CODE_OF_CONDUCT.md`.

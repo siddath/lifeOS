@@ -102,7 +102,7 @@
   .sync-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
             padding:6px 14px;font-size:var(--fs-meta);cursor:pointer;text-decoration:none;transition:all .15s;font-weight:600}
   .sync-btn:hover{background:var(--line)}
-  .sync-btn.primary{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .sync-btn.primary{background:var(--accent2);color:var(--on-accent2);border-color:var(--accent2)}
   .sync-msg{font-size:var(--fs-meta);color:var(--muted);width:100%;text-align:center}
 
   /* Daily Wisdom quote card */
@@ -143,7 +143,7 @@
   .ed-area{border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:var(--fs-micro);
               background:var(--bg);cursor:pointer;color:var(--ink)}
   .ed-prio{border:none;border-radius:999px;padding:3px 10px;font-size:var(--fs-micro);font-weight:700;cursor:pointer;color:#fff}
-  .ed-prio.prio-P1{background:var(--accent)}
+  .ed-prio.prio-P1{background:var(--accent);color:var(--on-accent)}
   .ed-prio.prio-P2{background:var(--gold);color:#3a2c10} /* white on gold was 2.4:1; dark ink matches chip.prio-P2.on */
   .ed-prio.prio-P3{background:#6f675c} /* was #9a9186 — 3.1:1 under white text */
   .ed-due{border:1px solid var(--line);border-radius:var(--r-btn);padding:3px 6px;font-size:var(--fs-meta);background:var(--bg);color:var(--ink)}
@@ -158,15 +158,32 @@
   .ed-days{display:flex;gap:4px}
   .ed-day{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
               color:var(--muted);font-size:var(--fs-micro);font-weight:700;cursor:pointer}
-  .ed-day.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .ed-day.on{background:var(--accent2);color:var(--on-accent2);border-color:var(--accent2)}
   .ed-addrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .ed-addrow input[type=text]{flex:1 1 260px;border:1px solid var(--line);border-radius:var(--r-btn);padding:8px 12px;
               font-size:var(--fs-sub);background:var(--bg);color:var(--ink)}
-  .ed-addrow button{border:none;background:var(--accent2);color:#fff;border-radius:var(--r-btn);padding:8px 16px;
+  .ed-addrow button{border:none;background:var(--accent2);color:var(--on-accent2);border-radius:var(--r-btn);padding:8px 16px;
               font-size:var(--fs-sub);font-weight:600;cursor:pointer}
   .ed-hint{font-size:var(--fs-micro);color:var(--muted);margin:8px 0 0}
   .ed-hint code{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
   .ed-empty{color:var(--muted);font-size:var(--fs-sub);font-style:italic;padding:8px 0}
+  .ed-row :focus-visible,.ed-hrow :focus-visible,.syncbar :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  #demoNotice{flex-basis:100%;color:var(--ink);font-size:var(--fs-meta)}
+  #demoNotice a{color:var(--accent2);text-underline-offset:3px}
+  .backup-dialog{width:min(680px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;
+    border:1px solid var(--line);border-radius:var(--r-card);padding:var(--sp-4);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .backup-dialog::backdrop{background:rgba(25,20,16,.65)}
+  .backup-dialog h2{font:600 var(--fs-title)/1.25 var(--serif);margin:0 0 var(--sp-2)}
+  .backup-dialog p{margin:0 0 var(--sp-3)}
+  .backup-dialog label{display:block;font-weight:600;margin-bottom:var(--sp-1)}
+  .backup-dialog textarea{display:block;width:100%;min-height:150px;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);
+    background:var(--bg);color:var(--ink);font:16px/1.5 monospace;resize:vertical;overflow-wrap:anywhere}
+  .backup-actions{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-3)}
+  .backup-actions[hidden]{display:none}
+  .backup-actions .sync-btn{min-height:44px}
+  .backup-actions button:disabled{opacity:.6;cursor:default}
+  #backupPreview{padding-top:var(--sp-3)}
+  #backupMessage{margin-top:var(--sp-3);overflow-wrap:anywhere}
   .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-meta);font-weight:600;color:var(--ink)}
   .status-dot.pending{background:var(--gold)}
   .status-dot.syncing{background:var(--gold)}
@@ -198,7 +215,7 @@
   .rate-dots{display:flex;gap:4px}
   .rate-dots button{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
         cursor:pointer;font-size:var(--fs-micro);color:var(--muted);padding:0;transition:all .12s}
-  .rate-dots button.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .rate-dots button.on{background:var(--accent2);color:var(--on-accent2);border-color:var(--accent2)}
   /* iPad/phone are the primary surfaces: the most-tapped controls get real hit areas */
   @media(pointer:coarse){
     .ed-day{width:38px;height:38px;font-size:var(--fs-meta)}
@@ -278,7 +295,7 @@
   .composer-main input[type=text]{flex:1 1 260px;border:1px solid var(--line);border-radius:var(--r-btn);padding:9px 12px;
     font-size:var(--fs-body);background:var(--bg);color:var(--ink)}
   .composer-main input[type=text]:focus{outline:none;box-shadow:0 0 0 2px var(--gold);background:var(--card)}
-  .composer-add{border:none;background:var(--accent2);color:#fff;border-radius:var(--r-btn);padding:9px 18px;
+  .composer-add{border:none;background:var(--accent2);color:var(--on-accent2);border-radius:var(--r-btn);padding:9px 18px;
     font-size:var(--fs-sub);font-weight:600;cursor:pointer;transition:filter var(--dur-1)}
   .composer-add:hover{filter:brightness(1.06)}
   .composer-opts{margin-top:10px}
@@ -293,8 +310,8 @@
   .chip.suggest{border-color:var(--gold);border-style:dashed}          /* last-used hint — NOT applied unless clicked */
   .chip.auto{border-color:var(--accent2);border-style:dashed;color:var(--accent2)}  /* the parser default */
   .chip.parsed{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 15%,transparent)}  /* live NL echo */
-  .chip.on{background:var(--accent2);border-color:var(--accent2);color:#fff}         /* explicitly chosen */
-  .chip.prio-P1.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip.on{background:var(--accent2);border-color:var(--accent2);color:var(--on-accent2)}         /* explicitly chosen */
+  .chip.prio-P1.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
   .chip.prio-P2.on{background:var(--gold);border-color:var(--gold);color:#3a2c10}
   .chip.prio-P3.on{background:#9a9186;border-color:#9a9186;color:#fff}
   .composer-hint{margin-top:2px}
@@ -304,7 +321,7 @@
 
   /* ---- Phase 4 · Daily review stepper ---- */
   .dr-rest-line{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:var(--fs-h3);margin:2px 0 12px}
-  .dr-begin{border:none;background:var(--accent);color:#fff;border-radius:999px;padding:9px 18px;
+  .dr-begin{border:none;background:var(--accent);color:var(--on-accent);border-radius:999px;padding:9px 18px;
     font-size:var(--fs-body);font-weight:600;cursor:pointer;transition:filter var(--dur-1)}
   .dr-begin:hover{filter:brightness(1.06)}
   .dr-dots{display:flex;gap:7px;margin-top:14px}
@@ -324,7 +341,7 @@
   .dr-mood{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
   .dr-mood button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
     padding:8px 14px;font-size:var(--fs-sub);font-weight:600;cursor:pointer;min-height:40px;display:inline-flex;align-items:center;gap:6px}
-  .dr-mood button.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
+  .dr-mood button.on{background:var(--accent2);border-color:var(--accent2);color:var(--on-accent2)}
   .dr-onething{width:100%;border:1px solid var(--line);border-radius:var(--r-btn);padding:12px 14px;
     font-family:var(--serif);font-size:var(--fs-h2);background:var(--card);color:var(--ink)}
   .dr-onething:focus{outline:none;box-shadow:0 0 0 2px var(--gold)}
@@ -333,12 +350,13 @@
   .grat-row[hidden]{display:none}
   .dr-nav{display:flex;justify-content:space-between;gap:8px;margin-top:16px}
   .dr-nav button:disabled{opacity:.4;cursor:default}
-  .dr-next{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .dr-next{background:var(--accent2);color:var(--on-accent2);border-color:var(--accent2)}
   #drStepper.dr-flat #drStepIndicator,#drStepper.dr-flat .dr-nav{display:none}
   #drStepper.dr-flat .dr-step{display:block}
   #drStepper.dr-flat .dr-step + .dr-step{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px}
 </style>
 <script src="assets/shared.js"></script>
+<script src="assets/state.js"></script>
 </head>
 <body>
 <div id="ambient" aria-hidden="true"></div>
@@ -355,13 +373,14 @@
 </nav>
 
 <!-- The Vaasal: the threshold — his own language, before the mission -->
-<div class="greeting">
+<section class="greeting" aria-label="Greeting">
   <div class="wrap greeting-inner">
     <span class="greet-hi" id="greetHi">Hey, Alex</span>
     <span class="greet-date" id="greetDate"></span>
     <span class="greet-line" id="greetLine">One thing at a time. Enjoy the ride.</span>
+    <span class="sub" id="demoNotice">Fictional demo · changes save only in this browser. <a href="../docs/onboarding.md">Make it yours</a></span>
   </div>
-</div>
+</section>
 
 <header id="top">
   <span class="kicker" id="heroKicker">Hero mission · one thing at a time</span>
@@ -369,7 +388,7 @@
   <p id="heroSubtitle">Ship Fieldnotes to its first 50 beta users — calm, finished, real</p>
 </header>
 
-<div class="wrap">
+<main class="wrap" id="main">
 
   <!-- ============ HERO ZONE: the one thing ============ -->
   <section id="hero" class="section" style="margin-top:0" aria-label="The one thing">
@@ -401,8 +420,8 @@
 
     <!-- Live Task Manager -->
     <div class="card" style="grid-column:1/-1">
-      <h2>Tasks <span class="pill found">live · syncs to Notion</span></h2>
-      <p class="sub">Add, edit, re-prioritize below. Every change queues an automatic sync to your Notion Tasks DB.</p>
+      <h2>Tasks <span class="pill found" data-sync-mode>saved on this device</span></h2>
+      <p class="sub">Add a task, choose its area, and take the next step. Edits save in this browser; export a backup to keep them safe.</p>
       <div id="taskList"></div>
       <!-- The Slate: type a title, walk away — the chips are for when you want more -->
       <div class="composer" id="taskComposer">
@@ -421,11 +440,11 @@
 
     <!-- The Kolam: the week's matrix, filled in one dot (day) at a time -->
     <div class="card" style="grid-column:1/-1">
-      <h2>Habits <span class="pill found">live · syncs to Notion</span></h2>
+      <h2>Habits <span class="pill found" data-sync-mode>saved on this device</span></h2>
       <p class="sub">This week's matrix. ★ = keystone habit. Click a day letter to toggle it.</p>
       <div id="habitList"></div>
       <div class="ed-addrow">
-        <input type="text" id="habitQuickAdd" placeholder="Add a new habit… Enter to add">
+        <input type="text" id="habitQuickAdd" placeholder="Add a new habit… Enter to add" aria-label="New habit name">
         <button onclick="addHabitFromQuickAdd()">+ Add</button>
       </div>
       <div id="habitHistory" class="ed-hint" style="margin-top:var(--sp-2)"></div>
@@ -897,7 +916,7 @@
   <details class="zone" style="margin:var(--section-gap) 0 0">
     <summary>
       🪔 Backup &amp; sync
-      <span class="zsub">Local-first — your edits live in this browser until you push them</span>
+      <span class="zsub">Edits save in this browser. Export a backup to keep a separate copy.</span>
       <span class="chev">▶</span>
     </summary>
     <div class="zone-body">
@@ -908,17 +927,38 @@
         <button class="sync-btn" onclick="setSyncSecret()" title="Set the sync key that matches SYNC_SHARED_SECRET on your deployment">🔑 Sync key</button>
         <button class="sync-btn" onclick="exportState()">💾 Export backup</button>
         <button class="sync-btn" onclick="importState()">📥 Import backup</button>
-        <span class="sync-msg" id="syncMsg">Edits to Tasks/Habits below queue an automatic sync to Notion · see <a href="../docs/connectors/notion.md">setup guide</a>.</span>
+        <span class="sync-msg" id="syncMsg" role="status">Local only. Backups include tasks, habits, checks, reviews and favorites, but never your sync key. Keep backups private.</span>
       </div>
     </div>
   </details>
 
-  <footer>
+</main>
+  <footer class="wrap">
     <p class="one-reframe" style="font-family:var(--serif);font-style:italic;color:var(--muted);max-width:640px;margin:0 auto 12px">One hero mission at a time. Do the one thing, stay close to the people you love, sleep well. That is the win.</p>
     <span id="footerCredit">Built with LifeOS · data saved locally in your browser</span> ·
-    <button class="reset" onclick="resetAll()">↺ Reset everything</button>
+    <button class="reset" onclick="resetAll()">↺ Reset visible checkboxes</button>
   </footer>
-</div>
+
+<dialog id="backupDialog" class="backup-dialog" aria-labelledby="backupTitle" aria-describedby="backupHelp">
+  <h2 id="backupTitle">Browser backup</h2>
+  <p id="backupHelp">Keep this code private. It contains your entries and is not encrypted. Sync keys are excluded.</p>
+  <label for="backupCode" id="backupCodeLabel">Backup code</label>
+  <textarea id="backupCode" rows="6" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="backupHelp backupMessage"></textarea>
+  <div class="backup-actions" id="backupExportActions">
+    <button type="button" class="sync-btn" onclick="selectBackupCode()">Select code</button>
+    <button type="button" class="sync-btn" onclick="copyBackupCode()">Copy code</button>
+  </div>
+  <div class="backup-actions" id="backupImportActions" hidden>
+    <button type="button" class="sync-btn" onclick="previewBackup()">Review backup</button>
+  </div>
+  <div id="backupPreview" hidden>
+    <p id="backupSummary"></p>
+    <p>Restoring replaces the saved entries included in this backup and clears pending sync work. It sends nothing to Notion. Export your current state first if you need to keep it.</p>
+    <button type="button" class="sync-btn primary" id="backupRestore" onclick="restoreBackup()" disabled>Restore these saved entries</button>
+  </div>
+  <p id="backupMessage" role="status" aria-live="polite"></p>
+  <div class="backup-actions"><button type="button" class="sync-btn" id="backupClose" onclick="closeBackupDialog()">Cancel</button></div>
+</dialog>
 
 <script>
   /* Shared chrome first: dock (with sync group) + theme icon. */
@@ -1007,8 +1047,14 @@
 
   // Persistent checkboxes (wired AFTER mission render so dynamic rows get listeners + saved state)
   const boxes = () => document.querySelectorAll('ul.check input[type=checkbox]');
-  function save(){ const s={}; boxes().forEach(b=>s[b.id]=b.checked); localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress(); }
-  function load(){ let s={}; try{ s=JSON.parse(localStorage.getItem('lifeos')||'{}'); }catch(e){} boxes().forEach(b=>{ if(s[b.id])b.checked=true; }); updateProgress(); }
+  function save(){
+    let s;
+    try{ s=LifeOSState.checks(JSON.parse(localStorage.getItem('lifeos')||'{}')); }
+    catch(_){ syncNote('Saved checkboxes could not be read. Export your current browser data before resetting them.'); return; }
+    boxes().forEach(b=>s[b.id]=b.checked);
+    localStorage.setItem('lifeos',JSON.stringify(s)); updateProgress();
+  }
+  function load(){ let s={}; try{ s=LifeOSState.checks(JSON.parse(localStorage.getItem('lifeos')||'{}')); }catch(e){} boxes().forEach(b=>{ b.checked=s[b.id]===true; }); updateProgress(); }
   function updateProgress(){
     const all=[...boxes()]; const done=all.filter(b=>b.checked).length;
     const pct = all.length? Math.round(done/all.length*100):0;
@@ -1185,11 +1231,13 @@
     fav.textContent=isFav?'♥':'♡'; fav.setAttribute('aria-pressed', isFav?'true':'false');
   }
   function qToast(msg){ const t=document.getElementById('qToast'); if(!t) return; t.textContent=msg; t.hidden=false; setTimeout(()=>{ t.hidden=true; }, 1600); }
-  function shareQuote(){
+  async function shareQuote(){
     const text='“'+curQuote.text+'” — '+curQuote.author;
-    if(navigator.share){ navigator.share({text}).catch(()=>{}); }
-    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>qToast('Copied'), ()=>window.prompt('Copy:',text)); }
-    else window.prompt('Copy:',text);
+    if(navigator.share){
+      try{ await navigator.share({text}); return; }
+      catch(error){ if(error?.name==='AbortError') return; }
+    }
+    if(await LifeOS.copyText(text,'Copy quote')) qToast('Copied');
   }
   function buildFilterPop(){
     const pop=document.getElementById('qFilterPop'); if(!pop) return; const cur=qFilter();
@@ -1260,7 +1308,7 @@
   function currentWeekMonday(){
     const d = new Date(); const day = d.getDay(); const diff = (day===0? -6 : 1-day);
     const monday = new Date(d); monday.setDate(d.getDate()+diff);
-    return monday.toISOString().slice(0,10);
+    return LifeOSState.localDate(monday);
   }
 
   function getTasks(){ try{ return JSON.parse(localStorage.getItem('lifeos_tasks_v1')||'[]'); }catch(e){ return []; } }
@@ -1275,10 +1323,9 @@
   // used only if those files can't be fetched (e.g. file:// with fetch blocked). Either way,
   // they only write when local storage is empty. Shapes: schemas/tasks|habits.schema.json.
   // See DEMO_DATA.md and AGENTS.md → Onboarding.
-  const _seededInlineThisLoad = { tasks:false, habits:false };
+  const _seededInlineThisLoad = { tasks:null, habits:null };
   function seedIfEmpty(){
     if(!localStorage.getItem('lifeos_tasks_v1')){
-      _seededInlineThisLoad.tasks = true;
       const now = nowIso();
       const seed = [
         {title:'Nail the core capture → recall loop', area:'fieldnotes', priority:'P1', due:''},
@@ -1291,15 +1338,16 @@
         {title:'Renew the apartment lease', area:'admin', priority:'P3', due:''},
       ].map(t=>({ id: uid(), status:'open', notionId:null, updatedAt: now, ...t }));
       setTasks(seed);
+      _seededInlineThisLoad.tasks = localStorage.getItem('lifeos_tasks_v1');
     }
     if(!localStorage.getItem('lifeos_habits_v1')){
-      _seededInlineThisLoad.habits = true;
       const now = nowIso(); const weekOf = currentWeekMonday();
       const names = ['Workout / strength','10k steps','Morning sunlight','Meditation 10-15 min','Water ~3 L','Vitamins','Read 30 min','Sleep early 7+ hrs','Time with Sam','Deep-work block'];
       const keystones = new Set(['Sleep early 7+ hrs','Workout / strength','Time with Sam','Meditation 10-15 min']);
       const seed = names.map(n=>({ id: uid(), name:n, keystone: keystones.has(n), active:true, cadence:'Daily', weekOf,
         days:{mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false}, notionId:null, updatedAt: now }));
       setHabits(seed);
+      _seededInlineThisLoad.habits = localStorage.getItem('lifeos_habits_v1');
     }
   }
   seedIfEmpty();
@@ -1309,14 +1357,16 @@
   // with an empty browser sees exactly that. We only replace data WE just wrote inline this
   // load (via _seededInlineThisLoad) — a returning user's real edits are never touched.
   async function hydrateSeedsFromFiles(){
+    let tasksHydrated=false, habitsHydrated=false;
     if(_seededInlineThisLoad.tasks){
       try{
         const r = await fetch('tasks-data.json',{cache:'no-store'});
         if(r.ok){ const d = await r.json();
-          if(Array.isArray(d.tasks) && d.tasks.length){
+          if(Array.isArray(d.tasks)){
             const now = nowIso();
-            setTasks(d.tasks.map(t=>({ id:uid(), title:t.title||'Untitled', area:t.area||'mindset',
-              priority:t.priority||'P3', status:t.status||'open', due:t.due||'', notionId:null, updatedAt:now })));
+            const rows=LifeOSState.records(d.tasks,'tasks').map(t=>({ ...t, id:t.id||uid(),
+              status:t.status||'open', due:t.due||'', notionId:null, updatedAt:now }));
+            tasksHydrated=LifeOSState.hydrateSeed(localStorage,'lifeos_tasks_v1',_seededInlineThisLoad.tasks,rows);
           }
         }
       }catch(e){ /* file:// or offline — keep the inline fallback */ }
@@ -1325,19 +1375,19 @@
       try{
         const r = await fetch('habits-data.json',{cache:'no-store'});
         if(r.ok){ const d = await r.json();
-          if(Array.isArray(d.habits) && d.habits.length){
+          if(Array.isArray(d.habits)){
             const now = nowIso(), weekOf = currentWeekMonday();
-            setHabits(d.habits.map(h=>({ id:uid(), name:h.name||'Untitled habit', keystone:!!h.keystone,
+            const rows=LifeOSState.records(d.habits,'habits').map(h=>({ id:h.id||uid(), name:h.name, keystone:!!h.keystone,
               active:h.active!==false, cadence:h.cadence||'Daily', weekOf,
               days:{mon:false,tue:false,wed:false,thu:false,fri:false,sat:false,sun:false},
-              notionId:null, updatedAt:now })));
+              notionId:null, updatedAt:now }));
+            habitsHydrated=LifeOSState.hydrateSeed(localStorage,'lifeos_habits_v1',_seededInlineThisLoad.habits,rows);
           }
         }
       }catch(e){ /* keep inline fallback */ }
     }
-    if(typeof renderTasks === 'function') renderTasks();
-    if(typeof renderHabits === 'function') renderHabits();
-    if(typeof renderHabitHistory === 'function') renderHabitHistory();
+    if(tasksHydrated) renderTasks();
+    if(habitsHydrated){ renderHabits(); renderHabitHistory(); }
   }
 
   // ---- Habit-week rollover: archive last week's matrix so streaks aren't lost ----
@@ -1370,11 +1420,11 @@
   // ---- Quick-add natural-language parsing ----
   function resolveDueToken(tok){
     const t = tok.toLowerCase(); const today = new Date();
-    const fmt = (d)=>d.toISOString().slice(0,10);
+    const fmt = LifeOSState.localDate;
     if(t==='today') return fmt(today);
     if(t==='tomorrow'){ const d=new Date(today); d.setDate(d.getDate()+1); return fmt(d); }
     if(t==='sat'){ const d=new Date(today); const add=(6-d.getDay()+7)%7||7; d.setDate(d.getDate()+add); return fmt(d); }
-    if(/^\d{4}-\d{2}-\d{2}$/.test(tok)) return tok;
+    if(LifeOSState.validDate(tok)) return tok;
     return '';
   }
   function parseQuickAdd(input){
@@ -1391,15 +1441,15 @@
 
   // ---- Rendering ----
   function taskRowHTML(t){
-    const areaOpts = AREA_CODES.map(a=>`<option value="${a}" ${a===t.area?'selected':''}>${AREA_META[a].label}</option>`).join('');
-    return `<div class="ed-row ${t.status==='done'?'ed-done-row':''}" data-id="${t.id}">
-      <input type="checkbox" class="ed-done" ${t.status==='done'?'checked':''} title="Mark done">
-      <input type="text" class="ed-title" value="${escAttr(t.title)}" placeholder="Task title">
-      <select class="ed-area" title="Area">${areaOpts}</select>
+    const areaOpts = (!AREA_CODES.includes(t.area)?`<option value="${escAttr(t.area)}" selected>${escHtml(t.area)} (from backup)</option>`:'') + AREA_CODES.map(a=>`<option value="${escAttr(a)}" ${a===t.area?'selected':''}>${escHtml(AREA_META[a].label)}</option>`).join('');
+    return `<div class="ed-row ${t.status==='done'?'ed-done-row':''}" data-id="${escAttr(t.id)}">
+      <input type="checkbox" class="ed-done" ${t.status==='done'?'checked':''} aria-label="Mark ${escAttr(t.title)} done">
+      <input type="text" class="ed-title" value="${escAttr(t.title)}" placeholder="Task title" aria-label="Task title">
+      <select class="ed-area" aria-label="Task area">${areaOpts}</select>
       <button class="ed-prio prio-${t.priority}" title="Click to cycle priority" aria-label="Priority ${t.priority} — click to cycle">${t.priority}</button>
-      <input type="date" class="ed-due" value="${t.due||''}" title="Due date">
+      <input type="date" class="ed-due" value="${escAttr(t.due||'')}" aria-label="Task due date">
       <span class="ed-sync-dot ${t.notionId?'synced':''}" title="${t.notionId?'Synced to Notion':'Not yet synced'}"></span>
-      <button class="ed-del" title="Delete">×</button>
+      <button class="ed-del" title="Delete task" aria-label="Delete ${escAttr(t.title)}">×</button>
     </div>`;
   }
   function sortTasks(a,b){
@@ -1412,17 +1462,32 @@
   }
   function habitRowHTML(h){
     const dayBtns = DAYS.map(d=>`<button class="ed-day ${h.days[d]?'on':''}" data-day="${d}" title="${DAY_LABEL[d]}" aria-pressed="${h.days[d]?'true':'false'}" aria-label="${DAY_LABEL[d]}">${DAY_LABEL[d][0]}</button>`).join('');
-    return `<div class="ed-hrow" data-id="${h.id}">
+    return `<div class="ed-hrow" data-id="${escAttr(h.id)}">
       <button class="ed-star ${h.keystone?'on':''}" title="Keystone habit" aria-pressed="${h.keystone?'true':'false'}" aria-label="Keystone habit">★</button>
-      <input type="text" class="ed-hname" value="${escAttr(h.name)}" placeholder="Habit name">
+      <input type="text" class="ed-hname" value="${escAttr(h.name)}" placeholder="Habit name" aria-label="Habit name">
       <div class="ed-days">${dayBtns}</div>
       <span class="ed-sync-dot ${h.notionId?'synced':''}" title="${h.notionId?'Synced to Notion':'Not yet synced'}"></span>
-      <button class="ed-hdel" title="Delete">×</button>
+      <button class="ed-hdel" title="Delete habit" aria-label="Delete ${escAttr(h.name)}">×</button>
     </div>`;
   }
   function renderHabits(){
     const list = getHabits();
     document.getElementById('habitList').innerHTML = list.map(habitRowHTML).join('') || '<p class="ed-empty">No habits yet — add one below.</p>';
+  }
+
+  // Update names in place; never replace an editor or its unfinished text.
+  function refreshTaskRowLabels(row, task){
+    if(!task) return;
+    const names={'.ed-done':`Completed: ${task.title}`,'.ed-area':`Area for ${task.title}`,
+      '.ed-prio':`Priority ${task.priority} for ${task.title} — activate to cycle`,
+      '.ed-due':`Due date for ${task.title}`,'.ed-del':`Delete ${task.title}`};
+    Object.entries(names).forEach(([selector,label])=>row.querySelector(selector)?.setAttribute('aria-label',label));
+  }
+  function refreshHabitRowLabels(row, habit){
+    if(!habit) return;
+    row.querySelector('.ed-star')?.setAttribute('aria-label',`Keystone habit: ${habit.name}`);
+    row.querySelector('.ed-hdel')?.setAttribute('aria-label',`Delete ${habit.name}`);
+    row.querySelectorAll('.ed-day').forEach(button=>button.setAttribute('aria-label',`${DAY_LABEL[button.dataset.day]}: ${habit.name}`));
   }
 
   // ---- Mutations ----
@@ -1439,7 +1504,9 @@
   }
   function addTaskFromQuickAdd(){
     const raw = composer.input.value.trim(); if(!raw) return;
-    const r = resolveComposer(); if(!r.title) return;
+    const r = resolveComposer();
+    if(r.invalidDue){ syncNote('Due date was not recognized. Use today, tomorrow, sat, or a real YYYY-MM-DD date. Your task text is kept.'); composer.input.focus(); return; }
+    if(!r.title) return;
     const t = { id:uid(), title:r.title, area:r.area, priority:r.priority, due:r.due, status:'open', notionId:null, updatedAt:nowIso() };
     const tasks = getTasks(); tasks.push(t); setTasks(tasks);
     queueSync('task','upsert', t);
@@ -1474,12 +1541,19 @@
   }
 
   // ---- Event delegation ----
+  let editorRevision=0;
+  document.getElementById('taskList').addEventListener('input',()=>{ _seededInlineThisLoad.tasks=null; editorRevision++; });
+  document.getElementById('habitList').addEventListener('input',()=>{ _seededInlineThisLoad.habits=null; editorRevision++; });
   document.getElementById('taskList').addEventListener('change', (e)=>{
     const row = e.target.closest('.ed-row'); if(!row) return; const id = row.dataset.id;
     if(e.target.classList.contains('ed-done')){
       updateTask(id, {status: e.target.checked?'done':'open'});
       row.classList.toggle('ed-done-row', e.target.checked);
-    } else if(e.target.classList.contains('ed-title')){ updateTask(id, {title: e.target.value}); }
+    } else if(e.target.classList.contains('ed-title')){
+      const current=getTasks().find(t=>t.id===id); if(!current) return;
+      if(!e.target.value.trim()){ e.target.value=current.title; syncNote('A task needs a title. The previous title was kept.'); return; }
+      updateTask(id, {title: e.target.value}); refreshTaskRowLabels(row,getTasks().find(t=>t.id===id));
+    }
     else if(e.target.classList.contains('ed-area')){ updateTask(id, {area: e.target.value}); }
     else if(e.target.classList.contains('ed-due')){ updateTask(id, {due: e.target.value}); }
   });
@@ -1489,6 +1563,7 @@
       const cur = getTasks().find(t=>t.id===id); if(!cur) return;
       const order=['P1','P2','P3']; const next = order[(order.indexOf(cur.priority)+1)%3];
       updateTask(id, {priority: next}); e.target.textContent = next; e.target.className = 'ed-prio prio-'+next;
+      refreshTaskRowLabels(row,getTasks().find(t=>t.id===id));
     } else if(e.target.classList.contains('ed-del')){ deleteTask(id); }
   });
   document.getElementById('taskQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addTaskFromQuickAdd(); }});
@@ -1526,7 +1601,7 @@
   function nlDueChip(tok){
     if(!tok) return null;
     if(tok==='today'||tok==='tomorrow'||tok==='sat') return tok;
-    if(/^\d{4}-\d{2}-\d{2}$/.test(tok)) return 'pick';
+    if(LifeOSState.validDate(tok)) return 'pick';
     return null;
   }
   function refreshComposerChips(){
@@ -1563,7 +1638,7 @@
     if(nl.due) due = resolveDueToken(nl.due);
     else if(composer.sel.due==='pick') due = composer.sel.dueDate||'';
     else if(composer.sel.due && composer.sel.due!=='none') due = resolveDueToken(composer.sel.due);
-    return { title:parsed.title, area, priority, due };
+    return { title:parsed.title, area, priority, due, invalidDue:!!nl.due && !due };
   }
   // Wiring
   buildComposerChips();
@@ -1597,17 +1672,22 @@
 
   document.getElementById('habitList').addEventListener('change', (e)=>{
     const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
-    if(e.target.classList.contains('ed-hname')){ updateHabit(id, {name: e.target.value}); }
+    if(e.target.classList.contains('ed-hname')){
+      const current=getHabits().find(h=>h.id===id); if(!current) return;
+      if(!e.target.value.trim()){ e.target.value=current.name; syncNote('A habit needs a name. The previous name was kept.'); return; }
+      updateHabit(id, {name: e.target.value}); refreshHabitRowLabels(row,getHabits().find(h=>h.id===id));
+    }
   });
   document.getElementById('habitList').addEventListener('click', (e)=>{
     const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
     if(e.target.classList.contains('ed-star')){
       const cur = getHabits().find(h=>h.id===id); if(!cur) return;
-      updateHabit(id, {keystone: !cur.keystone}); e.target.classList.toggle('on');
+      const next=!cur.keystone;
+      updateHabit(id, {keystone: next}); e.target.classList.toggle('on',next); e.target.setAttribute('aria-pressed',String(next));
     } else if(e.target.classList.contains('ed-day')){
       const cur = getHabits().find(h=>h.id===id); if(!cur) return;
       const day = e.target.dataset.day; const days = {...cur.days, [day]: !cur.days[day]};
-      updateHabit(id, {days}); e.target.classList.toggle('on');
+      updateHabit(id, {days}); e.target.classList.toggle('on',days[day]); e.target.setAttribute('aria-pressed',String(days[day]));
     } else if(e.target.classList.contains('ed-hdel')){ deleteHabit(id); }
   });
   document.getElementById('habitQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addHabitFromQuickAdd(); }});
@@ -1622,9 +1702,18 @@
      "local only" if the API isn't configured on Vercel yet.
      ============================================================ */
   const SYNC_PUSH = '/api/notion-sync', SYNC_PULL = '/api/notion-pull';
-  let syncTimer = null, apiConfigured = true;
+  let syncTimer = null, apiConfigured = true, syncInFlight = false;
+  function notionEnabled(){ return LIFEOS.integrations?.notion?.enabled === true; }
+  function localOnly(){ setStatus('local-only','Local only'); }
 
-  function getQueue(){ try{ return JSON.parse(localStorage.getItem('lifeos_syncqueue_v1')||'[]'); }catch(e){ return []; } }
+  function getQueue(){
+    try{
+      const q=JSON.parse(localStorage.getItem('lifeos_syncqueue_v1')||'[]');
+      if(!Array.isArray(q)) return [];
+      if(q.some(item=>!item.queueId)){ q.forEach(item=>{ item.queueId=item.queueId||uid(); }); setQueue(q); }
+      return q;
+    }catch(e){ return []; }
+  }
   function setQueue(q){ localStorage.setItem('lifeos_syncqueue_v1', JSON.stringify(q)); }
 
   // Broadcast sync state to EVERY [data-sync-dot]/[data-sync-text] surface (in-page pill + dock + FAB).
@@ -1639,49 +1728,55 @@
     if(text!=null) document.querySelectorAll('[data-sync-text]').forEach(el=>{ el.textContent = text; });
   }
   function queueSync(type, action, payload){
-    const q = getQueue(); q.push({ type, action, payload }); setQueue(q);
+    if(!notionEnabled()){ localOnly(); return; }
+    const q = getQueue(); q.push({ queueId:uid(), type, action, payload:{...payload} }); setQueue(q);
     if(apiConfigured) setStatus('pending', `${q.length} change${q.length>1?'s':''} pending…`);
     scheduleFlush();
   }
-  function scheduleFlush(delay=1400){ clearTimeout(syncTimer); syncTimer = setTimeout(flushQueue, delay); }
+  function scheduleFlush(delay=1400){ clearTimeout(syncTimer); if(notionEnabled()) syncTimer = setTimeout(flushQueue, delay); }
   // Optional shared secret authenticating dashboard -> serverless calls (matches SYNC_SHARED_SECRET
-  // on the server). Kept in localStorage, never committed. Empty = no header (open/dev deployments).
+  // on the server). Kept in localStorage, excluded from backups. Configured servers require it.
   function syncHeaders(base){ const h = base||{}; let s=''; try{ s=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
     if(s) h['X-Sync-Secret']=s; return h; }
-  // If you set SYNC_SHARED_SECRET on your deployment, the dashboard must send the SAME value.
-  // This stores it in this browser's localStorage (never committed) and retries the sync.
+  // Key changes are local settings. They never submit or retry queued work.
   function setSyncSecret(){
-    let cur=''; try{ cur=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
-    const next = window.prompt('Sync key — must match SYNC_SHARED_SECRET on your deployment.\nLeave blank to clear it (open/dev deployments).', cur);
-    if(next===null) return; // cancelled
-    try{ if(next) localStorage.setItem('lifeos_sync_secret', next); else localStorage.removeItem('lifeos_sync_secret'); }catch(e){}
-    apiConfigured = true; // let it try again now that a key is set/cleared
-    syncNote(next ? '🔑 Sync key saved on this device. Retrying…' : '🔑 Sync key cleared.');
-    flushQueue();
+    if(!notionEnabled()){ localOnly(); syncNote('Notion is off. Enable integrations.notion.enabled in your private config before setting a sync key.'); return; }
+    LifeOS.editSyncKey(saveSyncSecret);
+  }
+  function saveSyncSecret(next){
+    if(!notionEnabled()) return 'Notion sync is off. Your key was not changed.';
+    try{ if(next) localStorage.setItem('lifeos_sync_secret', next); else localStorage.removeItem('lifeos_sync_secret'); }
+    catch(_){ return 'The browser could not save the key. Your current setting is unchanged.'; }
+    clearTimeout(syncTimer); apiConfigured=true;
+    syncNote(next?'Sync key saved on this device. Press Push when the destination is verified.':'Sync key cleared. Queued entries stay on this device.');
   }
 
   async function flushQueue(){
-    const q = getQueue(); if(!q.length){ if(apiConfigured) setStatus('synced', lastSyncedLabel()); return; }
-    if(!apiConfigured){ setStatus('', 'Local only — see setup guide'); return; }
+    if(!notionEnabled()){ localOnly(); syncNote('Notion sync is off. Your edits stay in this browser. See the setup guide to enable it in your private instance.'); return; }
+    if(syncInFlight) return;
+    const q = LifeOSState.compactQueue(getQueue()); setQueue(q);
+    if(!q.length){ setStatus('idle', 'No pending changes'); return; }
+    if(!apiConfigured){ localOnly(); return; }
+    syncInFlight=true;
     setStatus('syncing', 'Syncing…');
     try{
       const res = await fetch(SYNC_PUSH, { method:'POST', headers:syncHeaders({'Content-Type':'application/json'}), body: JSON.stringify({items:q}) });
-      if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); return; }
+      if(res.status===503 || res.status===404){ apiConfigured=false; localOnly(); syncNote('Sync endpoint is unavailable or not configured. Your changes remain queued on this device.'); return; }
       if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Sync rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }  // stop looping; wait for the user to set the key
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
-      const results = data.results||[];
+      const results = Array.isArray(data.results)?data.results:[];
       applyResults(results);
-      // A 200 doesn't mean every item landed: keep per-item failures queued for retry.
-      const failed = new Set(results.filter(r=>r && r.ok===false).map(r=>r.localId));
-      setQueue(failed.size ? q.filter(it=>it.payload && failed.has(it.payload.id)) : []);
-      localStorage.setItem('lifeos_last_synced', nowIso());
-      if(failed.size){ setStatus('error', failed.size+' item'+(failed.size>1?'s':'')+' failed — will retry'); scheduleFlush(15000); }
+      const pending=LifeOSState.acknowledgeQueue(getQueue(),q,results); setQueue(pending);
+      const incomplete=q.some(item=>!results.some(r=>r?.localId===item.payload.id && r.ok===true));
+      if(results.some(r=>r?.ok===true)) localStorage.setItem('lifeos_last_synced', nowIso());
+      if(incomplete){ setStatus('error', 'Some changes are still queued — retrying'); scheduleFlush(15000); }
+      else if(pending.length){ setStatus('pending',pending.length+' change(s) pending'); scheduleFlush(); }
       else setStatus('synced', lastSyncedLabel());
     }catch(err){
       setStatus('error', 'Sync error — will retry');
       scheduleFlush(15000);
-    }
+    }finally{ syncInFlight=false; if(!notionEnabled()) localOnly(); }
   }
   function lastSyncedLabel(){
     const t = localStorage.getItem('lifeos_last_synced');
@@ -1697,27 +1792,46 @@
       item = habits.find(h=>h.id===r.localId);
       if(item){ item.notionId = r.notionId; }
     });
-    setTasks(tasks); setHabits(habits); renderTasks(); renderHabits();
+    setTasks(tasks); setHabits(habits);
+    // Do not replace editable inputs while someone is typing during a network request.
+    document.querySelectorAll('.ed-row,.ed-hrow').forEach(row=>{
+      const item=tasks.find(t=>t.id===row.dataset.id)||habits.find(h=>h.id===row.dataset.id);
+      const dot=row.querySelector('.ed-sync-dot');
+      if(dot && item?.notionId){ dot.classList.add('synced'); dot.title='Synced to Notion'; }
+    });
   }
 
   async function pullFromNotion(){
+    if(!notionEnabled()){ localOnly(); syncNote('Notion sync is off. Enable it in your private config and follow the setup guide.'); return; }
+    if(syncInFlight) return;
+    if(getQueue().length){ syncNote('Push pending changes before pulling, so remote data cannot replace your unsent edits.'); return; }
+    syncInFlight=true;
+    const revisionAtPull=editorRevision;
     setStatus('syncing', 'Pulling…');
     try{
       const res = await fetch(SYNC_PULL, { headers:syncHeaders() });
-      if(res.status===503){ apiConfigured=false; setStatus('', 'Local only — Notion sync not configured'); syncNote('Notion sync isn’t configured yet on this deployment — see docs/connectors/notion.md'); return; }
+      if(res.status===503 || res.status===404){ apiConfigured=false; localOnly(); syncNote('Notion sync is unavailable or not configured on this deployment — see the setup guide.'); return; }
       if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Pull rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
+      if(!notionEnabled()){ localOnly(); syncNote('Sync was disabled while pulling. Remote entries were not applied.'); return; }
+      if(editorRevision!==revisionAtPull || document.activeElement?.matches('.ed-title,.ed-hname')){
+        setStatus('idle','Pull paused — finish editing');
+        syncNote('You edited while pulling. Your text is preserved. Finish the edit, push pending changes, then pull again.');
+        return;
+      }
       mergeRemoteTasks(data.tasks||[]); mergeRemoteHabits(data.habits||[]);
       renderTasks(); renderHabits();
       localStorage.setItem('lifeos_last_synced', nowIso());
       setStatus('synced', lastSyncedLabel());
-      syncNote('✅ Pulled latest Tasks + Habits from Notion.');
-    }catch(err){ setStatus('error', 'Pull failed'); syncNote('⚠️ Pull failed — check your connection and try again.'); }
+      syncNote(data.truncated ? 'Pulled up to 1,000 tasks and habits. More records exist in Notion; this is a partial pull.' : 'Pulled Tasks + Habits from Notion.');
+    }catch(err){ setStatus('error', 'Pull failed'); syncNote('Pull failed — your local data is still here. Check your connection and try again.'); }
+    finally{ syncInFlight=false; if(!notionEnabled()) localOnly(); else if(getQueue().length) scheduleFlush(); }
   }
   function mergeRemoteTasks(remote){
     const tasks = getTasks();
     remote.forEach(rt=>{
+      if(getQueue().some(item=>item.type==='task' && item.payload.notionId===rt.notionId)) return;
       const existing = tasks.find(t=>t.notionId===rt.notionId);
       if(existing){ if(!existing.updatedAt || new Date(rt.updatedAt) > new Date(existing.updatedAt)) Object.assign(existing, rt, {id:existing.id}); }
       else tasks.push({...rt, id: uid()});
@@ -1727,6 +1841,7 @@
   function mergeRemoteHabits(remote){
     const habits = getHabits();
     remote.forEach(rh=>{
+      if(getQueue().some(item=>item.type==='habit' && item.payload.notionId===rh.notionId)) return;
       const existing = habits.find(h=>h.notionId===rh.notionId);
       if(existing){ if(!existing.updatedAt || new Date(rh.updatedAt) > new Date(existing.updatedAt)) Object.assign(existing, rh, {id:existing.id}); }
       else habits.push({...rh, id: uid()});
@@ -1735,44 +1850,97 @@
   }
 
   window.addEventListener('online', flushQueue);
-  // Try an initial pull + flush shortly after load (non-blocking, silent if API not configured).
-  setTimeout(()=>{ flushQueue(); }, 800);
-  if(getQueue().length===0) setStatus('', 'Local only');
+  // applyConfig schedules pending work only after the explicit opt-in has loaded.
+  localOnly();
 
-  // ---- Backup export/import (now bundles checks + tasks + habits) ----
+  // ---- Versioned browser backup. Credentials and pending network work never travel. ----
   function syncNote(msg){ const el=document.getElementById('syncMsg'); if(el) el.textContent=msg; }
   function buildBackupPayload(){
-    return JSON.stringify({ checks: JSON.parse(localStorage.getItem('lifeos')||'{}'), tasks: getTasks(), habits: getHabits() });
+    return JSON.stringify(LifeOSState.snapshot(localStorage));
   }
+  let backupMode='', backupCandidate=null, backupReturnFocus=null;
+  const backupDialog=document.getElementById('backupDialog');
+  function backupMessage(message){ document.getElementById('backupMessage').textContent=message; }
+  function resetBackupPreview(){
+    backupCandidate=null;
+    document.getElementById('backupPreview').hidden=true;
+    document.getElementById('backupRestore').disabled=true;
+  }
+  function openBackupDialog(mode){
+    backupReturnFocus=document.activeElement;
+    backupMode=mode;
+    resetBackupPreview();
+    const exporting=mode==='export', code=document.getElementById('backupCode');
+    document.getElementById('backupTitle').textContent=exporting?'Export browser backup':'Import browser backup';
+    document.getElementById('backupCodeLabel').textContent=exporting?'Your private backup code':'Paste your private backup code';
+    document.getElementById('backupExportActions').hidden=!exporting;
+    document.getElementById('backupImportActions').hidden=exporting;
+    document.getElementById('backupClose').textContent=exporting?'Done':'Cancel';
+    code.readOnly=exporting;
+    code.value=exporting?'LIFEOS3:'+btoa(unescape(encodeURIComponent(buildBackupPayload()))):'';
+    backupMessage(exporting?'Save the complete code somewhere private. You can select and copy it even if clipboard access is unavailable.':'Accepts LIFEOS3:, LIFEOS2:, or legacy LIFEOS: codes. Review the contents before restoring.');
+    backupDialog.showModal();
+    code.focus();
+  }
+  function closeBackupDialog(){ backupDialog.close(); }
+  backupDialog.addEventListener('cancel',event=>{ event.preventDefault(); closeBackupDialog(); });
+  backupDialog.addEventListener('close',()=>{
+    resetBackupPreview();
+    if(backupReturnFocus?.isConnected) backupReturnFocus.focus();
+  });
+  document.getElementById('backupCode').addEventListener('input',()=>{ resetBackupPreview(); backupMessage('Code changed. Review it again before restoring.'); });
   function exportState(){
-    const payload = 'LIFEOS2:' + btoa(unescape(encodeURIComponent(buildBackupPayload())));
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(payload).then(
-        ()=>syncNote('✅ Copied checks + tasks + habits to clipboard — paste somewhere safe or onto another device.'),
-        ()=>window.prompt('Copy your backup code:', payload)
-      );
-    } else { window.prompt('Copy your backup code:', payload); }
+    try{ openBackupDialog('export'); }
+    catch(error){ syncNote('Backup could not be opened. '+error.message); }
   }
   function importState(){
-    const raw = window.prompt('Paste your exported backup code (starts with LIFEOS2: or LIFEOS:)');
-    if(!raw) return;
+    if(syncInFlight){ syncNote('Wait for the current sync to finish before restoring a backup.'); return; }
+    openBackupDialog('import');
+  }
+  function selectBackupCode(){ const code=document.getElementById('backupCode'); code.focus(); code.select(); }
+  async function copyBackupCode(){
+    selectBackupCode();
     try{
-      const trimmed = raw.trim();
-      if(trimmed.startsWith('LIFEOS2:')){
-        const json = decodeURIComponent(escape(atob(trimmed.replace(/^LIFEOS2:/,''))));
-        const data = JSON.parse(json);
-        localStorage.setItem('lifeos', JSON.stringify(data.checks||{}));
-        setTasks(data.tasks||[]); setHabits(data.habits||[]);
-        load(); renderTasks(); renderHabits();
-        syncNote('✅ Imported — checks, tasks, and habits restored on this device.');
-      } else {
-        const json = decodeURIComponent(escape(atob(trimmed.replace(/^LIFEOS:/,''))));
-        JSON.parse(json);
-        localStorage.setItem('lifeos', json);
-        load();
-        syncNote('✅ Imported checks (legacy backup). Tasks/Habits unchanged.');
-      }
-    }catch(e){ syncNote('⚠️ That code didn\'t look right. Make sure you pasted the full backup code.'); }
+      if(!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(document.getElementById('backupCode').value);
+      backupMessage('Backup code copied. Keep it private.');
+    }catch(_){ backupMessage('Clipboard access is unavailable here. The code is selected: use your browser’s Copy command, then save it privately.'); }
+  }
+  function previewBackup(){
+    resetBackupPreview();
+    try{
+      const data=LifeOSState.parseBackup(document.getElementById('backupCode').value);
+      const tasks=data.lifeos_tasks_v1 ? LifeOSState.records(JSON.parse(data.lifeos_tasks_v1),'tasks') : null;
+      const habits=data.lifeos_habits_v1 ? LifeOSState.records(JSON.parse(data.lifeos_habits_v1),'habits') : null;
+      if(tasks) data.lifeos_tasks_v1=JSON.stringify(tasks.map(t=>({...t,id:t.id||uid(),status:t.status||'open',due:t.due||''})));
+      if(habits) data.lifeos_habits_v1=JSON.stringify(habits.map(h=>({...h,id:h.id||uid(),weekOf:h.weekOf||currentWeekMonday(),days:Object.fromEntries(DAYS.map(d=>[d,h.days?.[d]===true]))})));
+      backupCandidate=data;
+      const reviews=Object.keys(data).filter(key=>key.startsWith('lifeos_review_')).length;
+      document.getElementById('backupSummary').textContent=tasks
+        ? `${tasks.length} tasks, ${habits.length} habits and ${reviews} daily reviews. Other included checks, history and preferences will also be restored.`
+        : 'Legacy backup: restores included checkboxes. Tasks, habits and reviews stay as they are.';
+      document.getElementById('backupPreview').hidden=false;
+      document.getElementById('backupRestore').disabled=false;
+      backupMessage('Backup validated. Review the replacement above, then choose Restore or Cancel.');
+    }catch(error){ backupMessage('Backup was not restored. '+error.message); }
+  }
+  function restoreBackup(){
+    if(backupMode!=='import' || !backupCandidate) return;
+    if(syncInFlight){ backupMessage('A sync is running. Wait for it to finish, then review the backup again.'); resetBackupPreview(); return; }
+    try{
+      LifeOSState.restore(localStorage,backupCandidate,true);
+      clearTimeout(syncTimer);
+      // Any first-run seed response still in flight must not replace this restore.
+      _seededInlineThisLoad.tasks=null; _seededInlineThisLoad.habits=null;
+      resetBackupPreview();
+      document.getElementById('backupCode').readOnly=true;
+      document.getElementById('backupImportActions').hidden=true;
+      document.getElementById('backupClose').textContent='Done';
+      load(); rollHabitWeekIfNeeded(); renderTasks(); renderHabits(); renderHabitHistory(); renderReview();
+      localOnly();
+      const message='Backup restored on this device. Reload to apply restored theme and quote preferences. No data was sent to Notion.';
+      backupMessage(message); syncNote(message);
+    }catch(error){ backupMessage('Restore could not finish. '+error.message); }
   }
 
   /* ============================================================
@@ -1855,7 +2023,7 @@
      ============================================================ */
   const DR_AREAS = [['health','💪 Health'],['career','💼 Career / work'],['passion','🔥 Passion / ventures'],['relationships','❤️ Relationships'],['mindset','🧘 Mindset']];
   const DR_MOODS = [['present','🙂 Present'],['mixed','😐 Mixed'],['stressed','😮‍💨 Stressed']];
-  function drKey(){ return 'lifeos_review_'+new Date().toISOString().slice(0,10); }
+  function drKey(){ return 'lifeos_review_'+LifeOSState.localDate(); }
   function todayLabel(){ return new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}); }
   function drState(){ try{ return JSON.parse(localStorage.getItem(drKey())||'{}'); }catch(e){ return {}; } }
   let drStepIdx=1, drFlat=false, drLastKey=drKey();
@@ -1934,13 +2102,14 @@
   function copyReview(){
     const s=collectReview(); localStorage.setItem(drKey(),JSON.stringify(s)); const r=s.ratings||{};
     const moodPrefix = s.presenceMood ? '['+s.presenceMood+'] ' : '';
-    const md='# Daily Review — '+new Date().toISOString().slice(0,10)+'\n\n'+
+    const md='# Daily Review — '+LifeOSState.localDate()+'\n\n'+
       DR_AREAS.map(([id,l])=>'- '+l+': '+(r[id]||'–')+'/5').join('\n')+
       '\n\nPresent with Sam: '+moodPrefix+(s.presence||'')+'\nOverthinking / can wait: '+(s.overthink||'')+
       '\n\nGratitude:\n1. '+(s.g?.[0]||'')+'\n2. '+(s.g?.[1]||'')+'\n3. '+(s.g?.[2]||'')+
       '\n\nTomorrow’s one thing: '+(s.oneThing||'')+'\n';
-    if(navigator.clipboard) navigator.clipboard.writeText(md).then(()=>document.getElementById('drMsg').textContent='📋 Copied — paste into templates/daily_review.md or your journal.',()=>window.prompt('Copy:',md));
-    else window.prompt('Copy:',md);
+    LifeOS.copyText(md,'Copy daily review').then(copied=>{
+      document.getElementById('drMsg').textContent=copied?'Copied — paste into your private journal.':'Review ready in the copy dialog.';
+    });
   }
 
   // ---- Stepper controls ----
@@ -2145,8 +2314,11 @@
     if(typeof renderGreeting === 'function') renderGreeting();
     if(typeof buildComposerChips === 'function') buildComposerChips();
     if(typeof refreshComposerChips === 'function') refreshComposerChips();
-    if(typeof renderTasks === 'function') renderTasks();
+    if(typeof renderTasks === 'function' && !document.getElementById('taskList').contains(document.activeElement)) renderTasks();
     if(typeof rewriteRepoLinks === 'function') rewriteRepoLinks();
+    document.querySelectorAll('[data-sync-mode]').forEach(el=>{ el.textContent=notionEnabled()?'Notion enabled':'saved on this device'; });
+    if(notionEnabled()){ setStatus('idle',getQueue().length+' change(s) pending'); if(getQueue().length) scheduleFlush(); }
+    else localOnly();
   }
   async function loadConfig(){
     let cfg = null, src = '';
@@ -2156,6 +2328,7 @@
       try{ const r = await fetch(f, {cache:'no-store'}); if(r.ok){ cfg = await r.json(); src = f; break; } }catch(e){}
     }
     if(cfg){ LIFEOS = Object.assign({}, LIFEOS, cfg, { owner: Object.assign({}, LIFEOS.owner, cfg.owner||{}) }); }
+    document.getElementById('demoNotice').hidden=!!cfg && !cfg._DEMO && !src.includes('example');
     if(!src || src.includes('example')) console.info('LifeOS: no lifeos.config.json — running the demo persona.');
     applyConfig();
   }

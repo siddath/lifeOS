@@ -16,7 +16,7 @@ The guiding idea: **your life data is plain text and open JSON; everything else 
 
 ## The layers
 
-**You** interact through three doors, all reading and writing the same underlying data:
+**You** interact through three doors with different write boundaries:
 
 1. **The Dashboard** (`dashboard/`) — a static, single-page HTML/JS app. No build step, no framework, `localStorage` for client state. It renders the current hero mission, tasks, habits, knowledge, finance, and the Anchor. Trivially self-hostable or archivable.
 2. **The Markdown Vault** (GitHub / Obsidian) — long-form, evergreen, human-readable content: your notes, project specs, routines, reviews. Git-versioned, offline-first. The repo *is* an Obsidian vault (relative Markdown links, YAML frontmatter), so a graph view and Dataview queries come for free.
@@ -25,7 +25,7 @@ The guiding idea: **your life data is plain text and open JSON; everything else 
 All three agree on one **contract**:
 
 - **`dashboard/lifeos.config.json`** — who you are (name, timezone, currency, greeting), your **area codes**, which **modules** are on, and which **integrations** are enabled. It lives inside the deploy root (`dashboard/`) so a hosted dashboard reads it; copy it from `dashboard/lifeos.config.example.json`. It holds identity + toggles, never keys — commit it in your private instance only.
-- **`schemas/`** — JSON Schemas for `tasks`, `habits`, `mission`, `finance`, and the `kb` (knowledge base). Every surface and every importer validates against these, so nothing drifts.
+- **`schemas/`** — JSON Schemas for `tasks`, `habits`, `mission`, `finance`, and the `kb` (knowledge base). The shipped JSON files are schema-validated in CI. Browser backup imports validate their supported shapes before writing; this does not imply every runtime surface enforces every schema.
 
 Below the contract sits the **optional** machinery:
 
@@ -80,10 +80,10 @@ Long-form, evergreen content that changes infrequently: notes, project specs, ro
 The machine-readable state the dashboard renders: `dashboard/mission.json` (the hero), `dashboard/finance-data.json`, tasks, habits, and the knowledge base. Each conforms to a file in `schemas/`. This is what importers write to and what connectors sync.
 
 **Tier 3 — Client state (dashboard `localStorage`).**
-Real-time UI state: checkbox ticks, theme choice, the current week view, quote favorites. Namespaced by mission slug so ticks never bleed across mission swaps. Persisted per-device; degrades gracefully with no network.
+Task and habit edits, daily reviews, habit history, checkbox ticks, theme and quote favorites. Task/habit JSON files seed this store on first use; browser edits do not write back to Git. Mission check keys are namespaced by mission slug. Storage is per browser and origin; keep a private [backup](browser-data.md) before clearing site data.
 
 **Tier 4 — Optional sync/back-end (serverless + Notion).**
-When you turn on the Notion connector, `api/notion-sync.js` pushes local task/habit changes up and `api/notion-pull.js` hydrates them back down — so a phone edit in Notion and a desktop edit on the dashboard converge. Off by default.
+When you turn on the Notion connector, `api/notion-sync.js` pushes local task/habit changes up and `api/notion-pull.js` hydrates them back down — so a phone edit in Notion and a desktop edit on the dashboard converge. Off unless `integrations.notion.enabled` is `true` in the private config. Only subsequent task/habit edits queue automatically; Push submits the queue, not the whole vault.
 
 ---
 
@@ -100,7 +100,7 @@ For the demo persona that mission is **"Operation Launch Week"** — Alex Rivera
 LifeOS is designed so sync can grow without reworking the vault:
 
 - **Manual / local (default).** You edit files; the dashboard reads them. No services, no secrets.
-- **Optional two-way Notion sync (built, best-effort).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Notion is the mobile front-end; the repo stays source of truth. See [connectors/notion.md](connectors/notion.md) for setup and current limitations.
+- **Optional two-way Notion sync (built, best-effort).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Browser storage and Notion hold task/habit records; sync does not update Git. The repo owns versioned source files and initial seeds. See [connectors/notion.md](connectors/notion.md) for setup and current limitations.
 - **Calendar / mail / broker (planned, MCP-only for now).** Today an MCP-capable assistant can read these live; dedicated serverless sync functions are on the roadmap, not shipped. See [ROADMAP.md](ROADMAP.md).
 
 ---

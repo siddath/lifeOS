@@ -31,7 +31,7 @@ Honest status. "Built" means it works today; "planned" means designed and docume
 | Connector | Method | Status | What it does |
 |---|---|---|---|
 | **Vercel** | Deploy button + `vercel.json` | **Built** | Hosts the static dashboard; one-click deploy. See [../deploy.md](../deploy.md). |
-| **Notion** | `api/` serverless + env vars | **Built** — guided ~10-min setup | Two-way sync of Tasks + Habits. Repo stays source of truth; Notion is the mobile front-end. See [notion.md](notion.md). |
+| **Notion** | `api/` serverless + env vars | **Built** — configuration required | Optional two-way Tasks + Habits sync between browser storage and Notion; no Git writeback. Repo files own source and initial seeds. See [notion.md](notion.md). |
 | **Google — Calendar / Gmail / Drive** | MCP | **Planned** (docs-only) | An MCP-capable assistant can read these live today; dedicated serverless sync functions are on the roadmap, not shipped. |
 | **GitHub** | Config (`repo.url`) | **Built** (config-level) | The vault is a Git repo; `repo.url` in `lifeos.config.json` wires links. Deeper automation (webhooks) is planned. |
 | **Broker** | MCP (generic) | **Planned** (docs-only) | A generic finance connector — e.g. a broker's public MCP endpoint. The finance card also works with **manual JSON** (`dashboard/finance-data.json`) with no connector at all. |

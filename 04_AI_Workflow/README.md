@@ -15,7 +15,7 @@ How to run a LifeOS with AI doing the heavy lifting — without AI becoming anot
 1. **Orchestrator** (a lead AI session, or the owner) breaks a goal into tasks.
 2. **Subagents** (AI sessions or "hats") each own one task with clear inputs and outputs.
 3. **Review loop** — the orchestrator checks outputs, integrates, iterates.
-4. **Loop engineering** — recurring tasks (daily brief, weekly review) run on a schedule, not on willpower.
+4. **Optional recurrence** — schedule a daily brief or review only when the owner requests it.
 
 ## Files
 - [`claude_guide.md`](claude_guide.md) — working with an in-repo AI coding agent (written around Claude Code; the patterns carry to any agentic assistant).
@@ -25,7 +25,7 @@ How to run a LifeOS with AI doing the heavy lifting — without AI becoming anot
 
 ## The principle
 
-AI should produce **evidence, not more plans.** If a session ends with another to-do list instead of a shipped artifact, the loop failed. The vault's job is to make that loop cheap to run: self-describing context (`AGENTS.md` → `00_START_HERE.md` → `06_Trackers/`), shared state in `06_Trackers/`, and skills that turn recurring work into one command.
+AI should support the owner's requested outcome, whether that is an artifact, a decision, exploration or reflection. The vault keeps context in `AGENTS.md` → `00_START_HERE.md` → `06_Trackers/`. Browser edits are a separate store; reconcile a private export before treating file trackers as a complete current record (see [browser data](../docs/browser-data.md)).
 
 ## The tier idea (one job per tier)
 

@@ -14,8 +14,8 @@ updated: 2026-07
 
 - One file per week: **`YYYY-Www.md`** (ISO week), e.g. `2026-W28.md`.
 - Instantiate from [`../templates/weekly_review.md`](../templates/weekly_review.md).
-- Pull evidence from `../06_Trackers/evidence.md`; roll incomplete tasks back into `../06_Trackers/tasks.md`. (Both are created on first setup from the [`evidence`](../06_Trackers/evidence.template.md) and [`tasks`](../06_Trackers/tasks.template.md) templates.)
-- End each review by setting **next week's one main thing**.
+- Pull evidence from `../06_Trackers/evidence.md`; review incomplete tasks and choose which to keep, reschedule, park or stop. Preserve original entries and dates until a change is chosen. (The [`evidence`](../06_Trackers/evidence.template.md) and [`tasks`](../06_Trackers/tasks.template.md) templates provide optional starting files.)
+- End with whatever next steps the owner wants, including maintenance or rest. A single focus is optional.
 
 ## Index
 

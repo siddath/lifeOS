@@ -111,9 +111,86 @@ var LifeOS = (function(){
       fab.setAttribute('aria-expanded','false'); scrim.hidden=true; fab.focus(); }
     fab.addEventListener('click', function(){ dock.classList.contains('open') ? close() : open(); });
     scrim.addEventListener('click', close);
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !document.querySelector('dialog[open]')) close(); });
     dock.addEventListener('click', function(e){ if(e.target.closest('a')) close(); });
   }
+
+  // ---- In-page copy and sync-key dialogs; no native prompts or implicit sends. ----
+  var textDialog=null, textDialogMode='', textDialogSave=null, textDialogReturnFocus=null, textDialogSession=0;
+  function textField(id){ return document.getElementById(id); }
+  function ensureTextDialog(){
+    if(textDialog) return;
+    textDialog=el('<dialog id="textDialog" class="text-dialog" aria-labelledby="textDialogTitle" aria-describedby="textDialogHelp">'+
+      '<h2 id="textDialogTitle"></h2><p id="textDialogHelp"></p>'+
+      '<label id="textDialogLabel" for="textDialogText">Text to copy</label>'+
+      '<textarea id="textDialogText" rows="6" readonly spellcheck="false"></textarea>'+
+      '<input id="textDialogKey" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" hidden>'+
+      '<div class="text-dialog-actions"><button type="button" id="textDialogSelect">Select text</button>'+
+      '<button type="button" id="textDialogCopy">Copy text</button><button type="button" id="textDialogSave">Save key</button>'+
+      '<button type="button" id="textDialogClear">Clear saved key</button><button type="button" id="textDialogClose">Cancel</button></div>'+
+      '<p id="textDialogMessage" role="status" aria-live="polite"></p></dialog>');
+    document.body.appendChild(textDialog);
+    textField('textDialogSelect').addEventListener('click',selectTextDialog);
+    textField('textDialogCopy').addEventListener('click',copyTextDialog);
+    textField('textDialogSave').addEventListener('click',function(){saveTextDialogKey(false);});
+    textField('textDialogClear').addEventListener('click',function(){saveTextDialogKey(true);});
+    textField('textDialogClose').addEventListener('click',function(){textDialog.close();});
+    textField('textDialogKey').addEventListener('keydown',function(event){
+      if(event.key==='Enter' && !event.isComposing){event.preventDefault();saveTextDialogKey(false);}
+    });
+    textDialog.addEventListener('cancel',function(event){event.preventDefault();textDialog.close();});
+    textDialog.addEventListener('close',function(){
+      textDialogSession++; textField('textDialogKey').value=''; textField('textDialogText').value='';
+      textDialogSave=null; textDialogMode='';
+      if(textDialogReturnFocus && textDialogReturnFocus.isConnected) textDialogReturnFocus.focus();
+    });
+  }
+  function showTextDialog(mode,title,text,returnFocus,save){
+    ensureTextDialog(); textDialogSession++; textDialogMode=mode; textDialogSave=save||null;
+    textDialogReturnFocus=returnFocus||document.activeElement;
+    var keyMode=mode==='key';
+    textField('textDialogTitle').textContent=title;
+    textField('textDialogHelp').textContent=keyMode
+      ? 'Use the key for your authorized private endpoint. Saving or clearing it sends nothing. Existing keys are never shown.'
+      : 'Select and copy this text. Nothing is sent until you choose where to paste or share it.';
+    textField('textDialogLabel').textContent=keyMode?'New sync key':'Text to copy';
+    textField('textDialogLabel').htmlFor=keyMode?'textDialogKey':'textDialogText';
+    textField('textDialogText').value=keyMode?'':text; textField('textDialogText').hidden=keyMode;
+    textField('textDialogKey').value=''; textField('textDialogKey').hidden=!keyMode;
+    ['Select','Copy'].forEach(function(name){textField('textDialog'+name).hidden=keyMode;});
+    ['Save','Clear'].forEach(function(name){textField('textDialog'+name).hidden=!keyMode;});
+    textField('textDialogClose').textContent=keyMode?'Cancel':'Done';
+    textField('textDialogMessage').textContent=keyMode?'':'Clipboard access is unavailable here. Use Select text and your browser’s Copy command.';
+    textDialog.showModal();
+    if(keyMode) textField('textDialogKey').focus(); else selectTextDialog();
+  }
+  function selectTextDialog(){var field=textField('textDialogText');field.focus();field.select();}
+  async function copyTextDialog(){
+    var session=textDialogSession, text=textField('textDialogText').value; selectTextDialog();
+    try{
+      if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(text);
+      if(session===textDialogSession) textField('textDialogMessage').textContent='Text copied.';
+    }catch(_){
+      if(session===textDialogSession) textField('textDialogMessage').textContent='Clipboard access is unavailable here. The text is selected: use your browser’s Copy command.';
+    }
+  }
+  function saveTextDialogKey(clear){
+    if(textDialogMode!=='key' || !textDialogSave) return;
+    var next=clear?'':textField('textDialogKey').value.trim(), error;
+    if(!clear && !next){textField('textDialogMessage').textContent='Enter a key, or choose Clear saved key.';textField('textDialogKey').focus();return;}
+    try{error=textDialogSave(next);}catch(_){error='The browser could not save the key. Your current setting is unchanged.';}
+    if(error){textField('textDialogMessage').textContent=error;return;}
+    textDialog.close();
+  }
+  async function copyText(text,title){
+    var returnFocus=document.activeElement;
+    try{
+      if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(text); return true;
+    }catch(_){showTextDialog('copy',title||'Copy text',text,returnFocus);return false;}
+  }
+  function editSyncKey(save){showTextDialog('key','Sync key for this browser','',document.activeElement,save);}
 
   /* One call per page. Renders the dock and syncs the theme icon.
      Greeting stays in the page (config-driven, async). Runs synchronously
@@ -125,5 +202,5 @@ var LifeOS = (function(){
     else run();
   }
 
-  return { init:init };
+  return { init:init, copyText:copyText, editSyncKey:editSyncKey };
 })();

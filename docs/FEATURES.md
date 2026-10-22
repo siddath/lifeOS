@@ -61,9 +61,9 @@ For Claude Code users, a set of skills under `.claude/` scripts the common flows
 - **`/setup`** — onboarding interview → writes config + first mission + seed data against the schemas. ✅
 - **`/daily-brief`** — a calm morning summary: mission cadence, P1 tasks, habits. ✅
 - **`/quick-capture`** — drop a thought into the inbox without breaking flow. ✅
-- **`/weekly-review`** — summarize evidence, roll incomplete tasks, set next week's one thing. ✅
+- **`/weekly-review`** — review the week and propose next steps for the owner to choose. ✅
 
-Every one reads and writes **schema-guided** data — no bespoke format — so the same work is one prompt away in any other assistant.
+Skills use schema-guided files when applicable. Browser edits remain separate until reconciled; see [browser data](browser-data.md). The same file workflow can be used with another assistant.
 
 ---
 

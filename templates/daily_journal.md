@@ -8,12 +8,12 @@ updated: 2026-07
 
 # Daily Journal — {{DATE}}
 
-> Keep it short. No long audits. Two minutes, then close the laptop.
+> Write as much or as little as helps. A brief note is one option; reflection does not need to produce an action.
 
 1. **What did I finish today?**
    -
 
-2. **Tomorrow's ONE main thing:**
+2. **Tomorrow's chosen focus or priorities (optional):**
    -
 
 3. **What am I overthinking?**
