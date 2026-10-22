@@ -100,7 +100,7 @@ For the demo persona that mission is **"Operation Launch Week"** — Alex Rivera
 LifeOS is designed so sync can grow without reworking the vault:
 
 - **Manual / local (default).** You edit files; the dashboard reads them. No services, no secrets.
-- **Optional two-way Notion sync (built, best-effort).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Notion is the mobile front-end; the repo stays source of truth. See [connectors/notion.md](connectors/notion.md) for setup and current limitations.
+- **Optional two-way Notion sync (built, best-effort).** Dashboard task/habit cards push and pull to two Notion databases via `api/`, authenticated with `SYNC_SHARED_SECRET`. Browser storage and Notion hold task/habit records; sync does not update Git. The repo owns versioned source files and initial seeds. See [connectors/notion.md](connectors/notion.md) for setup and current limitations.
 - **Calendar / mail / broker (planned, MCP-only for now).** Today an MCP-capable assistant can read these live; dedicated serverless sync functions are on the roadmap, not shipped. See [ROADMAP.md](ROADMAP.md).
 
 ---
