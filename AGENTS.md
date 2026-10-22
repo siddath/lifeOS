@@ -126,5 +126,5 @@ adopt as much of it as your own workflow wants.
 
 ## Sync
 
-- Source of truth is this Git repo. Optionally mirror to Notion and/or host `dashboard/` (see `04_AI_Workflow/` and `api/`).
+- This Git repo owns versioned source files and initial JSON seeds. Dashboard edits live in browser storage; optional task/habit sync exchanges records with Notion and does not update Git. Reconcile an export before changing seed files. Hosting and connector setup are optional (see `04_AI_Workflow/` and `api/`).
 - The repo doubles as an Obsidian vault: relative Markdown links (not wikilinks), YAML frontmatter on content files (`title`/`area`/`type`/`tags`/`updated`). When you add a note, give it frontmatter so it joins the computed layer.

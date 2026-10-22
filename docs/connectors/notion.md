@@ -3,12 +3,12 @@ title: "Notion Connector — Optional Task/Habit Sync"
 area: docs
 type: doc
 tags: [connectors, notion, sync, setup]
-updated: 2026-07
+updated: 2026-10-22
 ---
 
 # Notion connector — optional two-way task/habit sync
 
-The Notion connector makes Notion the **mobile front-end** for your Tasks and Habits: check a habit off on your phone, see it on the dashboard; add a task on the dashboard, find it in Notion. The repo stays the source of truth; Notion mirrors it. Setup is a one-time, roughly **10-minute** job.
+The optional Notion connector synchronizes task and habit records between the dashboard's browser storage and Notion. It does not write those records back to Git. The repo owns the versioned source files and initial JSON seeds; browser edits and Notion records have their own state. Reconcile an export before updating seed files. Setup requires matching databases, integration access and server configuration.
 
 The sync is **best-effort by design** — good enough to keep two personal surfaces in agreement, not a conflict-free replication protocol. Read [Limitations](#limitations) before relying on it.
 
