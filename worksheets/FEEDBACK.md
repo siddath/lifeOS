@@ -51,3 +51,9 @@
   parking, automatic roll-forward and productivity repayment. These instructions now explain
   the separate browser/file stores and leave priorities, cadence and record changes to the
   owner. Historical demo records were preserved.
+
+## 2026-10-22 — Immediate row state
+
+- A priority button’s text changed while its accessible name kept the old priority. Rename commits similarly left contextual control labels stale. Labels now refresh on existing controls without replacing editors or moving focus.
+- Day/keystone buttons explicitly derive class and aria-pressed from the persisted next boolean, keeping the immediate visual and announced state aligned.
+- The regression runs actual production handler source with synthetic data. An empty-state audit alone does not exercise these transitions; include populated rows and both toggle directions in the final interface pass.

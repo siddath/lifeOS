@@ -1473,6 +1473,21 @@
     document.getElementById('habitList').innerHTML = list.map(habitRowHTML).join('') || '<p class="ed-empty">No habits yet — add one below.</p>';
   }
 
+  // Update names in place; never replace an editor or its unfinished text.
+  function refreshTaskRowLabels(row, task){
+    if(!task) return;
+    const names={'.ed-done':`Completed: ${task.title}`,'.ed-area':`Area for ${task.title}`,
+      '.ed-prio':`Priority ${task.priority} for ${task.title} — activate to cycle`,
+      '.ed-due':`Due date for ${task.title}`,'.ed-del':`Delete ${task.title}`};
+    Object.entries(names).forEach(([selector,label])=>row.querySelector(selector)?.setAttribute('aria-label',label));
+  }
+  function refreshHabitRowLabels(row, habit){
+    if(!habit) return;
+    row.querySelector('.ed-star')?.setAttribute('aria-label',`Keystone habit: ${habit.name}`);
+    row.querySelector('.ed-hdel')?.setAttribute('aria-label',`Delete ${habit.name}`);
+    row.querySelectorAll('.ed-day').forEach(button=>button.setAttribute('aria-label',`${DAY_LABEL[button.dataset.day]}: ${habit.name}`));
+  }
+
   // ---- Mutations ----
   function updateTask(id, patch){
     const tasks = getTasks(); const t = tasks.find(x=>x.id===id); if(!t) return;
@@ -1531,8 +1546,9 @@
       updateTask(id, {status: e.target.checked?'done':'open'});
       row.classList.toggle('ed-done-row', e.target.checked);
     } else if(e.target.classList.contains('ed-title')){
-      if(!e.target.value.trim()){ e.target.value=getTasks().find(t=>t.id===id).title; syncNote('A task needs a title. The previous title was kept.'); return; }
-      updateTask(id, {title: e.target.value});
+      const current=getTasks().find(t=>t.id===id); if(!current) return;
+      if(!e.target.value.trim()){ e.target.value=current.title; syncNote('A task needs a title. The previous title was kept.'); return; }
+      updateTask(id, {title: e.target.value}); refreshTaskRowLabels(row,getTasks().find(t=>t.id===id));
     }
     else if(e.target.classList.contains('ed-area')){ updateTask(id, {area: e.target.value}); }
     else if(e.target.classList.contains('ed-due')){ updateTask(id, {due: e.target.value}); }
@@ -1543,6 +1559,7 @@
       const cur = getTasks().find(t=>t.id===id); if(!cur) return;
       const order=['P1','P2','P3']; const next = order[(order.indexOf(cur.priority)+1)%3];
       updateTask(id, {priority: next}); e.target.textContent = next; e.target.className = 'ed-prio prio-'+next;
+      refreshTaskRowLabels(row,getTasks().find(t=>t.id===id));
     } else if(e.target.classList.contains('ed-del')){ deleteTask(id); }
   });
   document.getElementById('taskQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addTaskFromQuickAdd(); }});
@@ -1652,19 +1669,21 @@
   document.getElementById('habitList').addEventListener('change', (e)=>{
     const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
     if(e.target.classList.contains('ed-hname')){
-      if(!e.target.value.trim()){ e.target.value=getHabits().find(h=>h.id===id).name; syncNote('A habit needs a name. The previous name was kept.'); return; }
-      updateHabit(id, {name: e.target.value});
+      const current=getHabits().find(h=>h.id===id); if(!current) return;
+      if(!e.target.value.trim()){ e.target.value=current.name; syncNote('A habit needs a name. The previous name was kept.'); return; }
+      updateHabit(id, {name: e.target.value}); refreshHabitRowLabels(row,getHabits().find(h=>h.id===id));
     }
   });
   document.getElementById('habitList').addEventListener('click', (e)=>{
     const row = e.target.closest('.ed-hrow'); if(!row) return; const id = row.dataset.id;
     if(e.target.classList.contains('ed-star')){
       const cur = getHabits().find(h=>h.id===id); if(!cur) return;
-      updateHabit(id, {keystone: !cur.keystone}); e.target.classList.toggle('on'); e.target.setAttribute('aria-pressed',String(!cur.keystone));
+      const next=!cur.keystone;
+      updateHabit(id, {keystone: next}); e.target.classList.toggle('on',next); e.target.setAttribute('aria-pressed',String(next));
     } else if(e.target.classList.contains('ed-day')){
       const cur = getHabits().find(h=>h.id===id); if(!cur) return;
       const day = e.target.dataset.day; const days = {...cur.days, [day]: !cur.days[day]};
-      updateHabit(id, {days}); e.target.classList.toggle('on'); e.target.setAttribute('aria-pressed',String(days[day]));
+      updateHabit(id, {days}); e.target.classList.toggle('on',days[day]); e.target.setAttribute('aria-pressed',String(days[day]));
     } else if(e.target.classList.contains('ed-hdel')){ deleteHabit(id); }
   });
   document.getElementById('habitQuickAdd').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); addHabitFromQuickAdd(); }});
