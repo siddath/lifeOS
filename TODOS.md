@@ -61,11 +61,12 @@ review/release; no PR or production deployment is claimed.
       Backup restore now validates and attempts rollback, but the rest of the app needs a
       visible recovery mode that preserves the original bytes before allowing replacement.
 
-- [ ] **Replace remaining native copy/key prompts in the intended browser.** Backup flows
-      now use the supported in-page dialog. Quote/review copy fallbacks and sync-key entry
-      still call `window.prompt`, which live review found unsupported there. Check these
-      paths before claiming they work in that browser; other confirmation controls have not
-      been established as unsupported by this evidence.
+- [x] **Replace remaining native copy/key prompts.** Quote/review copying now retains
+      selectable text after denied clipboard access. Key entry uses an empty password field;
+      Save/Clear sends nothing, reports storage failure and scrubs the input on close.
+      Seven new shipped-handler regressions cover these and adjacent opt-out/date cases.
+      Actual interface acceptance remains integration evidence; other native confirmation
+      paths are not certified by this fix. [Worksheet](worksheets/2026-10-22-copy-key-release.md).
 
 - [ ] **Honor every advertised module toggle.** `applyConfig` handles finance/Anchor/knowledge
       links, but `modules.missions` and `modules.trackers` do not yet hide their surfaces.

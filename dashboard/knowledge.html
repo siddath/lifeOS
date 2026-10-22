@@ -25,7 +25,7 @@
   .epigraph{font-family:Georgia,'Times New Roman',serif;font-style:italic;color:var(--muted);
          text-align:center;font-size:var(--fs-h3);line-height:1.55;margin:22px auto 6px;max-width:760px}
   .epigraph .whom{display:block;font-style:normal;font-size:var(--fs-meta);letter-spacing:.4px;margin-top:8px;
-         text-transform:uppercase;color:var(--gold);font-weight:700}
+         text-transform:uppercase;color:var(--gold-ink);font-weight:700}
 
   /* Search box */
   .searchbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 0 10px;margin-top:8px}
@@ -108,7 +108,7 @@
          font-size:var(--fs-body);margin:22px 0}
 
   footer{text-align:center;color:var(--muted);font-size:var(--fs-meta);margin-top:34px;padding:0 16px}
-  footer a{color:var(--accent2);text-decoration:none}
+  footer a{color:var(--accent2);text-decoration:underline;text-underline-offset:3px}
   footer a:hover{text-decoration:underline}
 
   .kbd{font-size:var(--fs-micro);border:1px solid var(--line);border-radius:5px;padding:1px 6px;background:var(--card);color:var(--muted)}
@@ -134,7 +134,7 @@
   </div>
 </header>
 
-<div class="wrap">
+<main class="wrap">
 
   <p class="epigraph">
     “Think once → Build → Measure → Improve. Every week ends with evidence, not ideas.”
@@ -142,12 +142,13 @@
   </p>
 
   <!-- Search -->
+  <label for="q">Search knowledge</label>
   <div class="searchbar">
     <div class="searchbox">
       <span class="ic">🔍</span>
       <input id="q" type="text" autocomplete="off" spellcheck="false"
              placeholder="Search everything about you — work, relationships, projects, habits…" />
-      <button class="clr" id="clr" title="Clear (Esc)">×</button>
+      <button class="clr" id="clr" title="Clear (Esc)" aria-label="Clear knowledge search">×</button>
       <span class="slash">press /</span>
     </div>
   </div>
@@ -179,7 +180,7 @@
     <p>Grounded in your notes · part of <strong>LifeOS</strong> · <a href="index.html">back to Command Center</a></p>
     <p style="font-family:Georgia,serif;font-style:italic;margin-top:4px">Relax and enjoy the ride.</p>
   </footer>
-</div>
+</main>
 
 <script>
 LifeOS.init({page:'knowledge'});

@@ -66,9 +66,19 @@ Sync is off unless `integrations.notion.enabled` is `true` in
 `dashboard/lifeos.config.json`. Follow the [Notion setup guide](connectors/notion.md), set the
 server environment variables and enter the matching sync key in this browser.
 
+**Sync key** opens an empty password field. Paste the matching key and choose **Save key**;
+**Clear saved key** removes it. These actions cancel a scheduled retry and send nothing.
+The saved key is never displayed. Cancel/Escape leaves it unchanged and clears the field;
+a storage error is shown in the dialog. Press Push after verifying the destination and entries.
+
 Only subsequent task/habit mutations queue automatically. **Push** submits pending work;
 an empty queue says **No pending changes**, which does not certify that the remote database
 matches this browser. **Pull** reads remote data; push pending work first. If you type into a task or habit while
 a pull is pending, its response is paused without replacing your text. Finish the edit,
 push pending changes and pull again. Reviews, checks,
 favorites and history remain local. See the guide's limitations before relying on sync.
+
+Quote/review copy keeps selectable text in an in-page dialog if clipboard access is denied.
+Daily-review Markdown uses the same local date as its browser record. Disabling optional sync
+while Pull is pending discards that response. An already-sent Push can still finish and acknowledge
+successful rows, but disabled sync schedules no retry. It cannot retract a submitted request.

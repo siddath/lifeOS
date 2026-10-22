@@ -57,3 +57,10 @@
 - A priority button’s text changed while its accessible name kept the old priority. Rename commits similarly left contextual control labels stale. Labels now refresh on existing controls without replacing editors or moving focus.
 - Day/keystone buttons explicitly derive class and aria-pressed from the persisted next boolean, keeping the immediate visual and announced state aligned.
 - The regression runs actual production handler source with synthetic data. An empty-state audit alone does not exercise these transitions; include populated rows and both toggle directions in the final interface pass.
+
+## 2026-10-22 — copy/key and date release follow-up
+
+- Repairing backup prompts did not repair neighboring quote/review/key paths. The shared in-page dialog now covers denied clipboard and empty password entry, with explicit save/clear, no implicit push and focus restoration.
+- An asynchronous response can outlive its opt-in. Tests defer shipped Push/Pull handlers, disable the integration, then verify acknowledgements survive while remote pulls and new retries do not.
+- Date validation must agree across entry and recovery. The parser/add/snapshot/backup regression uses impossible dates and a valid leap date; invalid tokens retain the original input for correction.
+- Actual browser and independent final-delta review remain separate integration evidence. No new workflow, dependency or integration was introduced.

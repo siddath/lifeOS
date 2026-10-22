@@ -102,7 +102,7 @@ SYNC_SHARED_SECRET=<any-long-random-string>           # REQUIRED whenever the No
 
 ### About `SYNC_SHARED_SECRET` (required)
 
-This authenticates the **dashboard → serverless** calls. The dashboard sends it as an `X-Sync-Secret` header; the function compares it to `SYNC_SHARED_SECRET`. The dashboard doesn't read the value from an env var (it's static — it can't), so you set the matching key **in the dashboard itself**: click **🔑 Sync key** in the sync bar and paste the same string. It's stored in that browser's local storage and never committed, so do it once per device.
+This authenticates the **dashboard → serverless** calls. The dashboard sends it as an `X-Sync-Secret` header; the function compares it to `SYNC_SHARED_SECRET`. The dashboard doesn't read the value from an env var (it's static — it can't), so you set the matching key **in the dashboard itself**: click **🔑 Sync key** in the sync bar and paste the same string. It's stored in that browser's local storage and never committed, so do it once per device. The empty password dialog never reveals the existing key. Save/Clear sends nothing and cancels a scheduled retry; press Push when ready. Cancel/Escape leaves the saved setting unchanged.
 
 - **The functions fail closed.** If `NOTION_API_KEY` is set but `SYNC_SHARED_SECRET` isn't, the endpoints refuse to serve (`503`) rather than expose an open write path into your Notion. Set the secret everywhere the Notion vars are set — including local dev.
 - **If set on the server but not in the dashboard**, sync returns `401`. Set the key with the 🔑 button.

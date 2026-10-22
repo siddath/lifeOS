@@ -101,6 +101,7 @@ a{color:var(--accent2);text-underline-offset:.16em}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .topnav{background:var(--card)} }
 .topnav .nav-inner{max-width:1080px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .topnav .brand{font-weight:700;font-size:var(--fs-body);color:var(--accent);letter-spacing:.2px;white-space:nowrap;text-decoration:none}
+.topnav .brand{max-width:100%;white-space:normal;flex-wrap:wrap}
 .topnav .brand span{color:var(--muted);font-weight:600}
 .nav-kb{background:var(--accent2);color:var(--on-accent2) !important;text-decoration:none;font-size:var(--fs-meta);font-weight:700;
         padding:6px 13px;border-radius:999px;white-space:nowrap;transition:filter .15s;box-shadow:var(--shadow);margin-left:auto}
@@ -176,3 +177,18 @@ a{color:var(--accent2);text-underline-offset:.16em}
   @keyframes sheetUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
   body{padding-bottom:88px}
 }
+
+/* Selectable copy text and private key entry use the same local dialog on every page. */
+.text-dialog{box-sizing:border-box;width:min(680px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;
+  border:1px solid var(--line);border-radius:var(--r-card);padding:var(--sp-4);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.text-dialog::backdrop{background:rgba(25,20,16,.65)}
+.text-dialog h2{font:600 var(--fs-title)/1.25 var(--serif);margin:0 0 var(--sp-2)}
+.text-dialog p{margin:0 0 var(--sp-3);overflow-wrap:anywhere}
+.text-dialog label{display:block;font-weight:600;margin-bottom:var(--sp-1)}
+.text-dialog textarea,.text-dialog input{box-sizing:border-box;width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--bg);color:var(--ink);font:16px/1.5 monospace}
+.text-dialog textarea{min-height:150px;resize:vertical;overflow-wrap:anywhere}
+.text-dialog [hidden]{display:none}
+.text-dialog-actions{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin:var(--sp-3) 0}
+.text-dialog button{min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--bg);color:var(--ink);font:inherit;cursor:pointer}

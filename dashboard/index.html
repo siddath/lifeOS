@@ -1231,11 +1231,13 @@
     fav.textContent=isFav?'♥':'♡'; fav.setAttribute('aria-pressed', isFav?'true':'false');
   }
   function qToast(msg){ const t=document.getElementById('qToast'); if(!t) return; t.textContent=msg; t.hidden=false; setTimeout(()=>{ t.hidden=true; }, 1600); }
-  function shareQuote(){
+  async function shareQuote(){
     const text='“'+curQuote.text+'” — '+curQuote.author;
-    if(navigator.share){ navigator.share({text}).catch(()=>{}); }
-    else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>qToast('Copied'), ()=>window.prompt('Copy:',text)); }
-    else window.prompt('Copy:',text);
+    if(navigator.share){
+      try{ await navigator.share({text}); return; }
+      catch(error){ if(error?.name==='AbortError') return; }
+    }
+    if(await LifeOS.copyText(text,'Copy quote')) qToast('Copied');
   }
   function buildFilterPop(){
     const pop=document.getElementById('qFilterPop'); if(!pop) return; const cur=qFilter();
@@ -1502,7 +1504,9 @@
   }
   function addTaskFromQuickAdd(){
     const raw = composer.input.value.trim(); if(!raw) return;
-    const r = resolveComposer(); if(!r.title) return;
+    const r = resolveComposer();
+    if(r.invalidDue){ syncNote('Due date was not recognized. Use today, tomorrow, sat, or a real YYYY-MM-DD date. Your task text is kept.'); composer.input.focus(); return; }
+    if(!r.title) return;
     const t = { id:uid(), title:r.title, area:r.area, priority:r.priority, due:r.due, status:'open', notionId:null, updatedAt:nowIso() };
     const tasks = getTasks(); tasks.push(t); setTasks(tasks);
     queueSync('task','upsert', t);
@@ -1597,7 +1601,7 @@
   function nlDueChip(tok){
     if(!tok) return null;
     if(tok==='today'||tok==='tomorrow'||tok==='sat') return tok;
-    if(/^\d{4}-\d{2}-\d{2}$/.test(tok)) return 'pick';
+    if(LifeOSState.validDate(tok)) return 'pick';
     return null;
   }
   function refreshComposerChips(){
@@ -1634,7 +1638,7 @@
     if(nl.due) due = resolveDueToken(nl.due);
     else if(composer.sel.due==='pick') due = composer.sel.dueDate||'';
     else if(composer.sel.due && composer.sel.due!=='none') due = resolveDueToken(composer.sel.due);
-    return { title:parsed.title, area, priority, due };
+    return { title:parsed.title, area, priority, due, invalidDue:!!nl.due && !due };
   }
   // Wiring
   buildComposerChips();
@@ -1729,22 +1733,22 @@
     if(apiConfigured) setStatus('pending', `${q.length} change${q.length>1?'s':''} pending…`);
     scheduleFlush();
   }
-  function scheduleFlush(delay=1400){ clearTimeout(syncTimer); syncTimer = setTimeout(flushQueue, delay); }
+  function scheduleFlush(delay=1400){ clearTimeout(syncTimer); if(notionEnabled()) syncTimer = setTimeout(flushQueue, delay); }
   // Optional shared secret authenticating dashboard -> serverless calls (matches SYNC_SHARED_SECRET
   // on the server). Kept in localStorage, excluded from backups. Configured servers require it.
   function syncHeaders(base){ const h = base||{}; let s=''; try{ s=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
     if(s) h['X-Sync-Secret']=s; return h; }
-  // If you set SYNC_SHARED_SECRET on your deployment, the dashboard must send the SAME value.
-  // This stores it in this browser's localStorage (never committed) and retries the sync.
+  // Key changes are local settings. They never submit or retry queued work.
   function setSyncSecret(){
-    let cur=''; try{ cur=localStorage.getItem('lifeos_sync_secret')||''; }catch(e){}
     if(!notionEnabled()){ localOnly(); syncNote('Notion is off. Enable integrations.notion.enabled in your private config before setting a sync key.'); return; }
-    const next = window.prompt('Sync key — must match SYNC_SHARED_SECRET on your deployment.\nLeave blank to clear the key from this browser.', cur);
-    if(next===null) return; // cancelled
-    try{ if(next) localStorage.setItem('lifeos_sync_secret', next); else localStorage.removeItem('lifeos_sync_secret'); }catch(e){}
-    apiConfigured = true; // let it try again now that a key is set/cleared
-    syncNote(next ? '🔑 Sync key saved on this device. Retrying…' : '🔑 Sync key cleared.');
-    flushQueue();
+    LifeOS.editSyncKey(saveSyncSecret);
+  }
+  function saveSyncSecret(next){
+    if(!notionEnabled()) return 'Notion sync is off. Your key was not changed.';
+    try{ if(next) localStorage.setItem('lifeos_sync_secret', next); else localStorage.removeItem('lifeos_sync_secret'); }
+    catch(_){ return 'The browser could not save the key. Your current setting is unchanged.'; }
+    clearTimeout(syncTimer); apiConfigured=true;
+    syncNote(next?'Sync key saved on this device. Press Push when the destination is verified.':'Sync key cleared. Queued entries stay on this device.');
   }
 
   async function flushQueue(){
@@ -1772,7 +1776,7 @@
     }catch(err){
       setStatus('error', 'Sync error — will retry');
       scheduleFlush(15000);
-    }finally{ syncInFlight=false; }
+    }finally{ syncInFlight=false; if(!notionEnabled()) localOnly(); }
   }
   function lastSyncedLabel(){
     const t = localStorage.getItem('lifeos_last_synced');
@@ -1810,6 +1814,7 @@
       if(res.status===401){ setStatus('error', 'Set your sync key 🔑'); syncNote('🔑 Pull rejected (401). Click 🔑 Sync key and enter the key that matches SYNC_SHARED_SECRET on your deployment.'); return; }
       if(!res.ok) throw new Error('HTTP '+res.status);
       const data = await res.json();
+      if(!notionEnabled()){ localOnly(); syncNote('Sync was disabled while pulling. Remote entries were not applied.'); return; }
       if(editorRevision!==revisionAtPull || document.activeElement?.matches('.ed-title,.ed-hname')){
         setStatus('idle','Pull paused — finish editing');
         syncNote('You edited while pulling. Your text is preserved. Finish the edit, push pending changes, then pull again.');
@@ -1821,7 +1826,7 @@
       setStatus('synced', lastSyncedLabel());
       syncNote(data.truncated ? 'Pulled up to 1,000 tasks and habits. More records exist in Notion; this is a partial pull.' : 'Pulled Tasks + Habits from Notion.');
     }catch(err){ setStatus('error', 'Pull failed'); syncNote('Pull failed — your local data is still here. Check your connection and try again.'); }
-    finally{ syncInFlight=false; if(getQueue().length) scheduleFlush(); }
+    finally{ syncInFlight=false; if(!notionEnabled()) localOnly(); else if(getQueue().length) scheduleFlush(); }
   }
   function mergeRemoteTasks(remote){
     const tasks = getTasks();
@@ -2102,8 +2107,9 @@
       '\n\nPresent with Sam: '+moodPrefix+(s.presence||'')+'\nOverthinking / can wait: '+(s.overthink||'')+
       '\n\nGratitude:\n1. '+(s.g?.[0]||'')+'\n2. '+(s.g?.[1]||'')+'\n3. '+(s.g?.[2]||'')+
       '\n\nTomorrow’s one thing: '+(s.oneThing||'')+'\n';
-    if(navigator.clipboard) navigator.clipboard.writeText(md).then(()=>document.getElementById('drMsg').textContent='📋 Copied — paste into templates/daily_review.md or your journal.',()=>window.prompt('Copy:',md));
-    else window.prompt('Copy:',md);
+    LifeOS.copyText(md,'Copy daily review').then(copied=>{
+      document.getElementById('drMsg').textContent=copied?'Copied — paste into your private journal.':'Review ready in the copy dialog.';
+    });
   }
 
   // ---- Stepper controls ----
