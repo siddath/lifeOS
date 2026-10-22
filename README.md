@@ -30,7 +30,7 @@ Most "get organized" systems fail the same way: you spend an afternoon setting t
 
 There's no LifeOS server and no account. Your data sits in your repo, your browser's local storage, and — if you opt in — your own Notion and Vercel. Nothing phones home.
 
-The one design decision everything hangs off: **the framework ships no content, only paths and a contract.** A single `lifeos.config.json` holds who you are; JSON Schemas in `schemas/` describe every data file. Swap one `mission.json` and the whole dashboard re-renders around your current focus. Because the shapes are written down, any AI can read your notes and fill the system in — you don't need this specific tool or that specific model.
+The framework ships a **fictional demo and a reusable data contract**. A single `dashboard/lifeos.config.json` holds who you are; JSON Schemas in `schemas/` describe every data file. Swap `dashboard/mission.json` and the hero re-renders around your current focus. Any AI can read your notes and write against those shapes.
 
 A fresh clone runs immediately as a demo persona ("Alex Rivera," a product engineer in Portland) so you can see the whole thing working before you touch a file.
 
@@ -45,7 +45,7 @@ There's also a set of Claude Code skills (`/setup`, `/daily-brief`, `/weekly-rev
 - **One hero mission at a time.** The dashboard centers a single focus with a live countdown, "the one thing right now," a week-by-week arc, and an evidence checklist. All of it renders from `dashboard/mission.json`; swap the file to swap the mission (about a ten-minute edit).
 - **Tasks and habits, live.** A natural-language task box (`#area P1 due:tomorrow`), a weekly habit grid with streak history, saved in your browser — with optional best-effort two-way Notion sync so your phone and desktop stay close.
 - **A knowledge base about you.** Searchable notes — strengths, watch-outs, preferences, one entry per life area. This is the raw material an AI reads to write your daily brief.
-- **The Anchor.** A calm break-glass page: grounding steps, a few reframes, a seven-day reset. It's the part that assumes you're a person who spirals under pressure, not a productivity robot.
+- **The Anchor.** An optional reflection page with example grounding prompts and reframes. Adapt or skip it to fit your needs.
 - **Finance.** Net worth, a monthly budget, and an optional broker view. Currency comes from your config.
 - **A four-step evening review.** Two minutes: how the day felt, presence with the people you love, three small thanks, tomorrow's one thing.
 - **A warm, theme-aware UI.** Light and dark, a mobile dock, reduced-motion support. Opinionated about being calm rather than loud.
@@ -71,7 +71,11 @@ python3 -m http.server 8000      # then open http://localhost:8000/dashboard/
 open dashboard/index.html
 ```
 
-Then open your AI assistant in this folder and tell it to read `AGENTS.md` and help you get started. It'll ask about you (or take whatever notes you already have), write your `lifeos.config.json`, and fill in your first mission, tasks, and knowledge base. If you use Claude Code, `/setup` does the same thing as a guided interview.
+Then open your AI assistant in this folder and tell it to read `AGENTS.md` and help you get started. It'll ask about you (or take whatever notes you already have), write your `dashboard/lifeos.config.json`, and fill in your first mission, tasks, and knowledge base. If you use Claude Code, `/setup` does the same thing as a guided interview.
+
+Tasks and habits seed an empty browser once; dashboard edits stay in that browser and do
+not write back to Git. Use **Backup & sync** to export before changing devices or seed files.
+See [browser data and backups](docs/browser-data.md) for what travels and what stays local.
 
 When you want it on your phone, deploy the `dashboard/` folder with the button up top. It runs fine with zero environment variables — Notion sync just stays dormant until you add keys. Full deploy notes: [docs/deploy.md](docs/deploy.md).
 

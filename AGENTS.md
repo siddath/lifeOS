@@ -33,17 +33,17 @@ The agent should treat this section as the standing context for every session. W
 
 The whole system exists to move `{{owner}}` from *Think → Plan → Improve the plan → Think again* to **Think once → Build → Measure → Improve.**
 
-Every week must end with **evidence (artifacts), not ideas.** A session that ends with a longer to-do list instead of one shipped thing has failed, even if the to-do list is excellent.
+The default method encourages a small, reviewable artifact when that serves the owner's goal. Rest, exploration, maintenance and a well-considered decision can also be valid outcomes. The owner chooses the pace and can change this method.
 
-**Spiral guardrail.** This system is built for people who over-plan under pressure. When `{{owner}}` is spiraling — reopening decisions, widening scope, planning instead of doing — **name it plainly and push them to ship one concrete thing.** Small and honest beats complete and imaginary. Structure calms the spiral; more options feed it.
+**Optional focus support.** If the owner asks for help narrowing the work, suggest one manageable next step. Do not infer their emotional state from planning, label them as spiraling, or push productivity when they ask for rest or reflection.
 
 ## One hero mission at a time
 
-There is always exactly **one** active hero mission — the single most important outcome right now. Everything else runs in maintenance mode until the hero closes.
+The dashboard has **one** hero mission slot. It is a focus aid, not a rule about how the owner must live; they decide what else needs attention.
 
 - The hero renders entirely from `dashboard/mission.json` (see the lifecycle below). Nothing else hardcodes it.
 - If a task doesn't serve the active mission, it goes to the parking lot — **except** the always-OK basics: relationship/family time, sleep, food, health, and unavoidable admin. Those are never parked.
-- Do not let `{{owner}}` reopen every project at once. Naming that pull ("that's the spiral — one hero at a time") is part of the job.
+- When the owner asks for help keeping a narrow focus, offer to park unrelated work. They decide what to pursue.
 
 ## File map
 
@@ -89,7 +89,7 @@ That's the whole swap — a ~10-minute edit.
 
 1. **Everything answers one question:** *does this serve the active hero mission?* If no, it's parked — except relationship/family time, sleep, food, health, and admin-critical items, which are always allowed.
 2. **Don't over-plan.** Prefer shipping a usable artifact over a perfect plan. When `{{owner}}` is planning a third time, that's the signal to ship.
-3. **Keep tone direct and calm.** Structure helps someone who spirals under pressure; walls of options don't.
+3. **Keep tone direct and calm.** Offer structure when useful and follow the owner's stated needs.
 4. **Preserve `{{owner}}`'s entries.** When updating trackers, append — don't overwrite.
 5. **Log evidence, not ideas.** Every session that ships something adds a line to `06_Trackers/evidence.md`.
 6. **Privacy first.** A personal LifeOS holds sensitive detail (finances, relationships, IDs). The public repo is the clean template; the owner's instance lives in a **private** repo, and personal config + data JSON are committed only there. Any hosted personal dashboard should sit behind access protection or be treated as public. For anything public, extract a sanitized showcase instead of publishing the vault. <!-- lifeos:fill --> add any owner-specific privacy rules.
@@ -106,13 +106,18 @@ PR (`.github/workflows/ci.yml`):
 |---|---|
 | `npm run validate` | Every `dashboard/*.json` matches its schema in `schemas/`, and every task/KB `area` is a real code from the config. |
 | `npm run check-links` | Every relative Markdown link resolves. Run after touching any doc. |
-| `npm run test:unit` | The Notion sync mapping and auth gate. |
+| `npm run test:unit` | Notion mapping/auth plus backup, seed-race, sync-queue and local-date regressions. |
 
 `bash scripts/pii-scan.sh .` runs as its own CI job (`.github/workflows/pii-scan.yml`) — **run
 it before pushing; this is a public template and secrets must never land in it.**
 
 The dashboard has **no build step**: for a UI change, open `dashboard/index.html` (or
 `python3 -m http.server`) and *look at it*. Nothing compiles; there is no dev server to wait on.
+
+Dashboard edits live in browser storage and do **not** write back to the JSON seed files.
+Before an assistant changes an existing instance's task/habit files, reconcile a private
+browser export with them. Never clear browser storage to force a seed refresh. See
+[`docs/browser-data.md`](docs/browser-data.md) for backup, restore and sync boundaries.
 
 Build-level work for this template is queued in [`TODOS.md`](TODOS.md); when a session dies
 mid-task, its trace and the friction log live in [`worksheets/`](worksheets/) so the next one

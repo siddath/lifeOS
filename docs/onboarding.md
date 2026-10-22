@@ -25,7 +25,7 @@ Open your assistant in the repo folder and tell it: *"Read `AGENTS.md` and help 
 3. Seeds starter **tasks** (`dashboard/tasks-data.json`), **habits** (`dashboard/habits-data.json`), and **knowledge-base** entries (`dashboard/kb-data.json`) against their schemas — the exact files the dashboard renders from.
 4. Tells you what's next (deploy, or wire a connector).
 
-Because it writes against the schemas, everything renders in the dashboard immediately. Review, tweak the wording, and you're live.
+These files seed an empty browser. If you have already used the dashboard, reconcile its private export first; changing JSON never overwrites existing browser edits. See [browser data and backups](browser-data.md). Review the result before using a personal instance.
 
 **Using Claude Code?** There's a shortcut for exactly this: run `/setup` and it does the interview and the writing as a bundled skill. It's a convenience, not a requirement — any assistant reaches the same result from `AGENTS.md` and the schemas.
 
@@ -55,7 +55,7 @@ If you'd rather live in Notion on mobile and use the dashboard on desktop, hydra
 1. **Create two Notion databases — Tasks and Habits — with the exact property names LifeOS expects.** The property tables in [connectors/notion.md](connectors/notion.md) (Step 4) are the spec; building them by hand takes a couple of minutes. (A prebuilt duplicate-me template is planned but not shipped yet.)
 2. **Create an internal integration** and share those databases with it; copy the **API key** and the two **database IDs**.
 3. **Set the env vars** — `NOTION_API_KEY`, `NOTION_DATABASE_ID_TASKS`, `NOTION_DATABASE_ID_HABITS`, and a `SYNC_SHARED_SECRET` — locally in `.env` and in your host.
-4. **Run the pull** (`api/notion-pull.js`, or the **Pull** button in the dashboard's dock). It hydrates local task/habit data from Notion, and pushes flow back the same way.
+4. **Enable `integrations.notion.enabled`** in your private `dashboard/lifeos.config.json`, then **run the pull** (`api/notion-pull.js`, or the **Pull** button in the dashboard's dock). It hydrates local task/habit data from Notion, and pushes flow back the same way.
 
 Full walkthrough with the exact property names and select-option values: **[connectors/notion.md](connectors/notion.md)**.
 
@@ -90,7 +90,7 @@ The privacy model is one sentence long: **the public repo is the template; your 
 
 ## After any path
 
-- **Verify it renders.** Open `dashboard/index.html` locally — your name, areas, and mission should appear. No network or keys required.
+- **Verify it renders.** Serve the repo with `python3 -m http.server 8000` and open `http://localhost:8000/dashboard/` — your name, areas, and mission should appear. Direct `file://` opening can block JSON fetches and retain the inline demo. No external services or keys required.
 - **Deploy** if you want it on your phone: [deploy.md](deploy.md).
 - **Layer on connectors** as you need them: [connectors/README.md](connectors/README.md).
 - **Keep it current** by asking your assistant for a daily brief, a quick capture, or a weekly review — all reading and writing the same schema-guided data. On Claude Code these are the bundled `/daily-brief`, `/quick-capture`, and `/weekly-review` skills.

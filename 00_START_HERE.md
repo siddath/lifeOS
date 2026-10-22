@@ -8,7 +8,7 @@ updated: 2026-07
 
 # 🏠 Start Here
 
-> Daily home base. Open this first. It points at the one thing that matters today and everything else is one click away. Identity lives in `lifeos.config.json`; the mission renders from `dashboard/mission.json`.
+> Daily home base. Open this first. It points at the one thing that matters today and everything else is one click away. Identity lives in `dashboard/lifeos.config.json`; the mission renders from `dashboard/mission.json`.
 
 ## 🎯 Today's hero
 
@@ -25,7 +25,7 @@ _(Demo persona. Swap this line whenever the hero changes — see the `mission-sw
 - **Capture something** — run the `quick-capture` skill to drop a thought into the inbox.
 - **Weekly review** — run the `weekly-review` skill (typically Sunday).
 - **Swap the hero** — run the `mission-swap` skill when a mission closes.
-- **First-time setup** — run the `setup` skill to create `lifeos.config.json`.
+- **First-time setup** — run the `setup` skill to create `dashboard/lifeos.config.json`.
 
 ## 🔴 Live state ([`06_Trackers/`](06_Trackers/))
 
@@ -55,4 +55,4 @@ _Full lists (blank templates — your live `tasks.md`, `habits.md`, etc. are cre
 
 ## 📌 The principle
 
-Think once → Build → Measure → Improve. End every day with **one shipped thing**, not a longer plan. When you notice yourself planning for the third time, that's the signal to ship.
+Think once → Build → Measure → Improve. Choose a small useful next step when you want one. Rest, reflection and maintenance count too; this method should support your life.

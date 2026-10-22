@@ -19,6 +19,7 @@ This folder is the map. Start with whichever door fits you.
 | Understand how the whole thing fits together | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Adopt it as your own (4 ways) | [onboarding.md](onboarding.md) |
 | Put the dashboard on the web | [deploy.md](deploy.md) |
+| Back up browser edits or reconcile them with files | [browser-data.md](browser-data.md) |
 | See what's built vs. planned | [ROADMAP.md](ROADMAP.md) · [FEATURES.md](FEATURES.md) |
 | Wire up an integration | [connectors/README.md](connectors/README.md) |
 | Understand the data shapes | [../schemas/README.md](../schemas/README.md) |

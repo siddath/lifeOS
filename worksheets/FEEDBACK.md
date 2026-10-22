@@ -22,3 +22,17 @@
 - `scripts/pii-scan.sh` is CI-wired via `pii-scan.yml` but is not part of `npm test`, and
   `CONTRIBUTING.md:30` hedges it as "if present" — it is present and it exits 0. The hedge made
   it unclear whether running it was expected.
+
+
+## 2026-10-22 — browser state and local-only behavior
+
+- The dashboard called an empty queue “Synced” while the example config disabled Notion.
+  Local-only copy now follows the toggle; no remote-parity claim comes from queue length.
+- First-run seed hydration had no comparison with subsequent user edits. The replacement
+  now checks the exact original fallback before writing, and empty seed arrays are honored.
+- The backup path accepted arbitrary decoded JSON and omitted daily reviews/history. It now
+  validates supported entries, confirms replacement and excludes sync credentials. The
+  state tests cover malformed imports, rollback and edits during a sync acknowledgement.
+- The docs described JSON seeds as authoritative current tasks and said missing sync auth
+  left endpoints open. Both disagreed with the code; browser ownership and fail-closed auth
+  are now explicit. Remaining storage/module-toggle work is in `TODOS.md`.

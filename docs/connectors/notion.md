@@ -83,7 +83,13 @@ The weekly matrix on the dashboard maps directly onto the seven day-checkboxes p
 
 ---
 
-## Step 5 — set the environment variables
+## Step 5 — enable sync and set the environment variables
+
+In your **private** `dashboard/lifeos.config.json`, set `integrations.notion.enabled` to
+`true`. The dashboard does not make sync requests while this toggle is off. After setup,
+new task/habit edits queue automatically; **Push** submits only pending changes. It does not
+seed every demo/file record into Notion. Push pending changes before **Pull**. Browser edits
+do not write back to repository JSON; see [browser data and backups](../browser-data.md).
 
 Put these in a gitignored `.env` for local dev **and** in your host's environment variables for the deployed functions (templates in `.env.example`):
 
@@ -120,6 +126,8 @@ Honest edges of the current implementation — fine for a personal two-surface s
 - **Deletions made in Notion don't propagate back.** Pull upserts what exists in Notion; a page you archived in Notion simply stops updating locally rather than disappearing. Delete on the dashboard side to remove both.
 - **A lost response can duplicate a create.** If the network drops after Notion created a page but before the dashboard recorded its `notionId`, a retry creates a second page. The databases are built by hand from the Step 4 tables (no spare identity property to dedupe on), so if this happens, delete the duplicate in Notion. Rare in practice.
 - **Last write wins.** There is no field-level merge; whichever side pushed or pulled most recently sets the state.
+
+- **Browser state is separate from Git.** Sync updates browser tasks/habits and Notion, not the repository seed JSON. Reviews, checks and habit history need a browser backup.
 
 ## Troubleshooting
 

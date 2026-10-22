@@ -10,7 +10,7 @@ Drive the most important 20 minutes of the week. End with evidence and a clear n
 Read the owner's identity and enabled modules from `dashboard/lifeos.config.json` (falling back to `dashboard/lifeos.config.example.json`); use the area codes there for the areas check.
 
 ## Steps
-1. Read `06_Trackers/tasks.md`, `inbox.md`, `habits.md`, `evidence.md`, and `00_START_HERE.md`. The dashboard JSON (`dashboard/tasks-data.json`, `habits-data.json`) is the authoritative state — cross-check it. Any tracker file that doesn't exist yet: create it from its `06_Trackers/*.template.md` rather than failing.
+1. Read `06_Trackers/tasks.md`, `inbox.md`, `habits.md`, `evidence.md`, and `00_START_HERE.md`. The dashboard JSON (`dashboard/tasks-data.json`, `habits-data.json`) is first-run seed data. Existing browser tasks/habits can be newer; reconcile a private dashboard export before rewriting the files or claiming the review is complete. Never clear browser storage to force a seed refresh; see `docs/browser-data.md`. Any tracker file that doesn't exist yet: create it from its `06_Trackers/*.template.md` rather than failing.
 2. Fill a copy of `templates/weekly_review.md` (or summarize inline if the owner prefers), filed under `reviews/YYYY-Www.md`:
    - **Evidence:** what actually shipped (artifacts, not intentions) — cross-check `06_Trackers/evidence.md`.
    - **Hero mission:** did it move toward its gate?

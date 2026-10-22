@@ -70,7 +70,7 @@ None of these are required to deploy. Add them only for the features you want. S
 | `NOTION_API_KEY` | Notion two-way sync | Internal integration token. |
 | `NOTION_DATABASE_ID_TASKS` | Tasks sync | The **database id** (URL slug), not a `collection://` id. |
 | `NOTION_DATABASE_ID_HABITS` | Habits sync | Same rule. |
-| `SYNC_SHARED_SECRET` | Auth for dashboard → serverless calls | Any long random string. Set the **identical** value in the dashboard via the **🔑 Sync key** button in the sync bar (stored per-browser, never committed). If unset on the server, the sync endpoints are open (fine locally, **not** for a public deployment). |
+| `SYNC_SHARED_SECRET` | Auth for dashboard → serverless calls | Any long random string. Set the **identical** value in the dashboard via the **🔑 Sync key** button in the sync bar (stored per-browser, never committed). Required whenever Notion is configured: without it the functions refuse sync with `503`; a missing or wrong browser key returns `401`. |
 
 Full Notion walkthrough (including the exact property names and where to find the database id): **[connectors/notion.md](connectors/notion.md)**.
 
@@ -88,12 +88,13 @@ If you set the Notion env vars, Vercel automatically serves the functions in `ap
 
 The dashboard holds your personal planning. To keep a deployment from being public:
 
-- **Deployment Protection** — require login to view (Project → Settings → Deployment Protection), or
-- **Password Protection** if your plan offers it, or
-- Keep the URL unlisted (weakest — avoid once finance data is involved).
+- **Deployment Protection** — require login to view (Project → Settings → Deployment Protection).
+- **Password Protection** if your plan offers it.
+
+An unlisted URL is still public; it is not access protection. Keep personal config and data behind authentication.
 
 ---
 
 ## Put it on your phone
 
-Open your `https://your-deployment.vercel.app` URL in mobile Safari/Chrome → **Share → Add to Home Screen**. It behaves like an app; checkbox state persists per-device via `localStorage`. If you want state shared across devices, enable the Notion connector so tasks and habits live in a database instead of the browser.
+Open your `https://your-deployment.vercel.app` URL in mobile Safari/Chrome → **Share → Add to Home Screen**. It behaves like an app; browser state persists per-device and origin via `localStorage` (see [browser data and backups](browser-data.md)). To mirror task/habit edits across devices, enable the Notion connector. Each browser still holds its own copy; checks and reviews are local.
