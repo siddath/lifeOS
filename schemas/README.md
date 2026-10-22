@@ -8,7 +8,7 @@ They're [JSON Schema draft-07](https://json-schema.org/). Point any validator at
 
 | Schema | Describes | Lives at |
 |---|---|---|
-| `lifeos.config.schema.json` | Identity, area codes, enabled modules, integration toggles | `lifeos.config.json` (copy of `lifeos.config.example.json`) |
+| `lifeos.config.schema.json` | Identity, area codes, enabled modules, integration toggles | `dashboard/lifeos.config.json` (copy of `dashboard/lifeos.config.example.json`) |
 | `mission.schema.json` | The hero mission — the swappable dashboard focus | `dashboard/mission.json` |
 | `tasks.schema.json` | The tasks file — a wrapper with a `tasks[]` array of task records | `dashboard/tasks-data.json` (seed; hydrates dashboard local storage) |
 | `habits.schema.json` | The habits file — a wrapper with a `habits[]` array of habit records | `dashboard/habits-data.json` (seed; hydrates dashboard local storage) |
@@ -33,7 +33,7 @@ They're [JSON Schema draft-07](https://json-schema.org/). Point any validator at
 
 Feed a schema to your assistant with your raw notes:
 
-> Here's my task list. Read `schemas/tasks.schema.json` and give me back a JSON array of tasks that matches it — infer the area from my `lifeos.config.json`, set priorities, and parse any due dates.
+> Here's my task list. Read `schemas/tasks.schema.json` and give me back a JSON object with a `tasks` array that matches it. Use the area codes from `dashboard/lifeos.config.json`; preserve supplied priorities and dates, and leave missing choices open for review.
 
 Or validate everything the way CI does:
 
