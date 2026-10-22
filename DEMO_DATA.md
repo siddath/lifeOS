@@ -17,7 +17,7 @@ The risk with any seed data is that an AI (or a hurried human) mistakes it for r
 }
 ```
 
-It's ignored by the schemas (none use `additionalProperties: false`) and by the dashboard, so it's harmless to leave in during development and trivial to drop when you write real data. If you're an AI reading a file and you see `_DEMO`, that file is a placeholder — replace its contents, don't reason from them.
+The schemas permit this marker. The dashboard uses the config marker to show its fictional-demo notice. If an assistant sees `_DEMO`, treat that file as placeholder source rather than owner evidence. Review existing private records and browser exports before replacing anything; a marker in a seed file does not prove that browser entries are still all demo data.
 
 Files that carry it:
 
@@ -38,7 +38,7 @@ Files that carry it:
 
 You don't have to do this by hand. Open your AI assistant in the repo, point it at [`AGENTS.md`](AGENTS.md), and let it walk the onboarding: it recognizes the markers above, asks for your real context (or reads whatever you hand it), and writes schema-guided files in place of the demo (the shipped demo data itself is schema-validated in CI). If you use Claude Code, `/setup` does the same thing as a guided interview.
 
-If you'd rather do it yourself: copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json`, edit the demo JSON files (`mission.json`, `tasks-data.json`, `habits-data.json`, `kb-data.json`, `finance-data.json`) against their schemas in [`schemas/`](schemas/), replace the `<!-- lifeos:fill -->` markers, and clear the demo tasks/habits from the dashboard UI (or your browser's local storage). That's the whole job.
+For manual setup, personalize a private copy. First export the browser's current work and review it for any personal entries mixed with the demo. Copy `dashboard/lifeos.config.example.json` to `dashboard/lifeos.config.json`, edit the JSON source files against their [`schemas`](schemas/), and replace the `<!-- lifeos:fill -->` markers. Existing browser records do not reload when seed files change. Remove only records you have confirmed are fictional, using the dashboard controls, and retain your reviewed backup. Do not clear browser storage to refresh seeds. See [browser data and recovery](docs/browser-data.md) before transferring or replacing records.
 
 ## One thing to keep
 
