@@ -44,3 +44,7 @@ upstream, keep your deny-list *there*, not here.
 |---|---|---|
 | Temple Courtyard at Dusk | template founding | Warm dual-theme tokens, the dock + mobile FAB, the quote engine, mission.json-driven hero |
 | **Temple Courtyard, Lamps Lit** | 2026-07 | The de-clutter: hero thinned to one-thing-first, quote card into Reflect, sync collapsed to a foot zone, one-emoji-per-header discipline, spacing scale, collapsed reference/week-planner zones, restrained motion, the named-widget registry |
+
+## Workspace era — October 2026
+
+The generic workspace port adds Home, Projects, Library and Reviews, visible bounded navigation, explicit task options, secondary backup/settings and a safe bundled-guide reader. Public config-driven identity, demo persona, mission, records and storage remain authoritative. The private upstream's personal overview, directory, data, trackers and life reviews do not port. See [workspace usage](workspace.md) for public deployment and guide-bundle details.

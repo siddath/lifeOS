@@ -1,0 +1,330 @@
+{
+  "version": 1,
+  "scope": "Public template guides only",
+  "documents": [
+    {
+      "path": "templates/obsidian_daily.md",
+      "title": "{{date:dddd, D MMM YYYY}}"
+    },
+    {
+      "path": "00_START_HERE.md",
+      "title": "🏠 Start Here"
+    },
+    {
+      "path": "04_AI_Workflow/README.md",
+      "title": "🤖 AI Workflow"
+    },
+    {
+      "path": "04_AI_Workflow/model_orchestration_map.md",
+      "title": "🧠 Model Orchestration Map"
+    },
+    {
+      "path": "04_AI_Workflow/subagents.md",
+      "title": "🧩 The Subagent Pattern"
+    },
+    {
+      "path": "04_AI_Workflow/master_prompt.md",
+      "title": "🪄 Master Prompt — Bootstrap Any AI Session"
+    },
+    {
+      "path": "02_Areas/knowledge_base/01_identity.template.md",
+      "title": "01 — Identity"
+    },
+    {
+      "path": "examples/alex/knowledge_base/01_identity.md",
+      "title": "01 — Identity"
+    },
+    {
+      "path": "01_Focus/README.md",
+      "title": "01_Focus — the current mission"
+    },
+    {
+      "path": "02_Areas/knowledge_base/02_values.template.md",
+      "title": "02 — Values & North Star"
+    },
+    {
+      "path": "02_Areas/README.md",
+      "title": "02_Areas — the standing parts of your life"
+    },
+    {
+      "path": "02_Areas/knowledge_base/03_psychology.template.md",
+      "title": "03 — Psychology & Operating Principles"
+    },
+    {
+      "path": "03_Projects/README.md",
+      "title": "03_Projects — ventures and long-running builds"
+    },
+    {
+      "path": "02_Areas/knowledge_base/04_career.template.md",
+      "title": "04 — Career"
+    },
+    {
+      "path": "examples/alex/knowledge_base/04_career.md",
+      "title": "04 — Career"
+    },
+    {
+      "path": "02_Areas/knowledge_base/05_relationships.template.md",
+      "title": "05 — Relationships"
+    },
+    {
+      "path": "examples/alex/knowledge_base/05_relationships.md",
+      "title": "05 — Relationships"
+    },
+    {
+      "path": "05_Checklists/README.md",
+      "title": "05_Checklists — reusable step-by-step lists"
+    },
+    {
+      "path": "02_Areas/knowledge_base/06_projects.template.md",
+      "title": "06 — Projects & Ventures"
+    },
+    {
+      "path": "06_Trackers/README.md",
+      "title": "06_Trackers — the working memory"
+    },
+    {
+      "path": "02_Areas/knowledge_base/07_health_habits.template.md",
+      "title": "07 — Health & Habits"
+    },
+    {
+      "path": "examples/alex/knowledge_base/07_health_habits.md",
+      "title": "07 — Health & Habits"
+    },
+    {
+      "path": "02_Areas/knowledge_base/08_finances_admin.template.md",
+      "title": "08 — Finances & Admin"
+    },
+    {
+      "path": "02_Areas/knowledge_base/09_meaning.template.md",
+      "title": "09 — Meaning"
+    },
+    {
+      "path": "02_Areas/knowledge_base/10_preferences.template.md",
+      "title": "10 — Preferences & Aesthetic"
+    },
+    {
+      "path": "02_Areas/knowledge_base/11_system_workflow.template.md",
+      "title": "11 — System & Workflow"
+    },
+    {
+      "path": "02_Areas/knowledge_base/12_personality_mirror.template.md",
+      "title": "12 — Personality Mirror"
+    },
+    {
+      "path": "04_AI_Workflow/claude_guide.md",
+      "title": "AI Coding Agent — Leverage Guide"
+    },
+    {
+      "path": "docs/browser-data.md",
+      "title": "Browser data and backups"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "title": "Changelog"
+    },
+    {
+      "path": "docs/connectors/README.md",
+      "title": "Connectors"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "title": "Contributing to LifeOS"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "title": "Contributor Covenant Code of Conduct"
+    },
+    {
+      "path": "templates/daily_journal.md",
+      "title": "Daily Journal — {{DATE}}"
+    },
+    {
+      "path": "templates/daily_review.md",
+      "title": "Daily Review — {{DATE}}"
+    },
+    {
+      "path": "templates/decision_log.md",
+      "title": "Decision Log — {{DECISION}}"
+    },
+    {
+      "path": "DEMO_DATA.md",
+      "title": "Demo data — the placeholder convention"
+    },
+    {
+      "path": "docs/deploy.md",
+      "title": "Deploy the dashboard"
+    },
+    {
+      "path": "docs/assets/README.md",
+      "title": "Docs assets — screenshot capture list"
+    },
+    {
+      "path": "06_Trackers/evidence.template.md",
+      "title": "Evidence Log — artifacts, not ideas"
+    },
+    {
+      "path": "examples/alex/06_Trackers/evidence.md",
+      "title": "Evidence Log — artifacts, not ideas"
+    },
+    {
+      "path": "examples/README.md",
+      "title": "examples — a filled demo vault"
+    },
+    {
+      "path": "06_Trackers/finance.template.md",
+      "title": "Finance"
+    },
+    {
+      "path": "06_Trackers/habits.template.md",
+      "title": "Habits Tracker"
+    },
+    {
+      "path": "examples/alex/06_Trackers/habits.md",
+      "title": "Habits Tracker"
+    },
+    {
+      "path": "docs/design_system.md",
+      "title": "Hearth — the LifeOS design language"
+    },
+    {
+      "path": "02_Areas/hobbies.template.md",
+      "title": "Hobbies"
+    },
+    {
+      "path": "02_Areas/house_vision.template.md",
+      "title": "House / Environment Vision"
+    },
+    {
+      "path": "06_Trackers/inbox.template.md",
+      "title": "Inbox — Quick Capture"
+    },
+    {
+      "path": "docs/INHERITANCE.md",
+      "title": "INHERITANCE.md — how this template stays current"
+    },
+    {
+      "path": "02_Areas/life_audit.template.md",
+      "title": "Life Audit"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "title": "LifeOS Architecture"
+    },
+    {
+      "path": "docs/README.md",
+      "title": "LifeOS Documentation"
+    },
+    {
+      "path": "docs/FEATURES.md",
+      "title": "LifeOS features"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "title": "LifeOS Roadmap"
+    },
+    {
+      "path": "01_Focus/plan.template.md",
+      "title": "Mission Plan — <!-- lifeos:fill: mission name, e.g. \"Operation Launch Week\" -->"
+    },
+    {
+      "path": "02_Areas/north_star.template.md",
+      "title": "North Star"
+    },
+    {
+      "path": "examples/alex/north_star.md",
+      "title": "North Star"
+    },
+    {
+      "path": "docs/connectors/notion.md",
+      "title": "Notion connector — optional two-way task/habit sync"
+    },
+    {
+      "path": "docs/onboarding.md",
+      "title": "Onboarding — make LifeOS yours"
+    },
+    {
+      "path": "02_Areas/one_year_vision.template.md",
+      "title": "One-Year Vision"
+    },
+    {
+      "path": "examples/alex/one_year_vision.md",
+      "title": "One-Year Vision"
+    },
+    {
+      "path": "README.md",
+      "title": "Optional — make it yours. Skip it and you'll see the demo persona."
+    },
+    {
+      "path": "02_Areas/panic_parking_lot.template.md",
+      "title": "Panic Parking Lot"
+    },
+    {
+      "path": "templates/project_story.md",
+      "title": "Project Story — {{PROJECT}}"
+    },
+    {
+      "path": "06_Trackers/evidence.md",
+      "title": "Public template maintenance evidence"
+    },
+    {
+      "path": "02_Areas/relationships.template.md",
+      "title": "Relationships"
+    },
+    {
+      "path": "06_Trackers/reminders.template.md",
+      "title": "Reminders & Deadlines"
+    },
+    {
+      "path": "reviews/README.md",
+      "title": "reviews — the archive of what actually happened"
+    },
+    {
+      "path": "02_Areas/routines.template.md",
+      "title": "Routines"
+    },
+    {
+      "path": "schemas/README.md",
+      "title": "schemas — the data contract"
+    },
+    {
+      "path": "SECURITY.md",
+      "title": "Security Policy"
+    },
+    {
+      "path": "templates/session_debrief.md",
+      "title": "Session Debrief — {{EVENT}} · {{DATE}}"
+    },
+    {
+      "path": "examples/alex/00_START_HERE.md",
+      "title": "Start Here"
+    },
+    {
+      "path": "06_Trackers/tasks.template.md",
+      "title": "Tasks"
+    },
+    {
+      "path": "examples/alex/06_Trackers/tasks.md",
+      "title": "Tasks"
+    },
+    {
+      "path": "templates/README.md",
+      "title": "templates — reusable document scaffolds"
+    },
+    {
+      "path": "docs/workspace.md",
+      "title": "The LifeOS workspace"
+    },
+    {
+      "path": "templates/weekly_review.md",
+      "title": "Weekly Review — Week of {{DATE}}"
+    },
+    {
+      "path": "examples/alex/reviews/2026-W28.md",
+      "title": "Weekly Review — Week of 2026-07-06"
+    },
+    {
+      "path": "02_Areas/wellbeing_routine.template.md",
+      "title": "Wellbeing Routine"
+    }
+  ]
+}

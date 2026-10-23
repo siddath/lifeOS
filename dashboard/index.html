@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>🧭 LifeOS — Command Center</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="assets/shared.css">
+<link rel="stylesheet" href="assets/shared.css?v=20261023.3">
 <style>
 
 
@@ -355,8 +355,9 @@
   #drStepper.dr-flat .dr-step{display:block}
   #drStepper.dr-flat .dr-step + .dr-step{border-top:1px dashed var(--line);margin-top:16px;padding-top:14px}
 </style>
-<script src="assets/shared.js"></script>
+<script src="assets/shared.js?v=20261023.3"></script>
 <script src="assets/state.js"></script>
+<script src="assets/workspace.js?v=20261023.3" defer></script>
 </head>
 <body>
 <div id="ambient" aria-hidden="true"></div>
@@ -384,7 +385,7 @@
 
 <header id="top">
   <span class="kicker" id="heroKicker">Hero mission · one thing at a time</span>
-  <h1 id="heroTitle">🚀 Operation Launch Week</h1>
+  <h2 id="heroTitle">🚀 Operation Launch Week</h2>
   <p id="heroSubtitle">Ship Fieldnotes to its first 50 beta users — calm, finished, real</p>
 </header>
 
@@ -425,10 +426,12 @@
       <div id="taskList"></div>
       <!-- The Slate: type a title, walk away — the chips are for when you want more -->
       <div class="composer" id="taskComposer">
+        <label for="taskQuickAdd">Add a task</label>
         <div class="composer-main">
-          <input type="text" id="taskQuickAdd" placeholder="Add a task — just type the title…" aria-label="New task title" autocomplete="off">
+          <input type="text" id="taskQuickAdd" placeholder="Add a task — just type the title…" aria-label="Add a task" autocomplete="off">
           <button class="composer-add" id="composerAddBtn" onclick="addTaskFromQuickAdd()">Add</button>
         </div>
+        <button type="button" id="composerOptionsToggle" aria-expanded="false" aria-controls="composerOpts">Area, priority &amp; due date</button>
         <div class="composer-opts" id="composerOpts" hidden>
           <div class="chip-row" role="radiogroup" aria-label="Area" id="composerAreas"></div>
           <div class="chip-row" role="radiogroup" aria-label="Priority" id="composerPrio"></div>
@@ -637,16 +640,16 @@
 
           <div class="dr-step" id="drStep3" hidden>
             <h3 class="dr-step-h" tabindex="-1">Three small thanks</h3>
-            <div class="grat-row"><span>1</span><input id="drG1" placeholder="Something specific…"></div>
-            <div class="grat-row" id="drG2Row"><span>2</span><input id="drG2" placeholder="Small counts…"></div>
-            <div class="grat-row" id="drG3Row"><span>3</span><input id="drG3" placeholder="…"></div>
+            <div class="grat-row"><label for="drG1">First thanks</label><input id="drG1" placeholder="Something specific…"></div>
+            <div class="grat-row" id="drG2Row"><label for="drG2">Second thanks</label><input id="drG2" placeholder="Small counts…"></div>
+            <div class="grat-row" id="drG3Row"><label for="drG3">Third thanks</label><input id="drG3" placeholder="…"></div>
             <button class="mini-btn dr-more" id="drMoreThanks" onclick="drMoreThanks()">+ one more</button>
             <p class="dr-micro">Filter coffee counts. Small counts.</p>
           </div>
 
           <div class="dr-step" id="drStep4" hidden>
             <h3 class="dr-step-h" tabindex="-1">Tomorrow's one thing</h3>
-            <input id="drOneThing" class="dr-onething" placeholder="Just one.">
+            <label for="drOneThing">One action for tomorrow (optional)</label><input id="drOneThing" class="dr-onething" placeholder="Just one.">
             <p class="dr-micro">Just one. The rest is parked, not forgotten.</p>
           </div>
 
@@ -1642,9 +1645,9 @@
   }
   // Wiring
   buildComposerChips();
-  composer.input.addEventListener('focus', ()=>{ composer.opts.hidden=false; });
-  composer.input.addEventListener('input', ()=>{ composer.opts.hidden=false; refreshComposerChips(); });
-  composer.input.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ composer.opts.hidden=true; } });
+  document.getElementById('composerOptionsToggle').addEventListener('click',()=>{ composer.opts.hidden=!composer.opts.hidden; document.getElementById('composerOptionsToggle').setAttribute('aria-expanded',String(!composer.opts.hidden)); });
+  composer.input.addEventListener('input', refreshComposerChips);
+  composer.input.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ composer.opts.hidden=true; document.getElementById('composerOptionsToggle').setAttribute('aria-expanded','false'); } });
   composer.opts.addEventListener('click', (e)=>{
     const ch=e.target.closest('.chip'); if(!ch) return;
     const dim=ch.dataset.dim, val=ch.dataset.val;
@@ -2294,7 +2297,10 @@
   function applyConfig(){
     rebuildAreas();
     const disp = (LIFEOS.product && LIFEOS.product.display) || 'LifeOS';
-    document.title = '🧭 ' + disp + ' — Command Center';
+    const workspaceHeading = document.getElementById('workspaceTitle');
+    document.title = workspaceHeading ? workspaceHeading.textContent + ' · ' + disp : '🧭 ' + disp + ' — Command Center';
+    const workspaceBrand = document.querySelector('.workspace-brand');
+    if(workspaceBrand) workspaceBrand.textContent = disp;
     const brand = document.getElementById('brandName');
     if(brand) brand.innerHTML = '🧭 ' + disp + ' <span>· Command Center</span>';
     const footer = document.getElementById('footerCredit');
