@@ -176,3 +176,7 @@ Small, focused, private-by-default. See [CONTRIBUTING.md](CONTRIBUTING.md) and [
 ## License
 
 [MIT](LICENSE). Copying is the point, not the threat — build your own life on it.
+
+## Workspace update
+
+Home, Projects, Library and Reviews now organize the dashboard. The Library includes bundled public guides, so reading works on the hosted demo as well as a local server. See [workspace usage](docs/workspace.md) and the [port evidence](worksheets/2026-10-23-workspace-port.md). The demo remains fictional; personalize a private instance rather than publishing personal records here.

@@ -94,3 +94,5 @@ review/release; no PR or production deployment is claimed.
 ## Done (move here with date + PR link, prune monthly)
 
 - _Empty — first entry lands when an item above ships._
+
+- [x] Generic workspace and bundled public-guide reader: labelled navigation, four views, explicit task options, safe source reading and settings actions. See [port worksheet](worksheets/2026-10-23-workspace-port.md); merge/production evidence remains separate from local acceptance.

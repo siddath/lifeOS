@@ -60,59 +60,42 @@ var LifeOS = (function(){
        page: 'index' | 'anchor' | 'knowledge'
        sync: true on index only — renders the Notion sync group
              (buttons call global flushQueue/pullFromNotion from index's script) */
+  function setWorkspaceCurrent(key){
+    document.querySelectorAll('[data-workspace-link]').forEach(function(link){
+      if(link.dataset.workspaceLink===key) link.setAttribute('aria-current','page');
+      else link.removeAttribute('aria-current');
+    });
+  }
   function initDock(opts){
-    var page = opts.page, dock = document.getElementById('dock');
-    if(!dock) return;
-    var onIndex = page === 'index';
-    var html = '';
-
-    if(opts.sync){
-      html += '<div class="dock-sync">' +
-        '<button class="dock-btn dock-sync-btn" id="dockSyncBtn" onclick="flushQueue()" aria-live="polite" title="Sync status — click to push now">' +
-          '<span class="status-dot" data-sync-dot></span><span class="dock-label" data-sync-text>Local only</span></button>' +
-        '<button class="dock-btn" onclick="pullFromNotion()" title="Pull from Notion">⬇ <span class="dock-label">Pull</span></button>' +
-        '<button class="dock-btn" onclick="flushQueue()" title="Push to Notion">⬆ <span class="dock-label">Push</span></button>' +
-      '</div>';
-    } else {
-      html += '<div class="dock-sync">' +
-        '<a class="dock-btn" href="index.html" title="Open the dashboard"><span class="status-dot"></span> ' +
-        '<span class="dock-label">Dashboard</span></a></div>';
+    var dock=document.getElementById('dock');if(!dock)return;
+    document.body.classList.add('has-workspace-nav');
+    var base=opts.page==='index'?'':'index.html';
+    function destinations(parent){
+      [['home','Home'],['projects','Projects'],['library','Library'],['reviews','Reviews']].forEach(function(item){
+        var a=document.createElement('a');a.href=base+'#'+item[0];a.dataset.workspaceLink=item[0];a.className='dock-btn';a.textContent=item[1];parent.appendChild(a);
+      });
     }
-    html += '<div class="dock-sep" role="presentation"></div><div class="dock-nav">';
-    SECTIONS.forEach(function(s){
-      var href = onIndex ? s.href : 'index.html' + s.href;
-      html += '<a class="dock-btn" href="' + href + '" title="' + s.title + '">' +
-              s.icon + ' <span class="dock-label">' + s.label + '</span></a>';
+    dock.replaceChildren();dock.setAttribute('aria-label','LifeOS navigation');
+    var brand=document.createElement('a');brand.className='workspace-brand';brand.href=base+'#home';brand.textContent='LifeOS';dock.appendChild(brand);
+    var closeButton=document.createElement('button');closeButton.type='button';closeButton.id='dockClose';closeButton.textContent='Close navigation';dock.appendChild(closeButton);
+    var primary=document.createElement('div');primary.className='workspace-primary';destinations(primary);dock.appendChild(primary);
+    var reading=document.createElement('details'),label=document.createElement('summary');label.textContent='Reading tools';reading.appendChild(label);
+    PAGES.forEach(function(page){var a=document.createElement('a');a.className='dock-btn';a.href=page.href;a.textContent=page.label;if(page.key===opts.page){a.setAttribute('aria-current','page');reading.open=true;}reading.appendChild(a);});dock.appendChild(reading);
+    var settings=document.createElement('a');settings.className='dock-btn workspace-settings';settings.href=base+'#settings';settings.textContent='Backup & settings';dock.appendChild(settings);
+    var status=document.createElement('a');status.href=base+'#settings';status.className='workspace-status';status.innerHTML='<span class="status-dot local-only"'+(opts.sync?' data-sync-dot':'')+'></span><span'+(opts.sync?' data-sync-text':'')+'>Local browser</span>';dock.appendChild(status);
+    var mobile=document.createElement('nav');mobile.className='workspace-mobile';mobile.setAttribute('aria-label','Workspace');destinations(mobile);
+    var more=document.createElement('button');more.id='dockFab';more.type='button';more.textContent='More';more.setAttribute('aria-controls','dock');more.setAttribute('aria-expanded','false');mobile.appendChild(more);document.body.appendChild(mobile);
+    var scrim=document.createElement('div');scrim.className='dock-scrim';scrim.hidden=true;document.body.appendChild(scrim);var opener;
+    function close(){if(!dock.classList.contains('open'))return;dock.classList.remove('open');scrim.hidden=true;more.setAttribute('aria-expanded','false');if(opener&&opener.isConnected&&opener.getClientRects().length)opener.focus();}
+    more.addEventListener('click',function(){if(dock.classList.contains('open'))return close();opener=document.activeElement;dock.classList.add('open');scrim.hidden=false;more.setAttribute('aria-expanded','true');closeButton.focus();});
+    closeButton.addEventListener('click',close);scrim.addEventListener('click',close);
+    [dock,mobile].forEach(function(nav){nav.addEventListener('click',function(e){if(e.target.closest('a'))close();});});
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&!document.querySelector('dialog[open]'))close();
+      if(e.key==='Tab'&&dock.classList.contains('open')){var nodes=Array.from(dock.querySelectorAll('a,button,summary')).filter(function(n){return n.getClientRects().length;});var first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
     });
-    html += '</div><div class="dock-sep" role="presentation"></div><div class="dock-pages">';
-    PAGES.forEach(function(p){
-      var current = p.key === page ? ' aria-current="page"' : '';
-      html += '<a class="dock-btn" href="' + p.href + '"' + current + ' title="' + p.title + '">' +
-              p.icon + ' <span class="dock-label">' + p.label + '</span></a>';
-    });
-    html += '</div>';
-    if(onIndex) html += '<div class="dock-thread" aria-hidden="true"><div id="dockThreadFill"></div></div>';
-    dock.innerHTML = html;
-
-    var fab = document.getElementById('dockFab');
-    if(!fab){
-      fab = el('<button id="dockFab" class="dock-fab" aria-expanded="false" aria-controls="dock" ' +
-               'aria-label="Open navigation">🧭' + (opts.sync ? '<span class="status-dot fab-dot" data-sync-dot></span>' : '') + '</button>');
-      dock.insertAdjacentElement('afterend', fab);
-    }
-    var scrim = document.getElementById('dockScrim');
-    if(!scrim){
-      scrim = el('<div id="dockScrim" class="dock-scrim" hidden></div>');
-      fab.insertAdjacentElement('afterend', scrim);
-    }
-    function open(){ dock.classList.add('open'); fab.setAttribute('aria-expanded','true'); scrim.hidden=false;
-      var f=dock.querySelector('.dock-btn'); if(f) f.focus(); }
-    function close(){ if(!dock.classList.contains('open')) return; dock.classList.remove('open');
-      fab.setAttribute('aria-expanded','false'); scrim.hidden=true; fab.focus(); }
-    fab.addEventListener('click', function(){ dock.classList.contains('open') ? close() : open(); });
-    scrim.addEventListener('click', close);
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !document.querySelector('dialog[open]')) close(); });
-    dock.addEventListener('click', function(e){ if(e.target.closest('a')) close(); });
+    var narrow=matchMedia('(max-width:899px)');if(narrow.addEventListener)narrow.addEventListener('change',function(e){if(!e.matches)close();});
+    setWorkspaceCurrent(opts.page==='index'?'home':'library');
   }
 
   // ---- In-page copy and sync-key dialogs; no native prompts or implicit sends. ----
@@ -202,5 +185,5 @@ var LifeOS = (function(){
     else run();
   }
 
-  return { init:init, copyText:copyText, editSyncKey:editSyncKey };
+  return { setWorkspaceCurrent:setWorkspaceCurrent, init:init, copyText:copyText, editSyncKey:editSyncKey };
 })();

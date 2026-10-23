@@ -16,6 +16,9 @@ const SKIP_DIRS = new Set(['.git', 'node_modules', '.vercel', '.obsidian', '.tra
 function* mdFiles(dir) {
   for (const name of readdirSync(dir)) {
     if (SKIP_DIRS.has(name)) continue;
+    // Bundled copies retain original source-relative Markdown. Their canonical
+    // originals are checked here; reader links resolve through the bundle catalog.
+    if (resolve(dir, name) === resolve(root, 'dashboard/library/source')) continue;
     const p = join(dir, name);
     if (statSync(p).isDirectory()) yield* mdFiles(p);
     else if (name.endsWith('.md')) yield p;

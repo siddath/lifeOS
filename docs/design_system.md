@@ -196,3 +196,7 @@ The palette (§1) is untouched — this pass is restraint, not redecoration. Dus
 - [ ] Evidence/artifacts celebrated.
 - [ ] Fast, forgiving, keyboard-friendly search.
 - [ ] Reduce-Motion renders static and identical.
+
+## Workspace — October 2026
+
+Four labelled destinations organize tasks, project focus, reading and reflection. The desktop navigation fits a short window and scrolls internally; mobile uses a compact bar with a focus-managed More sheet. Lists suit dense source directories, while cards bound editing and review. Task choices open explicitly; hidden controls obey the native hidden attribute; review hover states retain paired theme tokens. The warm palette and existing config-driven persona remain. This supersedes the previous floating icon-rail composition.
